@@ -5,9 +5,9 @@ CPP  = g++.exe -D__DEBUG__
 CC   = gcc.exe -D__DEBUG__
 WINDRES = windres.exe
 RES  = vrp_private.res
-OBJ  = src/main.o src/utils.o src/game.o src/texture.o src/texture_processing.o $(RES)
-LINKOBJ  = src/main.o src/utils.o src/game.o src/texture.o src/texture_processing.o $(RES)
-LIBS =  -L"C:/Dev-Cpp/lib" -mwindows -lfreeglut -lglu32 -lopengl32 -lwinmm -lgdi32  -g3 -fmessage-length=0 
+OBJ  = src/main.o src/utils.o src/game.o src/texture.o src/texture_processing.o src/sfx.o src/imageloader.o src/intro.o $(RES)
+LINKOBJ  = src/main.o src/utils.o src/game.o src/texture.o src/texture_processing.o src/sfx.o src/imageloader.o src/intro.o $(RES)
+LIBS =  -L"C:/Dev-Cpp/lib" -L"lib" -mwindows -lfreeglut -lglu32 -lopengl32 -lwinmm -lgdi32 lib/libfmod.a  -g3 -fmessage-length=0 
 INCS =  -I"C:/Dev-Cpp/include" 
 CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include" 
 BIN  = bin/vrp.exe
@@ -40,6 +40,15 @@ src/texture.o: src/texture.cpp
 
 src/texture_processing.o: src/texture_processing.c
 	$(CPP) -c src/texture_processing.c -o src/texture_processing.o $(CXXFLAGS)
+
+src/sfx.o: src/sfx.c
+	$(CPP) -c src/sfx.c -o src/sfx.o $(CXXFLAGS)
+
+src/imageloader.o: src/imageloader.cpp
+	$(CPP) -c src/imageloader.cpp -o src/imageloader.o $(CXXFLAGS)
+
+src/intro.o: src/intro.c
+	$(CPP) -c src/intro.c -o src/intro.o $(CXXFLAGS)
 
 vrp_private.res: vrp_private.rc 
 	$(WINDRES) -i vrp_private.rc --input-format=rc -o vrp_private.res -O coff 

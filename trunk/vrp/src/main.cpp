@@ -17,7 +17,10 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
+#include "scene_switcher.h"
+#include "intro.h"
 #include "utils.h"
+#include "sfx.h"
 
 float fps = 0; // almacena el fps
 char debug_string[512] = {0}; // buffer para mensajes de debug
@@ -105,10 +108,14 @@ void perspective_mode()										// Set Up A Perspective View
 	// We should be in the normal 3D perspective mode now
 }
 
+/**
+ * Dibujar textos de debug
+ */
 void draw_text() {
     char buffer[1000];
 
 	ortho_mode( 0, 0, _width, _height );
+	glDisable(GL_DEPTH_TEST);
 		
         // TIMING
         glColor3f(1.0f, 1.0f, 0.0f);
@@ -128,7 +135,7 @@ void draw_text() {
         glutBitmapString(GLUT_BITMAP_9_BY_15, (unsigned char *) buffer);
         glRasterPos2i(0, 0);
 
-
+    glEnable(GL_DEPTH_TEST);
     perspective_mode();
 }
 
@@ -163,10 +170,54 @@ void handle_idle(void)
 }
 
 void draw_scene() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear all
+    if (generic_handle_draw_scene)
+        // si hay una función de dibujado seteado, dibujar
+        generic_handle_draw_scene();
+    else {
+        // sino, no dibujar nada
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear all
+    }
     
     draw_text();
 	glutSwapBuffers() ;
+}
+
+/**
+ * Inicializar
+ */
+void init() {
+    glEnable(GL_DEPTH_TEST);
+    glClearColor(0.0, 0.0, 0.0, 0.9);
+    glPointSize(3.0);    
+    sfx_init();
+    music_play("test.ogg");
+}
+
+/**
+ * Scene switcher
+ */
+int switch_to(int scene) {
+    int current_scene = -1;
+    // kill stuff from previous scene
+    if (current_scene != -1) {
+        generic_handle_keypress = NULL;
+        generic_handle_keypress_special = NULL;
+        generic_handle_mouse_button = NULL;
+        generic_handle_mouse_motion = NULL;
+        generic_handle_mouse_passive_motion = NULL;
+        generic_handle_draw_scene = NULL;
+    }
+    
+    // load new
+    switch (scene) {
+        case SCENE_INTRO:
+            generic_handle_draw_scene = intro_draw_scene;
+            generic_handle_keypress = intro_handle_keypress;
+            intro_init();
+            current_scene = scene;
+            break;
+    }
+    return 1;
 }
 
 /**
@@ -177,14 +228,9 @@ int main(int argc, char ** argv) {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH) ;   
     glutInitWindowSize(800,600);
 
-    glutCreateWindow("Vector Racer Pro");
-    //init();
+    glutCreateWindow("Vector Racer Pro Extreme Edition");
     
-        glEnable(GL_DEPTH_TEST);
-    glClearColor(0.0, 0.0, 0.0, 0.9);
-    glPointSize(3.0);
-
-
+    // handlers por todos lados
     glutDisplayFunc(draw_scene);
     glutKeyboardFunc(handle_keypress);
     glutSpecialFunc(handle_keypress_special);
@@ -194,8 +240,10 @@ int main(int argc, char ** argv) {
     glutPassiveMotionFunc(handle_mouse_passive_motion);
     glutIdleFunc(handle_idle) ;
 
-    //glutTimerFunc(25, update, 0); // add timer
-
+    init();
+    
+    switch_to(SCENE_INTRO);
+    
     glutMainLoop();
     return 0;
 }
