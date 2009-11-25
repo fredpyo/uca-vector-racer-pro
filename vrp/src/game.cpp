@@ -9,10 +9,12 @@
 
 #include <math.h>
 
-#include "texture.h"
-#include "utils.h"
 #include "main.h"
 #include "texture_processing.h"
+#include "imageloader.h"
+#include "texture.h"
+#include "utils.h"
+
 #define AXIS_SIZE 10
 
 // BLUR STUFF
@@ -95,7 +97,7 @@ void game_handle_keypress(unsigned char key, int x, int y) {
 /**
  * Manejo de teclas especiales (flechas, función, etc)
  */
-void handle_special_keypress(int key, int x, int y) {
+void game_handle_special_keypress(int key, int x, int y) {
     switch (key) {
         case GLUT_KEY_LEFT:
             _anglez = wrap_f(_anglez, 3.0, 0.0, 360.0);
@@ -143,7 +145,7 @@ void game_handle_mouse_motion (int x, int y) {
 /**
  * Manejo de movimiento del mouse sin boton presionado
  */
-void handle_mouse_motion_passive (int x, int y){
+void game_handle_mouse_motion_passive (int x, int y){
 	_x = x;
 	_y = y;
 }
