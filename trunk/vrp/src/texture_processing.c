@@ -3,7 +3,7 @@
  * @description: Operaciones especiales sobre las texturas
  */
 
-#include <gl/glut.h>
+#include <gl/freeglut.h>
 #include "main.h"
 
 float blur_zoom = 0;
@@ -79,10 +79,9 @@ void render_motion_blur(GLuint textureID)
 	glPopMatrix();
 }
 
-void blur_tex_zoom (GLuint tex, int passes)
+void blur_tex_zoom (GLuint tex, int passes, int WIDTH, int HEIGHT)
 {
     int i;
-    int WIDTH = _width, HEIGHT = _height;
  
     glEnable (GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

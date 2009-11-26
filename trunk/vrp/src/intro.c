@@ -2,7 +2,7 @@
  * intro.c
  */
 
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <math.h>
 #include "imageloader.h"
