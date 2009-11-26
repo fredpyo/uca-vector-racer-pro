@@ -18,7 +18,7 @@
 #define AXIS_SIZE 10
 
 // BLUR STUFF
-GLuint _tex_0_id; // textura donde se almacenara el "blur"
+GLuint _tex_0_id4; // textura donde se almacenara el "blur"
 int _tex_0_size = 512; // tamaño de la textura
 //float blur_zoom = 0; // factor de "zoom" de la textura
 //  GENERAL
@@ -42,12 +42,27 @@ int sentido_v = 1;
 /*
  * Inicialización
  */
-/*void game_init() {
+void game_init() {
+    GLfloat density = 0.3; //set the density to 0.3 which is acctually quite thick
+    GLfloat fogColor[4] = {0, 0, 0, 1.0}; //set the for color to grey
+    
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.0, 0.0, 0.0, 0.9);
     glPointSize(3.0);
-    texture_create_blank_render_texture( &_tex_0_id, 512, 3, GL_RGB);
-}*/
+    texture_create_blank_render_texture( &_tex_0_id4, 512, 3, GL_RGB);
+
+    glEnable (GL_DEPTH_TEST); //enable the depth testing
+
+    glFogfv (GL_FOG_COLOR, fogColor); //set the fog color to our color chosen above
+    glFogf (GL_FOG_DENSITY, density); //set the density to the value above
+    glFogi (GL_FOG_MODE, GL_LINEAR); //set the fog mode to GL_EXP2
+    glFogf(GL_FOG_START,20.0);                   /* Where wwe start fogging */
+    glFogf(GL_FOG_END,40.0);                       /* end */
+
+    glHint (GL_FOG_HINT, GL_NICEST); // set the fog to look the nicest, may slow down on older cards
+
+    glEnable (GL_FOG); //enable the fog
+}
 
 /**
  * Manejo de teclas convencionales
@@ -97,7 +112,7 @@ void game_handle_keypress(unsigned char key, int x, int y) {
 /**
  * Manejo de teclas especiales (flechas, función, etc)
  */
-void game_handle_special_keypress(int key, int x, int y) {
+void game_handle_keypress_special(int key, int x, int y) {
     switch (key) {
         case GLUT_KEY_LEFT:
             _anglez = wrap_f(_anglez, 3.0, 0.0, 360.0);
@@ -348,7 +363,7 @@ void do_draw(GLuint textureID) {
 /**
  * Dibujar la escena
  */
-void game_draw() {
+void game_draw_scene() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear all
     glLoadIdentity(); // reset drawing perspective
    
@@ -365,10 +380,10 @@ void game_draw() {
 
     if( AnimateNextFrame(60)) {
         glViewport(0, 0, _tex_0_size, _tex_0_size);	
-        render_motion_blur( _tex_0_id );
+        render_motion_blur( _tex_0_id4);
         // draw
         do_draw(0);
-   		glBindTexture(GL_TEXTURE_2D,_tex_0_id);
+   		glBindTexture(GL_TEXTURE_2D,_tex_0_id4);
 		// Render the current screen to our texture
 		glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, _tex_0_size, _tex_0_size, 0);
 
@@ -378,9 +393,17 @@ void game_draw() {
 		// Set our viewport back to it's normal size
 		glViewport(0, 0, _width, _height);	
 	}
-	render_motion_blur( _tex_0_id );
-//    blur_tex_zoom(g_tex_0_ID, 1);
+	render_motion_blur( _tex_0_id4);
+//    blur_tex_zoom(g_tex_0_id4, 1);
     do_draw(0);
     //draw_text();
-	glutSwapBuffers() ;
+//	glutSwapBuffers() ;
+}
+
+void game_handle_idle() {
+    static int elapsed_time = 0;
+    int time;
+	time = glutGet(GLUT_ELAPSED_TIME);
+    delta = wrap_f(delta, (time - elapsed_time) * 0.05 / 25, 0.0, 1.35);
+    elapsed_time = time;
 }

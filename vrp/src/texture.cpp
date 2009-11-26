@@ -2,7 +2,7 @@
  * texture.cpp
  * @description: Cosas varias del manejo de texturas
  */
-#include <gl/glut.h>
+#include <gl/freeglut.h>
 #include "imageloader.h"
 
 /**

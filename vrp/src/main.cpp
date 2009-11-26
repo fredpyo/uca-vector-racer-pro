@@ -20,12 +20,15 @@
 #include "scene_switcher.h"
 #include "intro.h"
 #include "title.h"
+#include "ranking.h"
+#include "game.h"
 #include "utils.h"
 #include "sfx.h"
 
 float fps = 0; // almacena el fps
 char _debug_string[512] = {0}; // buffer para mensajes de debug
 char _message_string[512] = {0}; // buffer para mensajes
+int _show_debug = 1; // mostar mensajes de fps, debug etc
 
 using namespace std;
 
@@ -36,11 +39,12 @@ float _angle = 30.0; // para camara en modo perspectiva
 
 // generic pointers
 void (*generic_handle_keypress)(unsigned char key, int x, int y) = NULL;
-void (*generic_handle_keypress_special)(unsigned char key, int x, int y) = NULL;
+void (*generic_handle_keypress_special)(int key, int x, int y) = NULL;
 void (*generic_handle_mouse_button)(int button, int state, int x, int y) = NULL;
 void (*generic_handle_mouse_motion)(int x, int y) = NULL;
 void (*generic_handle_mouse_passive_motion)(int x, int y) = NULL;
 void (*generic_handle_draw_scene)(void) = NULL;
+void (*generic_handle_idle)(void) = NULL;
 
 
 // Funciones genéricas, usando punteros a funciones
@@ -56,7 +60,14 @@ void handle_keypress(unsigned char key, int x, int y) {
 }
 
 void handle_keypress_special(int key, int x, int y) {
-    
+    switch (key) {
+        case GLUT_KEY_F1:
+            _show_debug = !_show_debug;
+            break;
+        default:
+            generic_handle_keypress_special(key, x, y);
+            break;
+    }
 }
 
 void handle_mouse_button (int button, int state, int x, int y) {
@@ -115,6 +126,7 @@ void perspective_mode()										// Set Up A Perspective View
 void draw_text() {
     char buffer[1000];
 
+    if (_show_debug) {
 	ortho_mode( 0, 0, _width, _height );
 	glDisable(GL_DEPTH_TEST);
 		
@@ -138,6 +150,7 @@ void draw_text() {
 
     glEnable(GL_DEPTH_TEST);
     perspective_mode();
+    }
 }
 
 /**
@@ -163,7 +176,8 @@ void handle_idle(void)
 	}
 
     // procedimientos adicionales    
-    //delta = wrap_f(delta, (time - elapsed_time) * 0.05 / 25, 0.0, 1.35);
+    if (generic_handle_idle)
+        generic_handle_idle();
     
     elapsed_time = time;
     // redibujar
@@ -214,6 +228,7 @@ int switch_to(int scene) {
         generic_handle_mouse_motion = NULL;
         generic_handle_mouse_passive_motion = NULL;
         generic_handle_draw_scene = NULL;
+        generic_handle_idle = NULL;
     }
     
     // load new
@@ -227,7 +242,23 @@ int switch_to(int scene) {
         case SCENE_TITLE:
             generic_handle_draw_scene = title_draw_scene;
             generic_handle_keypress = title_handle_keypress;
+            generic_handle_keypress_special = title_handle_keypress_special;
             title_init();
+            current_scene = scene;
+            break;
+        case SCENE_RANKING:
+            generic_handle_draw_scene = ranking_draw_scene;
+            generic_handle_keypress = ranking_handle_keypress;
+            generic_handle_keypress_special = ranking_handle_keypress_special;
+            ranking_init();
+            current_scene = scene;
+            break;
+        case SCENE_GAME:
+            generic_handle_draw_scene = game_draw_scene;
+            generic_handle_idle = game_handle_idle;
+            generic_handle_keypress = game_handle_keypress;
+            generic_handle_keypress_special = game_handle_keypress_special;
+            game_init();
             current_scene = scene;
             break;
     }
