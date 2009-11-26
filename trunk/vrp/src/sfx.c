@@ -30,6 +30,7 @@ char * get_music_file_path (char * filename) {
     int i;
     for (i = 6; filename[i-6]; i++)
         path[i] = filename[i-6];
+    path[i] = 0;
     return path;
 }
 
@@ -37,8 +38,8 @@ char * get_music_file_path (char * filename) {
  * Abre filename para reproducir
  */
 void music_play(char * filename) {
-    stream_handle = FSOUND_Stream_Open(get_music_file_path(filename), FSOUND_2D, 0, 0);
-    FSOUND_Stream_Play(0, stream_handle);
+    stream_handle = FSOUND_Stream_Open(get_music_file_path(filename), 0, 0, 0);
+    FSOUND_Stream_Play(FSOUND_FREE, stream_handle);
 }
 
 /**
@@ -46,6 +47,7 @@ void music_play(char * filename) {
  */
 void music_stop(int fade) {
     FSOUND_Stream_Stop(stream_handle);
+    FSOUND_Stream_Close(stream_handle);
 }
 
 void music_crossfade(char * filename, int delay) {

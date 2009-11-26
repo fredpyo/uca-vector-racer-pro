@@ -1,7 +1,7 @@
 [Project]
 FileName=vrp.dev
 Name=Vector Racer Pro
-UnitCount=17
+UnitCount=11
 Type=0
 Ver=1
 ObjFiles=
@@ -106,40 +106,10 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit7]
-FileName=src\texture.h
-CompileCpp=1
-Folder=
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit8]
-FileName=src\main.h
-CompileCpp=1
-Folder=
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit9]
-FileName=src\texture_processing.h
+FileName=src\intro.c
 CompileCpp=1
 Folder=
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit10]
-FileName=src\fmod.h
-CompileCpp=1
-Folder=Vector Racer Pro
 Compile=1
 Link=1
 Priority=1000
@@ -147,9 +117,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=src\fmod_errors.h
+FileName=src\title.c
 CompileCpp=1
-Folder=Vector Racer Pro
+Folder=
 Compile=1
 Link=1
 Priority=1000
@@ -158,16 +128,6 @@ BuildCmd=
 
 [Unit12]
 FileName=src\sfx.c
-CompileCpp=1
-Folder=Vector Racer Pro
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit13]
-FileName=src\sfx.h
 CompileCpp=1
 Folder=Vector Racer Pro
 Compile=1
@@ -207,7 +167,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit18]
-FileName=src\scene_switcher.h
+FileName=src\title.c
 CompileCpp=1
 Folder=
 Compile=1
@@ -217,6 +177,46 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit17]
+FileName=src\scene_switcher.h
+CompileCpp=1
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit19]
+FileName=src\title.h
+CompileCpp=1
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit7]
+FileName=src\sfx.c
+CompileCpp=1
+Folder=Vector Racer Pro
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit8]
+FileName=src\imageloader.cpp
+CompileCpp=1
+Folder=Vector Racer Pro
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit10]
 FileName=src\scene_switcher.h
 CompileCpp=1
 Folder=

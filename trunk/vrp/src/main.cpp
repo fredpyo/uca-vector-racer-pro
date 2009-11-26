@@ -19,12 +19,13 @@
 
 #include "scene_switcher.h"
 #include "intro.h"
+#include "title.h"
 #include "utils.h"
 #include "sfx.h"
 
 float fps = 0; // almacena el fps
-char debug_string[512] = {0}; // buffer para mensajes de debug
-char message_string[512] = {0}; // buffer para mensajes
+char _debug_string[512] = {0}; // buffer para mensajes de debug
+char _message_string[512] = {0}; // buffer para mensajes
 
 using namespace std;
 
@@ -125,13 +126,13 @@ void draw_text() {
         // MESSAGES
         glColor3f(0.0f, 0.3f, 1.0f);
         glRasterPos2i(3, _height-20);
-        sprintf(buffer, "[MSG] %s", message_string);
+        sprintf(buffer, "[MSG] %s", _message_string);
         glutBitmapString(GLUT_BITMAP_9_BY_15, (unsigned char *) buffer);
         glRasterPos2i(0, 0);
         // DEBUG
         glColor3f(0.0f, 1.0f, 0.0f);
         glRasterPos2i(3, _height-4);
-        sprintf(buffer, "[DEBUG] %s", debug_string);
+        sprintf(buffer, "[DEBUG] %s", _debug_string);
         glutBitmapString(GLUT_BITMAP_9_BY_15, (unsigned char *) buffer);
         glRasterPos2i(0, 0);
 
@@ -190,7 +191,14 @@ void init() {
     glClearColor(0.0, 0.0, 0.0, 0.9);
     glPointSize(3.0);    
     sfx_init();
-    music_play("test.ogg");
+//    music_play("test.ogg");
+
+    gluPerspective(45.0, // cam angle
+                    (double)_width / (double)_height, // w/h ratio
+                    1.0, // near clipping
+                    200.0 // far clipping
+    );
+
 }
 
 /**
@@ -214,6 +222,12 @@ int switch_to(int scene) {
             generic_handle_draw_scene = intro_draw_scene;
             generic_handle_keypress = intro_handle_keypress;
             intro_init();
+            current_scene = scene;
+            break;
+        case SCENE_TITLE:
+            generic_handle_draw_scene = title_draw_scene;
+            generic_handle_keypress = title_handle_keypress;
+            title_init();
             current_scene = scene;
             break;
     }

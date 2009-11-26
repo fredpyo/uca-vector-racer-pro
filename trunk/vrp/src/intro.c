@@ -9,6 +9,7 @@
 #include "texture.h"
 #include "sfx.h"
 #include "main.h"
+#include "scene_switcher.h"
 
 GLuint _texture_id; // the id of the texture
 
@@ -32,12 +33,13 @@ void intro_draw_scene(void)
     // desastres de tiempos transcurridos
     if (glutGet(GLUT_ELAPSED_TIME) < 2000)
         color = glutGet(GLUT_ELAPSED_TIME)/2000.0;
-    else if (glutGet(GLUT_ELAPSED_TIME) > 15000)
-        exit(1);
-    else if (glutGet(GLUT_ELAPSED_TIME) > 10000)
+    else if (glutGet(GLUT_ELAPSED_TIME) > 15000) {
+        switch_to(SCENE_TITLE);
+    } else if (glutGet(GLUT_ELAPSED_TIME) > 10000)
         color = 1 - (glutGet(GLUT_ELAPSED_TIME)-10000)/5000.0;
-    else
+    else {
         color = 1;
+    }
 
     // borrar y preparar colores
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -76,7 +78,7 @@ void intro_handle_keypress(unsigned char key, int x, int y)
     {
         case ' ' : 
         case 13:
-            exit(0);
+            switch_to(SCENE_TITLE);
             break;
     }
 }
