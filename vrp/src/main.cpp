@@ -97,7 +97,7 @@ void handle_resize(int w, int h) {
     gluPerspective(45.0, // cam angle
                     (double)w / (double)h, // w/h ratio
                     1.0, // near clipping
-                    200.0 // far clipping
+                    400.0 // far clipping
     );
 
     glMatrixMode(GL_MODELVIEW);
