@@ -25,6 +25,8 @@
 #include "utils.h"
 #include "sfx.h"
 
+#define INITIAL_SCENE SCENE_GAME
+
 float fps = 0; // almacena el fps
 char _debug_string[512] = {0}; // buffer para mensajes de debug
 char _message_string[512] = {0}; // buffer para mensajes
@@ -107,7 +109,7 @@ void ortho_mode(int left, int top, int right, int bottom)
 	glMatrixMode(GL_PROJECTION); // Switch to our projection matrix so that we can change it to ortho mode, not perspective.
 	glPushMatrix(); // Push on a new matrix so that we can just pop it off to go back to perspective mode
 	glLoadIdentity(); // Reset the current matrix to our identify matrix
-	glOrtho( left, right, bottom, top, 0, 1 ); // Pass in our 2D ortho screen coordinates like so (left, right, bottom, top).  The last 2 parameters are the near and far planes.
+	glOrtho( left, right, bottom, top, 0, 200 ); // Pass in our 2D ortho screen coordinates like so (left, right, bottom, top).  The last 2 parameters are the near and far planes.
 	glMatrixMode(GL_MODELVIEW); // Switch to model view so that we can render the scope image
 	glLoadIdentity(); // Initialize the current model view matrix with the identity matrix
 }
@@ -200,18 +202,21 @@ void draw_scene() {
 /**
  * Inicializar
  */
-void init() {
+void vrp_init() {
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.0, 0.0, 0.0, 0.9);
     glPointSize(3.0);    
     sfx_init();
 //    music_play("test.ogg");
 
+    glMatrixMode(GL_PROJECTION);
     gluPerspective(45.0, // cam angle
                     (double)_width / (double)_height, // w/h ratio
                     1.0, // near clipping
                     200.0 // far clipping
     );
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 
 }
 
@@ -285,9 +290,9 @@ int main(int argc, char ** argv) {
     glutPassiveMotionFunc(handle_mouse_passive_motion);
     glutIdleFunc(handle_idle) ;
 
-    init();
+    vrp_init();
     
-    switch_to(SCENE_INTRO);
+    switch_to(INITIAL_SCENE);
     
     glutMainLoop();
     return 0;
