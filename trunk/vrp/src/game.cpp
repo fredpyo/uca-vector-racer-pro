@@ -22,6 +22,11 @@
 #define ROAD_MIN 0
 #define ROAD_MAX 145
 #define ROAD_STEPS 35
+#define ROAD_WIDTH 5
+
+#define LOOK_AT_X 0
+#define LOOK_AT_Y 10
+#define LOOK_AT_Z -ROAD_MAX
 
 struct Punto3D {
     float x;
@@ -102,22 +107,22 @@ void game_handle_keypress(unsigned char key, int x, int y) {
  		case 'a':
         case 'A':
             if (xx > -15)
-                xx = xx - 0.08;
+                xx = xx - 0.04;
             break;
 		case 'd':
         case 'D':
             if (xx < 15)
-                xx = xx + 0.08;
+                xx = xx + 0.04;
             break;
  		case 'w':
         case 'W':
             if (yy > -15)
-                yy = yy + 0.08;
+                yy = yy + 0.04;
             break;
 		case 's':
         case 'S':
             if (yy < 15)
-                yy = yy - 0.08;
+                yy = yy - 0.04;
             break;
     }
     
@@ -267,10 +272,6 @@ static void dibujar_carretera()  {
     float z = 0, x, y = 0;
     float i, j, k;
     float b, c;
-    int min = 0;
-    int max = 130;
-    int steps = 25;
-    float ancho = 3;
     
     glDisable(GL_DEPTH_TEST);
     
@@ -285,14 +286,14 @@ static void dibujar_carretera()  {
 
         // hallar el x y z real
         if (k == 0)
-            x = ancho;
+            x = ROAD_WIDTH;
         else
-            x = sin(atan(-1/(2*(k))*curvatura_h*sentido_h)) * ancho;
+            x = sin(atan(-1/(2*(k))*curvatura_h*sentido_h)) * ROAD_WIDTH;
 
         if (k == 0)
             y = 0;
         else
-            y = cos(atan(-1/(2*(k))*curvatura_h*sentido_h)) * ancho;
+            y = cos(atan(-1/(2*(k))*curvatura_h*sentido_h)) * ROAD_WIDTH;
 
         glColor4f(1.0, 1.0, 1.0, 1.0);
         if (sentido_h < 0) {
@@ -307,11 +308,11 @@ static void dibujar_carretera()  {
 
             glEnable (GL_BLEND);
             glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            glColor4f(1.0, 1.0, 1.0, 1.0);
+            glColor4f(0.75, 0.75, 0.75, 1.0);
             glVertex3f(j-x,c+0.5,-i+y);
             glColor4f(0.0, 0.0, 0.0, 0.0);
             glVertex3f(j-x*10,c+0.5,-i+y*10);
-            glColor4f(1.0, 1.0, 1.0, 1.0);
+            glColor4f(0.75, 0.75, 0.75, 1.0);
             glVertex3f(j+x,c+0.5,-i-y);
             glColor4f(0.0, 0.0, 0.0, 0.0);
             glVertex3f(j+x*10,c+0.5,-i-y*10);
@@ -457,6 +458,52 @@ void dibujar_cosa() {
     
 }
 
+void dibujar_mira() {
+   struct Punto3D a;
+   
+   a.x = LOOK_AT_X;
+   a.y = LOOK_AT_Y;
+   a.z = LOOK_AT_Z;
+   
+   calcular_coordenadas(a, &a);
+   
+    glPushMatrix();
+    glTranslatef(a.x, a.y, a.z);
+//    glRotatef(90.0, 0.0, 0.0, 0.0);
+//    glColor3f(1,.5,0);
+//    glScalef(5,5,5);
+    
+    glColor3f(1.0, 0.8, 0.0);
+    glBegin(GL_LINES);
+        glVertex3f(a.x, a.y+1, a.z);
+        glVertex3f(a.x, a.y+3, a.z);
+
+        glVertex3f(a.x, a.y-1, a.z);
+        glVertex3f(a.x, a.y-3, a.z);
+  
+        glVertex3f(a.x+1, a.y, a.z);
+        glVertex3f(a.x+3, a.y, a.z);
+  
+        glVertex3f(a.x-1, a.y, a.z);
+        glVertex3f(a.x-3, a.y, a.z);
+  
+  
+    glEnd();
+    
+    glPopMatrix();
+   
+}
+
+void dibujar_horizonte() {
+    glPushMatrix();
+    glColor3f(0.0, 0.0, 0.5);
+    glBegin(GL_LINES);
+        glVertex3f(-100000, 0, -ROAD_MAX);
+        glVertex3f(100000, 0, -ROAD_MAX);
+    glEnd();
+    glPopMatrix();
+}
+
 void do_draw(GLuint textureID) {
  
     glEnable(GL_TEXTURE_2D);   
@@ -471,10 +518,12 @@ void do_draw(GLuint textureID) {
     glDisable(GL_LIGHTING);
     glEnable(GL_COLOR_MATERIAL);
 //        dibujar_grid();
-        dibujar_eje();
+        //dibujar_eje();
+        dibujar_horizonte();
         glTranslatef(0.0, 0.0, 20.0);
         dibujar_carretera();
         dibujar_cosa();
+        dibujar_mira();
         //draw_text();
     glPopMatrix();
 }
@@ -485,6 +534,8 @@ void do_draw(GLuint textureID) {
  * Dibujar la escena
  */
 void game_draw_scene() {
+   struct Punto3D a;
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear all
     glLoadIdentity(); // reset drawing perspective
    
@@ -494,6 +545,13 @@ void game_draw_scene() {
 //    glTranslatef(0.0f, 0.0f, -5.0f); // moveeee
 
 
+   
+   a.x = LOOK_AT_X;
+   a.y = LOOK_AT_Y;
+   a.z = LOOK_AT_Z;
+   
+   calcular_coordenadas(a, &a);
+
 
     if (current_cam == 0) {
         gluLookAt(sin(_angley*3.14/180) * cos(_anglez*3.14/180) * _distance, cos(_angley*3.14/180) * _distance, sin(_angley*3.14/180) * sin(_anglez*3.14/180) * _distance,  // donde estoy
@@ -501,8 +559,9 @@ void game_draw_scene() {
             0.0, (_angley >= 180 ? -1.0 : 1.0), 0.0 // mi arriba
         );
     } else {
-        gluLookAt(0,1,22,
-            0,1,0,
+        gluLookAt(
+            -a.x/50,2-a.y/50,22,
+            a.x/2,a.y/2,a.z,
             0, 1, 0
         );
     }
@@ -511,7 +570,7 @@ void game_draw_scene() {
 
     if( AnimateNextFrame(60)) {
         glViewport(0, 0, _tex_0_size, _tex_0_size);	
-        render_motion_blur( _tex_0_id4);
+//        render_motion_blur( _tex_0_id4);
         // draw
         do_draw(0);
    		glBindTexture(GL_TEXTURE_2D,_tex_0_id4);
@@ -524,7 +583,7 @@ void game_draw_scene() {
 		// Set our viewport back to it's normal size
 		glViewport(0, 0, _width, _height);	
 	}
-	render_motion_blur( _tex_0_id4);
+//	render_motion_blur( _tex_0_id4);
 //    blur_tex_zoom(g_tex_0_id4, 1);
     do_draw(0);
     //draw_text();
@@ -535,6 +594,6 @@ void game_handle_idle() {
     static int elapsed_time = 0;
     int time;
 	time = glutGet(GLUT_ELAPSED_TIME);
-    delta = wrap_f(delta, (time - elapsed_time) * 0.05 / 25, 0.0, (ROAD_MAX - ROAD_MIN)/ROAD_STEPS); /* este ultimo es (max - min) / steps */
+    delta = wrap_f(delta, (time - elapsed_time) * 0.05 / 25, ROAD_MIN, (ROAD_MAX - ROAD_MIN)*2/ROAD_STEPS); /* este ultimo es (max - min) / steps */
     elapsed_time = time;
 }
