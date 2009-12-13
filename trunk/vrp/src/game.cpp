@@ -19,6 +19,10 @@
 
 #define AXIS_SIZE 10
 
+#define ROAD_MIN 0
+#define ROAD_MAX 145
+#define ROAD_STEPS 35
+
 struct Punto3D {
     float x;
     float y;
@@ -41,10 +45,13 @@ bool _dragging = false; // arrastrando?
 float delta = 0;
 
 // CARRETERA
-float curvatura_h = 100.0;
-float curvatura_v = 100.0;
+float curvatura_h = 100000.0;
+float curvatura_v = 100000.0;
 int sentido_h = 1;
 int sentido_v = 1;
+
+// CAMARA
+int current_cam = 0;
 
 
 /*
@@ -136,6 +143,9 @@ void game_handle_keypress_special(int key, int x, int y) {
             break;
         case GLUT_KEY_DOWN:
             _angley = wrap_f(_angley, 3.0, 0.0, 360);
+            break;
+        case GLUT_KEY_F2:
+            current_cam = !current_cam;
             break;
     }
 }
@@ -258,16 +268,15 @@ static void dibujar_carretera()  {
     float i, j, k;
     float b, c;
     int min = 0;
-    int map_max = 20;
-    int max = 35;
-    int steps = 50;
+    int max = 130;
+    int steps = 25;
     float ancho = 3;
     
     glDisable(GL_DEPTH_TEST);
     
     glColor3f(1.0, 1.0, 1.0);
     glBegin(GL_LINES);
-    for (i = 0 - delta; i < max; i = i + (max-min)/(float)steps ) {
+    for (i = 0 - delta; i < ROAD_MAX; i = i + (ROAD_MAX-ROAD_MIN)/(float)ROAD_STEPS ) {
         k = i / curvatura_h; // x
         j = (k*k)*sentido_h; // y
         
@@ -285,6 +294,7 @@ static void dibujar_carretera()  {
         else
             y = cos(atan(-1/(2*(k))*curvatura_h*sentido_h)) * ancho;
 
+        glColor4f(1.0, 1.0, 1.0, 1.0);
         if (sentido_h < 0) {
             glVertex3f(j-x,c,-i+y);
             glVertex3f(j+x,c,-i-y);
@@ -293,6 +303,20 @@ static void dibujar_carretera()  {
             glVertex3f(j-x,c+0.5,-i+y);
             glVertex3f(j+x,c,-i-y);
             glVertex3f(j+x,c+0.5,-i-y);
+
+
+            glEnable (GL_BLEND);
+            glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glColor4f(1.0, 1.0, 1.0, 1.0);
+            glVertex3f(j-x,c+0.5,-i+y);
+            glColor4f(0.0, 0.0, 0.0, 0.0);
+            glVertex3f(j-x*10,c+0.5,-i+y*10);
+            glColor4f(1.0, 1.0, 1.0, 1.0);
+            glVertex3f(j+x,c+0.5,-i-y);
+            glColor4f(0.0, 0.0, 0.0, 0.0);
+            glVertex3f(j+x*10,c+0.5,-i-y*10);
+            glDisable(GL_BLEND);
+
         } else {
             glVertex3f(j+x,c,-i-y);
             glVertex3f(j-x,c,-i+y);
@@ -301,6 +325,17 @@ static void dibujar_carretera()  {
             glVertex3f(j+x,c+0.5,-i-y);
             glVertex3f(j-x,c,-i+y);
             glVertex3f(j-x,c+0.5,-i+y);
+
+            glEnable (GL_BLEND);
+            glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glColor4f(0.75, 0.75, 0.75, 1.0);
+            glVertex3f(j+x,c+0.5,-i-y);
+            glColor4f(0.0, 0.0, 0.0, 0.0);
+            glVertex3f(j+x*10,c+0.5,-i-y*10);
+            glColor4f(0.75, 0.75, 0.75, 1.0);
+            glVertex3f(j-x,c+0.5,-i+y);
+            glColor4f(0.0, 0.0, 0.0, 0.0);
+            glVertex3f(j-x*10,c+0.5,-i+y*10);
         }
     }
     glEnd();
@@ -308,7 +343,7 @@ static void dibujar_carretera()  {
     // medio ROJO
     glBegin(GL_LINES);
     glColor3f(1.0,0,0);
-    for (i = 0 - delta; i < max; i = i + (max-min)/(float)steps ) {
+    for (i = 0 - delta; i < ROAD_MAX; i = i + (ROAD_MAX-ROAD_MIN)/(float)ROAD_STEPS ) {
         k = i / curvatura_h; // x
         j = (k*k)*sentido_h; // y
 
@@ -349,18 +384,20 @@ bool AnimateNextFrame(int desiredFrameRate)
 
 
 static void calcular_coordenadas(struct Punto3D entrada, struct Punto3D * salida) {
-    float aux = abs(entrada.z) / curvatura_h; // aux
+    // curva para el plano xz
+    float aux = entrada.z / curvatura_h; // aux
     float aux_x = (aux*aux)*sentido_h; // x
     
-    float aux2 = abs(entrada.z) / curvatura_v; // aux
-    float aux_y = (aux2*aux2)*sentido_v/3; // y
+    // curva para y
+    float aux2 = entrada.z / curvatura_v; // aux
+    float aux_y = (aux2*aux2)*sentido_v/3.0; // y
     
     // hallar el x y z real
     if (aux == 0)
         salida->x = entrada.x;
     else
 //        salida->x = aux_x;
-        salida->x = aux_x + sin(atan(-1/(2*(aux))*curvatura_h * sentido_h)) * -entrada.x * sentido_h;
+        salida->x = aux_x + sin(atan(-1/(2*(aux))*curvatura_h * sentido_h)) * entrada.x * sentido_h;
 
 
     if (aux == 0)
@@ -369,28 +406,52 @@ static void calcular_coordenadas(struct Punto3D entrada, struct Punto3D * salida
 ///        salida->z = aux_z;
         salida->z = entrada.z + cos(atan(-1/(2*(aux))*curvatura_h*sentido_h)) * entrada.x * sentido_h;
         
-    salida->y = aux_y + entrada.y;
+    salida->y = aux_y/* + entrada.y*/;
     
     //salida->z -= 2;
     
-    sprintf(_message_string, "Curvatura H: %f %d, x>%f,y>%f", curvatura_h, sentido_h, aux_x,aux_y);
+    sprintf(_message_string, "Curvatura V: %f %d, aux2>%f,aux_y>%f", curvatura_v, sentido_v, aux2,aux_y);
     sprintf(_debug_string, "entrada: %f,%f,%f, salida: %f,%f,%f", entrada.x,entrada.y,entrada.z, salida->x,salida->y,salida->z);
 }
 
 void dibujar_cosa() {
     static float decremento = 0.01;
-    struct Punto3D a, b;
+    struct Punto3D a, b, c, d;
     
     a.x = 3;
     a.y = 0;
     a.z = -35.0 + decremento;
-    decremento += 0.04;
+//    decremento += 0.04;
+    decremento = wrap_f(decremento, 0.01, -15, 35);
     
     calcular_coordenadas(a, &b);
     
+    c.x = -b.x;
+    c.y = b.y;
+    c.z = b.z;
+
+    d.x = 0;
+    d.y = b.y;
+    d.z = b.z;
+    
     glPushMatrix();
     glTranslatef(b.x, b.y, b.z);
+//    glRotatef(90.0, 0.0, 0.0, 0.0);
     glColor3f(1,.5,0);
+    glutSolidCone(0.25, 0.5, 16, 2);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(d.x, d.y, d.z);
+    glRotatef(90.0, -1.0, 0, 0.0);
+    glColor3f(.5,1,0);
+    glutSolidCone(0.25, 0.5, 16, 2);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(c.x, c.y, c.z);
+    glRotatef(90.0, -1.0, -1.0, 0.0);
+    glColor3f(0,.5,1);
     glutSolidCone(0.25, 0.5, 16, 2);
     glPopMatrix();
     
@@ -434,24 +495,23 @@ void game_draw_scene() {
 
 
 
-    gluLookAt(sin(_angley*3.14/180) * cos(_anglez*3.14/180) * _distance, cos(_angley*3.14/180) * _distance, sin(_angley*3.14/180) * sin(_anglez*3.14/180) * _distance,  // donde estoy
-        0.0, 0.0, 0.0, // a donde miro
-        0.0, (_angley >= 180 ? -1.0 : 1.0), 0.0 // mi arriba
-    );
+    if (current_cam == 0) {
+        gluLookAt(sin(_angley*3.14/180) * cos(_anglez*3.14/180) * _distance, cos(_angley*3.14/180) * _distance, sin(_angley*3.14/180) * sin(_anglez*3.14/180) * _distance,  // donde estoy
+            0.0, 0.0, 0.0, // a donde miro
+            0.0, (_angley >= 180 ? -1.0 : 1.0), 0.0 // mi arriba
+        );
+    } else {
+        gluLookAt(0,1,22,
+            0,1,0,
+            0, 1, 0
+        );
+    }
 
-
-    //
-    /* 
-    gluLookAt(0,1,22,
-        0,1,0,
-        0, 1, 0
-    );
-    */
     
 
     if( AnimateNextFrame(60)) {
         glViewport(0, 0, _tex_0_size, _tex_0_size);	
-        //render_motion_blur( _tex_0_id4);
+        render_motion_blur( _tex_0_id4);
         // draw
         do_draw(0);
    		glBindTexture(GL_TEXTURE_2D,_tex_0_id4);
@@ -475,6 +535,6 @@ void game_handle_idle() {
     static int elapsed_time = 0;
     int time;
 	time = glutGet(GLUT_ELAPSED_TIME);
-    //delta = wrap_f(delta, (time - elapsed_time) * 0.05 / 25, 0.0, 1.35);
+    delta = wrap_f(delta, (time - elapsed_time) * 0.05 / 25, 0.0, (ROAD_MAX - ROAD_MIN)/ROAD_STEPS); /* este ultimo es (max - min) / steps */
     elapsed_time = time;
 }

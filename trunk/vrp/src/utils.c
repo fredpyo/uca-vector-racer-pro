@@ -27,7 +27,7 @@ float constraint_f(float value, float increment, float minimum, float maximum) {
  */
 float wrap_f(float value, float increment, float minimum, float maximum) {
     value += increment;
-    if (value < minimum) value += maximum;
-    if (value > maximum) value -= maximum;
+    if (value < minimum) value += (maximum - minimum);
+    if (value > maximum) value -= (maximum - minimum);
     return value;
 }
