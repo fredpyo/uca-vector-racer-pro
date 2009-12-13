@@ -6,7 +6,8 @@
 #include <GL/freeglut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-
+#include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
 
 #include "main.h"
@@ -14,8 +15,15 @@
 #include "imageloader.h"
 #include "texture.h"
 #include "utils.h"
+#include "sfx.h"
 
 #define AXIS_SIZE 10
+
+struct Punto3D {
+    float x;
+    float y;
+    float z;
+};
 
 // BLUR STUFF
 GLuint _tex_0_id4; // textura donde se almacenara el "blur"
@@ -61,7 +69,10 @@ void game_init() {
 
     glHint (GL_FOG_HINT, GL_NICEST); // set the fog to look the nicest, may slow down on older cards
 
-    glEnable (GL_FOG); //enable the fog
+    //glEnable (GL_FOG); //enable the fog
+
+    music_stop(0);
+	music_play("g-storm.mp3");
 }
 
 /**
@@ -238,10 +249,9 @@ static void dibujar_grid() {
         }
     glEnd();
 }
-
 /*
-** f(x)  = x^3
-** f'(x) = 3x^2
+** f(x)  = x^2
+** f'(x) = 2x
 */
 static void dibujar_carretera()  {
     float z = 0, x, y = 0;
@@ -251,7 +261,7 @@ static void dibujar_carretera()  {
     int map_max = 20;
     int max = 35;
     int steps = 50;
-    float ancho = 5;
+    float ancho = 3;
     
     glDisable(GL_DEPTH_TEST);
     
@@ -266,7 +276,7 @@ static void dibujar_carretera()  {
 
         // hallar el x y z real
         if (k == 0)
-            x = -ancho;
+            x = ancho;
         else
             x = sin(atan(-1/(2*(k))*curvatura_h*sentido_h)) * ancho;
 
@@ -337,6 +347,55 @@ bool AnimateNextFrame(int desiredFrameRate)
 	return false;
 }
 
+
+static void calcular_coordenadas(struct Punto3D entrada, struct Punto3D * salida) {
+    float aux = abs(entrada.z) / curvatura_h; // aux
+    float aux_x = (aux*aux)*sentido_h; // x
+    
+    float aux2 = abs(entrada.z) / curvatura_v; // aux
+    float aux_y = (aux2*aux2)*sentido_v/3; // y
+    
+    // hallar el x y z real
+    if (aux == 0)
+        salida->x = entrada.x;
+    else
+//        salida->x = aux_x;
+        salida->x = aux_x + sin(atan(-1/(2*(aux))*curvatura_h * sentido_h)) * -entrada.x * sentido_h;
+
+
+    if (aux == 0)
+        salida->z = entrada.z;
+    else
+///        salida->z = aux_z;
+        salida->z = entrada.z + cos(atan(-1/(2*(aux))*curvatura_h*sentido_h)) * entrada.x * sentido_h;
+        
+    salida->y = aux_y + entrada.y;
+    
+    //salida->z -= 2;
+    
+    sprintf(_message_string, "Curvatura H: %f %d, x>%f,y>%f", curvatura_h, sentido_h, aux_x,aux_y);
+    sprintf(_debug_string, "entrada: %f,%f,%f, salida: %f,%f,%f", entrada.x,entrada.y,entrada.z, salida->x,salida->y,salida->z);
+}
+
+void dibujar_cosa() {
+    static float decremento = 0.01;
+    struct Punto3D a, b;
+    
+    a.x = 3;
+    a.y = 0;
+    a.z = -35.0 + decremento;
+    decremento += 0.04;
+    
+    calcular_coordenadas(a, &b);
+    
+    glPushMatrix();
+    glTranslatef(b.x, b.y, b.z);
+    glColor3f(1,.5,0);
+    glutSolidCone(0.25, 0.5, 16, 2);
+    glPopMatrix();
+    
+}
+
 void do_draw(GLuint textureID) {
  
     glEnable(GL_TEXTURE_2D);   
@@ -354,6 +413,7 @@ void do_draw(GLuint textureID) {
         dibujar_eje();
         glTranslatef(0.0, 0.0, 20.0);
         dibujar_carretera();
+        dibujar_cosa();
         //draw_text();
     glPopMatrix();
 }
@@ -372,15 +432,26 @@ void game_draw_scene() {
 //    glRotatef(-_camera_angle, 0.1f, -.1f, 1.0f); // rotate camera
 //    glTranslatef(0.0f, 0.0f, -5.0f); // moveeee
 
+
+
     gluLookAt(sin(_angley*3.14/180) * cos(_anglez*3.14/180) * _distance, cos(_angley*3.14/180) * _distance, sin(_angley*3.14/180) * sin(_anglez*3.14/180) * _distance,  // donde estoy
         0.0, 0.0, 0.0, // a donde miro
         0.0, (_angley >= 180 ? -1.0 : 1.0), 0.0 // mi arriba
     );
+
+
+    //
+    /* 
+    gluLookAt(0,1,22,
+        0,1,0,
+        0, 1, 0
+    );
+    */
     
 
     if( AnimateNextFrame(60)) {
         glViewport(0, 0, _tex_0_size, _tex_0_size);	
-        render_motion_blur( _tex_0_id4);
+        //render_motion_blur( _tex_0_id4);
         // draw
         do_draw(0);
    		glBindTexture(GL_TEXTURE_2D,_tex_0_id4);
@@ -404,6 +475,6 @@ void game_handle_idle() {
     static int elapsed_time = 0;
     int time;
 	time = glutGet(GLUT_ELAPSED_TIME);
-    delta = wrap_f(delta, (time - elapsed_time) * 0.05 / 25, 0.0, 1.35);
+    //delta = wrap_f(delta, (time - elapsed_time) * 0.05 / 25, 0.0, 1.35);
     elapsed_time = time;
 }
