@@ -286,27 +286,27 @@ static void dibujar_carretera()  {
     float aux_x;
     static struct Punto3D vertices[ROAD_STEPS][2];
     
-//    glDisable(GL_DEPTH_TEST);
-    
     i = 0 - delta;
     for (j = 0; j < ROAD_STEPS; j++ ) {
-        a = i / curvatura_h; // x
-        aux_x = (a*a)*sentido_h; // x
+        a = i / curvatura_h; // auxiliar para calcular 'x' y 'z' (es el parametro de la función f(a) = a^2, se divide por curvatura para obtener una porción mayor o menor de la formula
+        aux_x = (a*a)*sentido_h; // coordenada de x en el centro de la carretera
         
-        b = i / curvatura_v; // x
-        y = (b*b)*sentido_v/3; // z
+        b = i / curvatura_v; // // auxiliar para calcular 'y' (es el parametro de la función f(b) = b^2, se divide por curvatura para obtener una porción mayor o menor de la formula
+        y = (b*b)*sentido_v/3; // coordenada y de la carretera
 
-        // hallar el x y z real
+        // ahora unas cosas que usan trigonometría
+        // hallar el incremente de x con respecto al centro de la carretera (esto es para que la curvatura se vea real)
         if (a == 0)
             x = ROAD_WIDTH;
         else
             x = sin(atan(-1/(2*(a))*curvatura_h*sentido_h)) * ROAD_WIDTH * sentido_h;
-
+        // hallar el incremente de z (esto es para que la curvatura se vea real)
         if (a == 0)
             z = 0;
         else
             z = cos(atan(-1/(2*(a))*curvatura_h*sentido_h)) * ROAD_WIDTH * sentido_h;
 
+        // almacenar variables
         if (aux_x + x > aux_x - x) {
             vertices[j][0].x = aux_x - x;
             vertices[j][1].x = aux_x + x;
@@ -319,15 +319,17 @@ static void dibujar_carretera()  {
         vertices[j][0].z = -i - z;
         vertices[j][1].z = -i + z;
         
+        // incrementar i, nuestro parametro global (y también z)
         i += (ROAD_MAX-ROAD_MIN)/(float)ROAD_STEPS;
     }
     
+    // el suelo es transparente, habilitar transparencia
     glEnable (GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
-    glColor3f(1.0, 1.0, 1.0);
-//    srand(212);
+
+    // dibujar la carretera    
     for (j = ROAD_STEPS-1; j >= 0; j--) {
+        // el suelo es transparente, dibujar un quad por cada par de puntos3d (menos para el último, ya que no existe vertices[0-1]
         if (j > 0) {
             glBegin(GL_QUADS);
                 i = (j%2 ? 0.10 : 0.05);
@@ -339,18 +341,24 @@ static void dibujar_carretera()  {
             glEnd();
         }
 
+        // dibujar las lineas
         glBegin(GL_LINES);
         glColor4f(1.0, 1.0, 1.0, 1.0);
-
+            // sobre el suelo
             glColor3f(0.5,0.5,0.5);
             glVertex3f(vertices[j][0].x,vertices[j][0].y,vertices[j][0].z);
             glVertex3f(vertices[j][1].x,vertices[j][1].y,vertices[j][1].z);
-
+            // paredes
             glColor3f(1,1,1);            
             glVertex3f(vertices[j][0].x,vertices[j][0].y,vertices[j][0].z);
             glVertex3f(vertices[j][0].x,vertices[j][0].y+0.5,vertices[j][0].z);
             glVertex3f(vertices[j][1].x,vertices[j][1].y,vertices[j][1].z);
             glVertex3f(vertices[j][1].x,vertices[j][1].y+0.5,vertices[j][1].z);
+            // laterales
+/*            glVertex3f(j-x,c+0.5,-i+y);
+            glVertex3f(j-x*10,c+0.5,-i+y*10);
+            glVertex3f(j+x,c+0.5,-i-y);
+            glVertex3f(j+x*10,c+0.5,-i-y*10);*/
         glEnd();
 
 /*
@@ -368,22 +376,7 @@ static void dibujar_carretera()  {
 
     }
 
-
-/*    // medio ROJO
-    glBegin(GL_LINES);
-    glColor3f(1.0,0,0);
-    for (i = 0 - delta; i < ROAD_MAX; i = i + (ROAD_MAX-ROAD_MIN)/(float)ROAD_STEPS ) {
-        k = i / curvatura_h; // x
-        j = (k*k)*sentido_h; // y
-
-        b = i / curvatura_v; // x
-        c = (b*b)*sentido_v/3; // z
-
-        glVertex3f(j,c,-i);        
-    }
-    glEnd();
-*/
-    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
 }
 
 bool AnimateNextFrame(int desiredFrameRate)
