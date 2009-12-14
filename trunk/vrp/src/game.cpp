@@ -282,9 +282,9 @@ static void dibujar_carretera()  {
     float x = 0, y = 0, z = 0;
     float a, b;
     float i;
-    int j = 0;
+    int j = 0, k;
     float aux_x;
-    static struct Punto3D vertices[ROAD_STEPS][2];
+    static struct Punto3D vrts[ROAD_STEPS][2];
     
     i = 0 - delta;
     for (j = 0; j < ROAD_STEPS; j++ ) {
@@ -307,17 +307,16 @@ static void dibujar_carretera()  {
             z = cos(atan(-1/(2*(a))*curvatura_h*sentido_h)) * ROAD_WIDTH * sentido_h;
 
         // almacenar variables
+        vrts[j][0].x = aux_x;
         if (aux_x + x > aux_x - x) {
-            vertices[j][0].x = aux_x - x;
-            vertices[j][1].x = aux_x + x;
+            vrts[j][1].x = -x;
         } else {
-            vertices[j][0].x = aux_x + x;
-            vertices[j][1].x = aux_x - x;
+            vrts[j][1].x = x;
         }
-        vertices[j][0].y = y;
-        vertices[j][1].y = y;
-        vertices[j][0].z = -i - z;
-        vertices[j][1].z = -i + z;
+        vrts[j][0].y = y;
+        vrts[j][1].y = y;
+        vrts[j][0].z = -i;
+        vrts[j][1].z = z;
         
         // incrementar i, nuestro parametro global (y también z)
         i += (ROAD_MAX-ROAD_MIN)/(float)ROAD_STEPS;
@@ -329,15 +328,15 @@ static void dibujar_carretera()  {
 
     // dibujar la carretera    
     for (j = ROAD_STEPS-1; j >= 0; j--) {
-        // el suelo es transparente, dibujar un quad por cada par de puntos3d (menos para el último, ya que no existe vertices[0-1]
+        // el suelo es transparente, dibujar un quad por cada par de puntos3d (menos para el último, ya que no existe vrts[0-1]
         if (j > 0) {
             glBegin(GL_QUADS);
                 i = (j%2 ? 0.10 : 0.05);
-                glColor4f(i,i,i, 0.75); 
-                glVertex3f(vertices[j][0].x,vertices[j][0].y-0.07,vertices[j][0].z);
-                glVertex3f(vertices[j][1].x,vertices[j][1].y-0.07,vertices[j][1].z);
-                glVertex3f(vertices[j-1][1].x,vertices[j-1][1].y-0.07,vertices[j-1][1].z);
-                glVertex3f(vertices[j-1][0].x,vertices[j-1][0].y-0.07,vertices[j-1][0].z);
+                glColor4f(i, i, i, 0.75); 
+                glVertex3f(vrts[j][0].x+vrts[j][1].x,vrts[j][0].y-0.07,vrts[j][0].z-vrts[j][1].z);
+                glVertex3f(vrts[j][0].x-vrts[j][1].x,vrts[j][0].y-0.07,vrts[j][0].z+vrts[j][1].z);
+                glVertex3f(vrts[j-1][0].x-vrts[j-1][1].x,vrts[j-1][0].y-0.07,vrts[j-1][0].z+vrts[j-1][1].z);
+                glVertex3f(vrts[j-1][0].x+vrts[j-1][1].x,vrts[j-1][0].y-0.07,vrts[j-1][0].z-vrts[j-1][1].z);
             glEnd();
         }
 
@@ -346,14 +345,15 @@ static void dibujar_carretera()  {
         glColor4f(1.0, 1.0, 1.0, 1.0);
             // sobre el suelo
             glColor3f(0.5,0.5,0.5);
-            glVertex3f(vertices[j][0].x,vertices[j][0].y,vertices[j][0].z);
-            glVertex3f(vertices[j][1].x,vertices[j][1].y,vertices[j][1].z);
+            glVertex3f(vrts[j][0].x+vrts[j][1].x,vrts[j][0].y,vrts[j][0].z-vrts[j][1].z);
+            glVertex3f(vrts[j][0].x-vrts[j][1].x,vrts[j][1].y,vrts[j][0].z+vrts[j][1].z);
             // paredes
             glColor3f(1,1,1);            
-            glVertex3f(vertices[j][0].x,vertices[j][0].y,vertices[j][0].z);
-            glVertex3f(vertices[j][0].x,vertices[j][0].y+0.5,vertices[j][0].z);
-            glVertex3f(vertices[j][1].x,vertices[j][1].y,vertices[j][1].z);
-            glVertex3f(vertices[j][1].x,vertices[j][1].y+0.5,vertices[j][1].z);
+            glVertex3f(vrts[j][0].x+vrts[j][1].x,vrts[j][0].y,vrts[j][0].z-vrts[j][1].z);
+            glVertex3f(vrts[j][0].x+vrts[j][1].x,vrts[j][0].y+0.5,vrts[j][0].z-vrts[j][1].z);
+            glVertex3f(vrts[j][0].x-vrts[j][1].x,vrts[j][1].y,vrts[j][0].z+vrts[j][1].z);
+            glVertex3f(vrts[j][0].x-vrts[j][1].x,vrts[j][1].y+0.5,vrts[j][0].z+vrts[j][1].z);
+
             // laterales
 /*            glVertex3f(j-x,c+0.5,-i+y);
             glVertex3f(j-x*10,c+0.5,-i+y*10);
