@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <time.h>
 
 #include "main.h"
 #include "imageloader.h"
@@ -17,6 +18,7 @@
 #include "sfx.h"
 #include "motionblur.h"
 #include "game_entities.h"
+#include "colors.h"
 
 #define ROAD_MIN 0
 #define ROAD_MAX 145
@@ -95,6 +97,7 @@ void game_init() {
 	entity_header.next = create_entity();
 	
 	_speed = BASE_SPEED;
+	srand(time(NULL));
 }
 
 /**
@@ -464,57 +467,118 @@ void dibujar_mira() {
    
 }
 
+/**
+ * Dibujar el horizonte
+ */
 void dibujar_horizonte() {
     int i;
     glPushMatrix();
+    
+    static int start = 0; // offset del tiempo para poder dibujar bien el fondo
+    static struct hsl color_hsl[3] = {{172, 1, 0.5},{182, 1, 0.2},{192, 1, 0.1}}; // paleta de colores en HSL
+    struct rgb color_rgb[3]; // variables auxiliares donde almacenaremos los HSL convertidos
 
+    // guardamos el momento de inicio    
+    if (start == 0)
+        start = glutGet(GLUT_ELAPSED_TIME);
+
+    // con el paso del tiempo, damos vuelta por la paleta de colores
+    // HSL nos permite hacer este ciclo sin mucho problema, ya que solo se tiene que cambiar el HUE
+    for (i = 0; i < 3; i++) {
+        color_hsl[i].hue = ((glutGet(GLUT_ELAPSED_TIME) - start)/500 + 180 + i*50)%360;
+        hsl2rgb(color_hsl[i], &color_rgb[i]);
+    }
+
+    // dibujamos el horizonte
     glBegin(GL_QUADS);
         for (i = 1; i >= -1; i-=2) {
-            glColor4f(0.1, 0.3, 0.6, 1);
+            // center
+            glColor4f(color_rgb[0].red, color_rgb[0].green, color_rgb[0].blue, 1);
             glVertex3f(0*i, 0, -ROAD_MAX);
-            glColor4f(0.0, 0.0, 0.4, 1);
-            glVertex3f(100*i, 0, -ROAD_MAX);
-            glColor4f(0.0, 0.0, 0.0, 1);
-            glVertex3f(100*i, 100, -ROAD_MAX);
+            glColor4f(color_rgb[1].red, color_rgb[1].green, color_rgb[1].blue, 1);
+            glVertex3f(100*i, 0, -ROAD_MAX+10);
+            glColor4f(color_rgb[2].red, color_rgb[2].green, color_rgb[2].blue, 1);
+            glVertex3f(100*i, 100, -ROAD_MAX+10);
             glVertex3f(0*i, 100, -ROAD_MAX);
-    
-            glColor4f(0.0, 0.0, 0.4, 1);
-            glVertex3f(100*i, 0, -ROAD_MAX);
-            glColor4f(0.0, 0.0, 0.0, 1);
-            glVertex3f(1000*i, 0, -ROAD_MAX);
-            glVertex3f(1000*i, 100, -ROAD_MAX);
-            glVertex3f(100*i, 100, -ROAD_MAX);
 
-            glColor4f(0.0, 0.0, 0.4, 1);
-            glVertex3f(100*i, 0, -ROAD_MAX);
-            glColor4f(0.0, 0.0, 0.0, 1);
-            glVertex3f(1000*i, 0, -ROAD_MAX);
-            glVertex3f(1000*i, -40, -ROAD_MAX);
-            glVertex3f(100*i, -40, -ROAD_MAX);
+            // center top
+            glColor4f(color_rgb[2].red, color_rgb[2].green, color_rgb[2].blue, 1);
+            glVertex3f(0*i, 100, -ROAD_MAX);
+            glVertex3f(100*i, 100, -ROAD_MAX+10);
+            glColor4f(0, 0, 0, 1);
+            glVertex3f(100*i, 150, -ROAD_MAX+50);
+            glVertex3f(0*i, 170, -ROAD_MAX+100);
+  
+            // near side
+            glColor4f(color_rgb[1].red, color_rgb[1].green, color_rgb[1].blue, 1);
+            glVertex3f(100*i, 0, -ROAD_MAX+10);
+            glColor4f(color_rgb[2].red, color_rgb[2].green, color_rgb[2].blue, 1);
+            glVertex3f(300*i, 0, -ROAD_MAX+30);
+            glColor4f(0, 0, 0, 1);
+            glVertex3f(300*i, 100, -ROAD_MAX+30);
+            glColor4f(color_rgb[2].red, color_rgb[2].green, color_rgb[2].blue, 1);
+            glVertex3f(100*i, 100, -ROAD_MAX+10);
 
-            glColor4f(0.1, 0.3, 0.6, 1);
+            // near side top
+            glColor4f(color_rgb[2].red, color_rgb[2].green, color_rgb[2].blue, 1);
+            glVertex3f(100*i, 100, -ROAD_MAX+10);
+            glColor4f(0, 0, 0, 1);
+            glVertex3f(300*i, 100, -ROAD_MAX+30);
+            glVertex3f(300*i, 190, -ROAD_MAX+45);
+            glVertex3f(100*i, 150, -ROAD_MAX+50);
+
+            // far side
+            glColor4f(color_rgb[2].red, color_rgb[2].green, color_rgb[2].blue, 1);
+            glVertex3f(300*i, 0, -ROAD_MAX+30);
+            glColor4f(0, 0, 0, 1);
+            glVertex3f(800*i, 0, -ROAD_MAX+50);
+            glVertex3f(800*i, 100, -ROAD_MAX+50);
+            glVertex3f(300*i, 100, -ROAD_MAX+30);
+
+            // bottom center
+            glColor4f(color_rgb[0].red, color_rgb[0].green, color_rgb[0].blue, 1);
             glVertex3f(0*i, 0, -ROAD_MAX);
-            glColor4f(0.0, 0.0, 0.4, 1);
-            glVertex3f(100*i, 0, -ROAD_MAX);
+            glColor4f(color_rgb[1].red, color_rgb[1].green, color_rgb[1].blue, 1);
+            glVertex3f(100*i, 0, -ROAD_MAX+10);
             glColor4f(0.0, 0.0, 0.0, 1);
-            glVertex3f(100*i, -40, -ROAD_MAX);
+            glVertex3f(100*i, -40, -ROAD_MAX+10);
             glVertex3f(0*i, -100, -ROAD_MAX);
+
+            // bottom near side
+            glColor4f(color_rgb[1].red, color_rgb[1].green, color_rgb[1].blue, 1);
+            glVertex3f(100*i, 0, -ROAD_MAX+10);
+            glColor4f(color_rgb[2].red, color_rgb[2].green, color_rgb[2].blue, 1);
+            glVertex3f(300*i, 0, -ROAD_MAX+30);
+            glColor4f(0.0, 0.0, 0.0, 1);
+            glVertex3f(300*i, -40, -ROAD_MAX+30);
+            glVertex3f(100*i, -40, -ROAD_MAX+10);
+
+            // bottom far side
+            glColor4f(color_rgb[2].red, color_rgb[2].green, color_rgb[2].blue, 1);
+            glVertex3f(300*i, 0, -ROAD_MAX+30);
+            glColor4f(0, 0, 0, 1);
+            glVertex3f(800*i, 0, -ROAD_MAX+50);
+            glVertex3f(800*i, -10, -ROAD_MAX+50);
+            glVertex3f(300*i, -40, -ROAD_MAX+30);
+
         }
     glEnd();
 
+    // dibujamos una linea fina y brillante en el centro del horizonte
     glEnable (GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glDisable(GL_DEPTH_TEST);
     glBegin(GL_LINES);
-        glColor4f(0.13, 0.33, 0.64, 1);
+        glColor4f(color_rgb[0].red, color_rgb[0].green, color_rgb[0].blue, 1);
         glVertex3f(0, 0, -ROAD_MAX);
         glColor4f(0.13, 0.33, 0.64, 0.0);
-        glVertex3f(300, 0, -ROAD_MAX);
-        glColor4f(0.13, 0.33, 0.64, 1);
+        glColor4f(color_rgb[2].red, color_rgb[2].green, color_rgb[2].blue, 1);
+        glVertex3f(300, 0, -ROAD_MAX+30);
+        glColor4f(color_rgb[0].red, color_rgb[0].green, color_rgb[0].blue, 1);
         glVertex3f(0, 0, -ROAD_MAX);
-        glColor4f(0.13, 0.33, 0.64, 0.0);
-        glVertex3f(-300, 0, -ROAD_MAX);
+        glColor4f(color_rgb[2].red, color_rgb[2].green, color_rgb[2].blue, 1);
+        glVertex3f(-300, 0, -ROAD_MAX+30);
     glEnd();
     glEnable(GL_DEPTH_TEST);
 
