@@ -28,6 +28,9 @@
 #define LOOK_AT_Y 10
 #define LOOK_AT_Z -ROAD_MAX
 
+#define FOG_FAR -(ROAD_MAX-ROAD_MIN)-10
+#define FOG_NEAR -(ROAD_MAX-ROAD_MIN)/10
+
 #define BASE_SPEED 0.10 / 25
 
 struct Punto3D {
@@ -274,6 +277,23 @@ static void dibujar_grid() {
         }
     glEnd();
 }
+
+float calcular_alpha(float z) {
+    float x;
+    sprintf(_debug_string, "ROAD_MAX %d ROAD_MIN %d, FOG_FAR %d, FOG_NEAR %d", ROAD_MAX, ROAD_MIN, FOG_FAR, FOG_NEAR);
+    if (z >= FOG_NEAR) {
+        sprintf(_message_string, "Z:%f --> 1", z);
+        return 1;
+    } else if (z > FOG_FAR) {
+        x = 1 - ((-z+FOG_NEAR) / (+FOG_NEAR-(float)FOG_FAR));
+        sprintf(_message_string, "Z:%f --> %f", z, x);
+        return x;
+    } else {
+        sprintf(_message_string, "Z:%f --> 0", z);
+        return 0;
+    }
+}
+
 /*
 ** f(x)  = x^2
 ** f'(x) = 2x
@@ -285,6 +305,7 @@ static void dibujar_carretera()  {
     int j = 0, k;
     float aux_x;
     static struct Punto3D vrts[ROAD_STEPS][2];
+    float alpha;
     
     i = 0 - delta;
     for (j = 0; j < ROAD_STEPS; j++ ) {
@@ -328,11 +349,13 @@ static void dibujar_carretera()  {
 
     // dibujar la carretera    
     for (j = ROAD_STEPS-1; j >= 0; j--) {
+        alpha = calcular_alpha(vrts[j][0].z);
+
         // el suelo es transparente, dibujar un quad por cada par de puntos3d (menos para el último, ya que no existe vrts[0-1]
         if (j > 0) {
             glBegin(GL_QUADS);
                 i = (j%2 ? 0.10 : 0.05);
-                glColor4f(i, i, i, 0.75); 
+                glColor4f(i, i, i, 0.75* alpha); 
                 glVertex3f(vrts[j][0].x+vrts[j][1].x,vrts[j][0].y-0.07,vrts[j][0].z-vrts[j][1].z);
                 glVertex3f(vrts[j][0].x-vrts[j][1].x,vrts[j][0].y-0.07,vrts[j][0].z+vrts[j][1].z);
                 glVertex3f(vrts[j-1][0].x-vrts[j-1][1].x,vrts[j-1][0].y-0.07,vrts[j-1][0].z+vrts[j-1][1].z);
@@ -340,40 +363,32 @@ static void dibujar_carretera()  {
             glEnd();
         }
 
+        //alpha = 1;
         // dibujar las lineas
         glBegin(GL_LINES);
-        glColor4f(1.0, 1.0, 1.0, 1.0);
+        glColor4f(1.0, 1.0, 1.0, alpha);
             // sobre el suelo
-            glColor3f(0.5,0.5,0.5);
+            glColor4f(0.5,0.5,0.5, alpha);
             glVertex3f(vrts[j][0].x+vrts[j][1].x,vrts[j][0].y,vrts[j][0].z-vrts[j][1].z);
             glVertex3f(vrts[j][0].x-vrts[j][1].x,vrts[j][1].y,vrts[j][0].z+vrts[j][1].z);
             // paredes
-            glColor3f(1,1,1);            
+            glColor4f(1,1,1, alpha);
             glVertex3f(vrts[j][0].x+vrts[j][1].x,vrts[j][0].y,vrts[j][0].z-vrts[j][1].z);
             glVertex3f(vrts[j][0].x+vrts[j][1].x,vrts[j][0].y+0.5,vrts[j][0].z-vrts[j][1].z);
             glVertex3f(vrts[j][0].x-vrts[j][1].x,vrts[j][1].y,vrts[j][0].z+vrts[j][1].z);
             glVertex3f(vrts[j][0].x-vrts[j][1].x,vrts[j][1].y+0.5,vrts[j][0].z+vrts[j][1].z);
 
             // laterales
-/*            glVertex3f(j-x,c+0.5,-i+y);
-            glVertex3f(j-x*10,c+0.5,-i+y*10);
-            glVertex3f(j+x,c+0.5,-i-y);
-            glVertex3f(j+x*10,c+0.5,-i-y*10);*/
+            glColor4f(1,1,1,alpha);
+            glVertex3f(vrts[j][0].x+vrts[j][1].x,vrts[j][0].y+0.5,vrts[j][0].z-vrts[j][1].z);
+            glColor4f(1,1,1,0.0);
+            glVertex3f(vrts[j][0].x+vrts[j][1].x*12,vrts[j][0].y+0.5,vrts[j][0].z-vrts[j][1].z*12);
+            
+            glColor4f(1,1,1,alpha);
+            glVertex3f(vrts[j][0].x-vrts[j][1].x,vrts[j][1].y+0.5,vrts[j][0].z+vrts[j][1].z);
+            glColor4f(1,1,1,0.0);
+            glVertex3f(vrts[j][0].x-vrts[j][1].x*12,vrts[j][1].y+0.5,vrts[j][0].z+vrts[j][1].z*12);
         glEnd();
-
-/*
-            glEnable (GL_BLEND);
-            glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            glColor4f(0.75, 0.75, 0.75, 1.0);
-            glVertex3f(j-x,c+0.5,-i+y);
-            glColor4f(0.0, 0.0, 0.0, 0.0);
-            glVertex3f(j-x*10,c+0.5,-i+y*10);
-            glColor4f(0.75, 0.75, 0.75, 1.0);
-            glVertex3f(j+x,c+0.5,-i-y);
-            glColor4f(0.0, 0.0, 0.0, 0.0);
-            glVertex3f(j+x*10,c+0.5,-i-y*10);
-            glDisable(GL_BLEND);*/
-
     }
 
     glDisable(GL_BLEND);
@@ -418,22 +433,20 @@ static void calcular_coordenadas(struct Punto3D entrada, struct Punto3D * salida
     if (aux == 0)
         salida->x = entrada.x;
     else
-//        salida->x = aux_x;
         salida->x = aux_x + sin(atan(-1/(2*(aux))*curvatura_h * sentido_h)) * entrada.x * sentido_h;
 
 
     if (aux == 0)
         salida->z = entrada.z;
     else
-///        salida->z = aux_z;
         salida->z = entrada.z + cos(atan(-1/(2*(aux))*curvatura_h*sentido_h)) * entrada.x * sentido_h;
         
     salida->y = aux_y/* + entrada.y*/;
     
     //salida->z -= 2;
     
-    sprintf(_message_string, "Curvatura V: %f %d, aux2>%f,aux_y>%f", curvatura_v, sentido_v, aux2,aux_y);
-    sprintf(_debug_string, "entrada: %f,%f,%f, salida: %f,%f,%f", entrada.x,entrada.y,entrada.z, salida->x,salida->y,salida->z);
+//    sprintf(_message_string, "Curvatura V: %f %d, aux2>%f,aux_y>%f", curvatura_v, sentido_v, aux2,aux_y);
+//    sprintf(_debug_string, "entrada: %f,%f,%f, salida: %f,%f,%f", entrada.x,entrada.y,entrada.z, salida->x,salida->y,salida->z);
 }
 
 void dibujar_cosa() {
@@ -458,26 +471,31 @@ void dibujar_cosa() {
     d.y = b.y;
     d.z = b.z;
     
+    glEnable (GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
     glPushMatrix();
     glTranslatef(b.x, b.y, b.z);
 //    glRotatef(90.0, 0.0, 0.0, 0.0);
-    glColor3f(1,.5,0);
+    glColor4f(1,.5,0, calcular_alpha(b.z));
     glutSolidCone(0.25, 0.5, 16, 2);
     glPopMatrix();
 
     glPushMatrix();
     glTranslatef(d.x, d.y, d.z);
     glRotatef(90.0, -1.0, 0, 0.0);
-    glColor3f(.5,1,0);
+    glColor4f(.5,1,0,calcular_alpha(d.z));
     glutSolidCone(0.25, 0.5, 16, 2);
     glPopMatrix();
 
     glPushMatrix();
     glTranslatef(c.x, c.y, c.z);
     glRotatef(90.0, -1.0, -1.0, 0.0);
-    glColor3f(0,.5,1);
+    glColor4f(0,.5,1,calcular_alpha(c.z));
     glutSolidCone(0.25, 0.5, 16, 2);
     glPopMatrix();
+    
+    glDisable(GL_BLEND);
     
 }
 
@@ -518,12 +536,53 @@ void dibujar_mira() {
 }
 
 void dibujar_horizonte() {
+    int i;
     glPushMatrix();
     glColor3f(0.0, 0.0, 0.5);
     glBegin(GL_LINES);
         glVertex3f(-100000, 0, -ROAD_MAX);
         glVertex3f(100000, 0, -ROAD_MAX);
     glEnd();
+
+    glEnable (GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+    glBegin(GL_QUADS);
+        for (i = 1; i >= -1; i-=2) {
+            glColor4f(0.1, 0.3, 0.6, 1);
+            glVertex3f(0*i, 0, -ROAD_MAX);
+            glColor4f(0.0, 0.0, 0.4, 0.3);
+            glVertex3f(100*i, 0, -ROAD_MAX);
+            glColor4f(0.0, 0.0, 0.0, 0.3);
+            glVertex3f(100*i, 100, -ROAD_MAX);
+            glVertex3f(0*i, 100, -ROAD_MAX);
+    
+            glColor4f(0.0, 0.0, 0.4, 0.3);
+            glVertex3f(100*i, 0, -ROAD_MAX);
+            glColor4f(0.0, 0.0, 0.0, 0.3);
+            glVertex3f(1000*i, 0, -ROAD_MAX);
+            glVertex3f(1000*i, 100, -ROAD_MAX);
+            glVertex3f(100*i, 100, -ROAD_MAX);
+
+            glColor4f(0.0, 0.0, 0.4, 0.3);
+            glVertex3f(100*i, 0, -ROAD_MAX);
+            glColor4f(0.0, 0.0, 0.0, 0.3);
+            glVertex3f(1000*i, 0, -ROAD_MAX);
+            glVertex3f(1000*i, -40, -ROAD_MAX);
+            glVertex3f(100*i, -40, -ROAD_MAX);
+
+            glColor4f(0.1, 0.3, 0.6, 1);
+            glVertex3f(0*i, 0, -ROAD_MAX);
+            glColor4f(0.0, 0.0, 0.4, 0.3);
+            glVertex3f(100*i, 0, -ROAD_MAX);
+            glColor4f(0.0, 0.0, 0.0, 0.3);
+            glVertex3f(100*i, -40, -ROAD_MAX);
+            glVertex3f(0*i, -100, -ROAD_MAX);
+        }
+    glEnd();
+    
+    glDisable(GL_BLEND);
+    
     glPopMatrix();
 }
 

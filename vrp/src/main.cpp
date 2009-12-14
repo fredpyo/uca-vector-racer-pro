@@ -25,7 +25,7 @@
 #include "utils.h"
 #include "sfx.h"
 
-#define INITIAL_SCENE SCENE_INTRO
+#define INITIAL_SCENE SCENE_GAME
 
 float fps = 0; // almacena el fps
 char _debug_string[512] = {0}; // buffer para mensajes de debug
@@ -97,7 +97,7 @@ void handle_resize(int w, int h) {
     gluPerspective(45.0, // cam angle
                     (double)w / (double)h, // w/h ratio
                     0.1, // near clipping
-                    400.0 // far clipping
+                    1000.0 // far clipping
     );
 
     glMatrixMode(GL_MODELVIEW);
