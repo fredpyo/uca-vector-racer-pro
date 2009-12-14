@@ -18,34 +18,38 @@ GLuint _texture_id2; // the id of the texture
 unsigned int menu_selected = 0;
 char menu_option_strings[4][20] = {"> Play >", "* Ranking *", "$ Options $", "- Exit -"};
 
-void title_draw_scene_fadein(int setup)
+int title_draw_scene_fadein(int setup)
 {
     static float base_time;
     float elapsed_time;
     float alpha = 0;
     float color = 0;
     
+    if (setup == 2) {
+        elapsed_time = glutGet(GLUT_ELAPSED_TIME) - base_time;
+        return (elapsed_time < 4000 ? 1 : 0);
+    }
     if (setup == 1)
         base_time = glutGet(GLUT_ELAPSED_TIME);
     else {
-        ortho_mode(0, 0, _width, _height);
-
         elapsed_time = glutGet(GLUT_ELAPSED_TIME) - base_time;
         
-        if (elapsed_time < 3000) {
+        if (elapsed_time < 3000) { // fade from black
             alpha = (3000 - elapsed_time)/3000;
-        } else if (elapsed_time < 4000) {
+        } else if (elapsed_time < 4000) { // fade to white
             alpha = (elapsed_time - 3000)/1000;
             color = 1;
-        } else if (elapsed_time < 6000) {
+        } else if (elapsed_time < 6000) { // fade from white
             alpha = (2000 - (elapsed_time-4000)) / 2000;
             color = 1;
         } else {
-            return;
+            return 0;
         }
+
+        ortho_mode(0, 0, _width, _height);
         
         // debug :D
-        sprintf(_debug_string, "alpha: %f, color: %f", alpha, color);
+        sprintf(_message_string, "alpha: %f, color: %f", alpha, color);
         
         // render fader
         glDisable(GL_DEPTH_TEST);
@@ -65,6 +69,7 @@ void title_draw_scene_fadein(int setup)
 
         perspective_mode();
     }
+    return 0;
 }
 
 void title_draw_lines(void)
@@ -77,28 +82,34 @@ void title_draw_lines(void)
     float speed2 = 4;
     int z = 300;
     float x, y;
+
+    glDisable(GL_DEPTH_TEST);
     
     elapsed_time = glutGet(GLUT_ELAPSED_TIME) - last_time;
 
-        glEnable (GL_BLEND);
-        glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+    glEnable(GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//    glBlendFunc (GL_ONE, GL_ONE);
     
-    glBegin(GL_LINES);
+    srand(213); // el mismo seed siempre para que renderee bien
+    glLineWidth(1);
 
-        for (z = 0; z < 600; z ++) {
+    glBegin(GL_LINES);            
+        for (z = 0; z < 600; z++) {
             x = (((time*-speed + (int)(sin(z*1) * 10000))%10000)/100.0) + 50;
-            y = cos(z*10) * 2 * z/50.0;
-//            y = 1;
-            glColor4f(1, 1, cos(z*100), 0.9);
+//            y = cos(z*10) * 2 * z/50.0;
+            y = (((rand()%200)/100.0)-1) * 2 * z/50.0 - 1;
+            glColor3f(1, (rand()%100)/100.0, 0);    
             glVertex3f(x, y,-z/6.0);
-            glColor4f(1, 1, cos(z*100), 0.0);
-            glVertex3f(x + 3, y,-z/6.0);
+            glColor3f(0, 0, 0);
+            glVertex3f(x + 5, y,-z/6.0);
         }
 
     glEnd();
-    
-    
+    glDisable(GL_BLEND);
+
+    glEnable(GL_DEPTH_TEST);    
+     glLineWidth(1);   
     last_time = elapsed_time;
     
 }
@@ -109,7 +120,6 @@ void title_draw_menu(void)
     ortho_mode(0, 0, _width, _height);
     int offset;
     float sine_value;
-
 
     // blend my friend
     glDisable(GL_DEPTH_TEST);
@@ -213,12 +223,11 @@ void title_draw_scene(void)
     glDisable(GL_TEXTURE_2D);
     perspective_mode();
 
-    title_draw_lines();
-    title_draw_menu();
-    
-//    title_draw_scene_fadein(0);
-
-
+    if (!title_draw_scene_fadein(2)) {
+        title_draw_lines();
+        title_draw_menu();
+    }    
+    title_draw_scene_fadein(0);
 }
 
 void title_handle_keypress(unsigned char key, int x, int y)

@@ -25,7 +25,7 @@
 #include "utils.h"
 #include "sfx.h"
 
-#define INITIAL_SCENE SCENE_GAME
+#define INITIAL_SCENE SCENE_INTRO
 
 float fps = 0; // almacena el fps
 char _debug_string[512] = {0}; // buffer para mensajes de debug
@@ -275,7 +275,7 @@ int switch_to(int scene) {
  */
 int main(int argc, char ** argv) {
     glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH) ;   
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH) ;   
     glutInitWindowSize(800,600);
 
     glutCreateWindow("Vector Racer Pro Extreme Edition");
