@@ -12,8 +12,6 @@
 #include "sfx.h"
 #include "main.h"
 
-#include "texture_processing.h"
-
 struct ranking
 {
     char name[64];

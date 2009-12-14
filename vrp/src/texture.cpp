@@ -4,6 +4,7 @@
  */
 #include <gl/freeglut.h>
 #include "imageloader.h"
+#include "texture.h"
 
 /**
  * Makes the image into a texture, and returns the id of the texture
@@ -50,4 +51,54 @@ void texture_create_blank_render_texture( GLuint *textureID, int size, int chann
 
 	// Since we stored the texture space with OpenGL, we can delete the image data
 	delete [] pTexture;																					
+}
+
+/*
+ * Generar una textura en blanco
+ */
+int GenerateTexture(GLuint &Texture, int SizeX, int SizeY, int Channels, int Format, int Min_Filter, int Mag_Filter) {
+	int Status = FALSE;
+	unsigned int memoryRequiredSize = SizeX * SizeY * Channels;
+
+	unsigned int *memoryBlock = new unsigned int[memoryRequiredSize];
+	if(memoryBlock == NULL)
+		return Status;
+
+	ZeroMemory(memoryBlock, memoryRequiredSize);
+
+	Status = GenerateTexture(Texture, SizeX, SizeY, Channels, Format, Min_Filter, Mag_Filter, memoryBlock);
+	delete [] memoryBlock;
+
+	int ErrorStatus = glGetError();
+	if(ErrorStatus == GL_NO_ERROR)
+		Status = TRUE;
+
+	return Status;
+}
+
+int GenerateTexture(GLuint &Texture, int SizeX, int SizeY, int Channels, int Format, int Min_Filter, int Mag_Filter, unsigned int *memoryArea) {
+	int Status = FALSE;
+
+	if(memoryArea == NULL)
+		return Status;
+
+	glGenTextures(1, &Texture);
+	glBindTexture(GL_TEXTURE_2D, Texture);
+
+	//glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	//glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	//glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
+
+	//gluBuild2DMipmaps(GL_TEXTURE_2D, Channels, SizeX, SizeY, Format, GL_UNSIGNED_INT, memoryBlock);
+	glTexImage2D(GL_TEXTURE_2D, 0, Channels, SizeX, SizeY, 0, Format, GL_UNSIGNED_INT, memoryArea );
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, Min_Filter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Mag_Filter); 
+
+
+	int ErrorStatus = glGetError();
+	if(ErrorStatus == GL_NO_ERROR)
+		Status = TRUE;
+
+	return Status;
 }

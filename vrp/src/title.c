@@ -11,8 +11,6 @@
 #include "sfx.h"
 #include "main.h"
 
-#include "texture_processing.h"
-
 GLuint _texture_id2; // the id of the texture
 
 unsigned int menu_selected = 0;
