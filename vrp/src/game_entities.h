@@ -19,7 +19,7 @@ struct game_entity {
     float dissapear_at;
     struct Punto3D bound_min;
     struct Punto3D bound_max;
-    void (*renderer)(struct game_entity * game_entity);
+    void (*renderer)(struct game_entity * game_entity, int elapsed_time);
     struct game_entity * next;
 };
 
