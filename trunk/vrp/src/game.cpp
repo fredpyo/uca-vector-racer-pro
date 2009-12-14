@@ -16,6 +16,7 @@
 #include "utils.h"
 #include "sfx.h"
 #include "motionblur.h"
+#include "game_entities.h"
 
 #define AXIS_SIZE 10
 
@@ -31,13 +32,7 @@
 #define FOG_FAR -(ROAD_MAX-ROAD_MIN)-10
 #define FOG_NEAR -(ROAD_MAX-ROAD_MIN)/10
 
-#define BASE_SPEED 0.10 / 25
-
-struct Punto3D {
-    float x;
-    float y;
-    float z;
-};
+#define BASE_SPEED 0.01
 
 // BLUR STUFF
 GLuint _tex_0_id4; // textura donde se almacenara el "blur"
@@ -64,6 +59,9 @@ float _speed = 1.1;
 
 // CAMARA
 int current_cam = 1;
+
+// ENTIDADES
+struct game_entity entity_header;
 
 
 /*
@@ -94,6 +92,11 @@ void game_init() {
 
     music_stop(0);
 	music_play("g-storm.mp3");
+	
+	entity_header.next = NULL;
+	entity_header.next = create_entity();
+	
+	_speed = BASE_SPEED;
 }
 
 /**
@@ -206,92 +209,18 @@ void game_handle_mouse_motion_passive (int x, int y){
 	_y = y;
 }
 
-/**
- * Dibujar el eje de coordenadas 3d
- */
-static void dibujar_eje() {
-    // x
-    glColor3f(1.0, 0.0, 0.0);
-    glBegin(GL_LINES);
-        glVertex3f(0.0, 0.0, 0.0);
-        glVertex3f(AXIS_SIZE, 0.0, 0.0);
-    glEnd();
-    // x cone
-    glPushMatrix();
-    glTranslatef(AXIS_SIZE, 00.0, 0.0);
-    glRotatef(90.0, 0.0, 1.0, 0.0);
-    glutSolidCone(0.25, 0.5, 16, 2);
-    glPopMatrix();
-
-    // y
-    glColor3f(0.0, 1.0, 0.0);
-    glBegin(GL_LINES);
-        glVertex3f(0.0, 0.0, 0.0);
-        glVertex3f(0.0, AXIS_SIZE, 0.0);
-    glEnd();
-    // y cone
-    glPushMatrix();
-    glTranslatef(0.0, AXIS_SIZE, 0.0);
-    glRotatef(90.0, -1.0, 0.0, 0.0);
-    glutSolidCone(0.25, 0.5, 16, 2);
-    glPopMatrix();
-
-    // z
-    glColor3f(0.0, 0.0, 1.0);
-    glBegin(GL_LINES);
-        glVertex3f(0.0, 0.0, 0.0);
-        glVertex3f(0.0, 0.0, AXIS_SIZE);
-    glEnd();
-    // z cone
-    glPushMatrix();
-    glTranslatef(0.0, 0.0, AXIS_SIZE);
-    glutSolidCone(0.25, 0.5, 16, 2);
-    glPopMatrix();
-}
-
-/**
- * Debijar la grilla de "suelo"
- */
-static void dibujar_grid() {
-    float x;
-    float y;
-    int a = 0;
-    static const float zeta = 0.05; 
-
-    glBegin(GL_LINES);
-        for (x = 0.0; x <= 20.0; x += 0.5, a++) {
-            if (a%nearest_f(_distance, 2.5))
-        	//if (a%10)
-                glColor3f(0.06, 0.11, 0.15);
-            else
-                glColor3f(0.10 - zeta, 0.15 - zeta, 0.19 - zeta);
-            // x <--->
-            glVertex3f(x, 0.0, -20.0);
-            glVertex3f(x, 0.0, 20.0);
-            glVertex3f(-x, 0.0, -20.0);
-            glVertex3f(-x, 0.0, 20.0);
-            // z <--->
-            glVertex3f(-20.0, 0.0, x);
-            glVertex3f(20.0, 0.0, x);
-            glVertex3f(-20.0, 0.0, -x);
-            glVertex3f(20.0, 0.0, -x);
-
-        }
-    glEnd();
-}
-
 float calcular_alpha(float z) {
     float x;
-    sprintf(_debug_string, "ROAD_MAX %d ROAD_MIN %d, FOG_FAR %d, FOG_NEAR %d", ROAD_MAX, ROAD_MIN, FOG_FAR, FOG_NEAR);
+//    sprintf(_debug_string, "ROAD_MAX %d ROAD_MIN %d, FOG_FAR %d, FOG_NEAR %d", ROAD_MAX, ROAD_MIN, FOG_FAR, FOG_NEAR);
     if (z >= FOG_NEAR) {
-        sprintf(_message_string, "Z:%f --> 1", z);
+//        sprintf(_message_string, "Z:%f --> 1", z);
         return 1;
     } else if (z > FOG_FAR) {
         x = 1 - ((-z+FOG_NEAR) / (+FOG_NEAR-(float)FOG_FAR));
-        sprintf(_message_string, "Z:%f --> %f", z, x);
+//        sprintf(_message_string, "Z:%f --> %f", z, x);
         return x;
     } else {
-        sprintf(_message_string, "Z:%f --> 0", z);
+//        sprintf(_message_string, "Z:%f --> 0", z);
         return 0;
     }
 }
@@ -422,7 +351,7 @@ bool AnimateNextFrame(int desiredFrameRate)
 }
 
 
-static void calcular_coordenadas(struct Punto3D entrada, struct Punto3D * salida) {
+void calcular_coordenadas(struct Punto3D entrada, struct Punto3D * salida) {
     // curva para el plano xz
     float aux = entrada.z / curvatura_h; // aux
     float aux_x = (aux*aux)*sentido_h; // x
@@ -459,7 +388,7 @@ void dibujar_cosa() {
     a.y = 0;
     a.z = -35.0 + decremento;
 //    decremento += 0.04;
-    decremento = wrap_f(decremento, 3 * BASE_SPEED * _speed, -ROAD_MAX, 35);
+    decremento = wrap_f(decremento, _speed, -ROAD_MAX, 35);
     
     //delta = wrap_f(delta, (time - elapsed_time) * _speed * BASE_SPEED, ROAD_MIN, (ROAD_MAX - ROAD_MIN)*2/ROAD_STEPS); /* este ultimo es (max - min) / steps */
     
@@ -631,11 +560,10 @@ int do_draw() {
     // esto se pinta sin luz ---
     glDisable(GL_LIGHTING);
     glEnable(GL_COLOR_MATERIAL);
-//        dibujar_grid();
-        //dibujar_eje();
         dibujar_horizonte();
         glTranslatef(0.0, 0.0, 20.0);
 
+        recorrer_lista(entity_header.next);
         dibujar_cosa();
         dibujar_mira();
         dibujar_carretera();
@@ -644,43 +572,14 @@ int do_draw() {
 
 }
 
-
-
 /**
  * Dibujar la escena
  */
 void game_draw_scene() {
    struct Punto3D a;
 
-/*    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear all
-    glLoadIdentity(); // reset drawing perspective
-  */ 
-
-
-/*    if( AnimateNextFrame(60)) {
-        glViewport(0, 0, _tex_0_size, _tex_0_size);	
-        render_motion_blur( _tex_0_id4);
-        // draw
-        do_draw(0);
-   		glBindTexture(GL_TEXTURE_2D,_tex_0_id4);
-		// Render the current screen to our texture
-		glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, _tex_0_size, _tex_0_size, 0);
-
-		// Here we clear the screen and depth bits of the small viewport
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);			
-
-		// Set our viewport back to it's normal size
-		glViewport(0, 0, _width, _height);	
-	}
-	render_motion_blur( _tex_0_id4);
-//    blur_tex_zoom(g_tex_0_id4, 1);
-    do_draw(0);
-    //draw_text();
-//	glutSwapBuffers() ;*/
-
 	RenderToMotionBlurTexture(1, do_draw);
 	ShowMotionBlurTexture();
-//	do_draw();
 }
 
 void game_handle_idle() {
@@ -688,7 +587,7 @@ void game_handle_idle() {
     int time;
 	time = glutGet(GLUT_ELAPSED_TIME);
 //    delta = wrap_f(delta, (time - elapsed_time) * _speed * 0.05 / 25, ROAD_MIN, (ROAD_MAX - ROAD_MIN)*2/ROAD_STEPS); /* este ultimo es (max - min) / steps */
-    delta = wrap_f(delta, (time - elapsed_time) * _speed * BASE_SPEED, ROAD_MIN, (ROAD_MAX - ROAD_MIN)*2/ROAD_STEPS); /* este ultimo es (max - min) / steps */
+    delta = wrap_f(delta, (time - elapsed_time) * _speed, ROAD_MIN, (ROAD_MAX - ROAD_MIN)*2/ROAD_STEPS); /* este ultimo es (max - min) / steps */
     
     elapsed_time = time;
 }
