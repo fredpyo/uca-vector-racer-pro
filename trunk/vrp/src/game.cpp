@@ -538,11 +538,6 @@ void dibujar_mira() {
 void dibujar_horizonte() {
     int i;
     glPushMatrix();
-    glColor3f(0.0, 0.0, 0.5);
-    glBegin(GL_LINES);
-        glVertex3f(-100000, 0, -ROAD_MAX);
-        glVertex3f(100000, 0, -ROAD_MAX);
-    glEnd();
 
     glEnable (GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -580,7 +575,20 @@ void dibujar_horizonte() {
             glVertex3f(0*i, -100, -ROAD_MAX);
         }
     glEnd();
-    
+
+    glDisable(GL_DEPTH_TEST);
+    glBegin(GL_LINES);
+        glColor4f(0.13, 0.33, 0.64, 1);
+        glVertex3f(0, 0, -ROAD_MAX);
+        glColor4f(0.13, 0.33, 0.64, 0.0);
+        glVertex3f(300, 0, -ROAD_MAX);
+        glColor4f(0.13, 0.33, 0.64, 1);
+        glVertex3f(0, 0, -ROAD_MAX);
+        glColor4f(0.13, 0.33, 0.64, 0.0);
+        glVertex3f(-300, 0, -ROAD_MAX);
+    glEnd();
+    glEnable(GL_DEPTH_TEST);
+
     glDisable(GL_BLEND);
     
     glPopMatrix();
@@ -622,19 +630,11 @@ void game_draw_scene() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear all
     glLoadIdentity(); // reset drawing perspective
    
-//    glMatrixMode(GL_MODELVIEW); // switch to drawing perspective
-
-//    glRotatef(-_camera_angle, 0.1f, -.1f, 1.0f); // rotate camera
-//    glTranslatef(0.0f, 0.0f, -5.0f); // moveeee
-
-
-   
    a.x = LOOK_AT_X;
    a.y = LOOK_AT_Y;
    a.z = LOOK_AT_Z;
    
    calcular_coordenadas(a, &a);
-
 
     if (current_cam == 0) {
         gluLookAt(sin(_angley*3.14/180) * cos(_anglez*3.14/180) * _distance, cos(_angley*3.14/180) * _distance, sin(_angley*3.14/180) * sin(_anglez*3.14/180) * _distance,  // donde estoy
@@ -648,8 +648,6 @@ void game_draw_scene() {
             0, 1, 0
         );
     }
-
-    
 
     if( AnimateNextFrame(60)) {
         glViewport(0, 0, _tex_0_size, _tex_0_size);	
