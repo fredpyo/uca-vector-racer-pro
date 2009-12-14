@@ -96,7 +96,7 @@ void handle_resize(int w, int h) {
     glLoadIdentity(); // reset camera
     gluPerspective(45.0, // cam angle
                     (double)w / (double)h, // w/h ratio
-                    1.0, // near clipping
+                    0.1, // near clipping
                     400.0 // far clipping
     );
 
