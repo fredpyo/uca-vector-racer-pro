@@ -18,8 +18,6 @@
 #include "motionblur.h"
 #include "game_entities.h"
 
-#define AXIS_SIZE 10
-
 #define ROAD_MIN 0
 #define ROAD_MAX 145
 #define ROAD_STEPS 35
@@ -137,10 +135,10 @@ void game_handle_keypress(unsigned char key, int x, int y) {
                 yy = yy - 0.04;
             break;
         case ',':
-            _speed -= 0.1;
+            _speed -= 1.1*BASE_SPEED;
             break;
         case '.':
-            _speed += 0.1;
+            _speed += 1.1*BASE_SPEED;
             break;
     }
     
@@ -584,10 +582,18 @@ void game_draw_scene() {
 
 void game_handle_idle() {
     static int elapsed_time = 0;
+    static int last_add = 0;
     int time;
 	time = glutGet(GLUT_ELAPSED_TIME);
 //    delta = wrap_f(delta, (time - elapsed_time) * _speed * 0.05 / 25, ROAD_MIN, (ROAD_MAX - ROAD_MIN)*2/ROAD_STEPS); /* este ultimo es (max - min) / steps */
     delta = wrap_f(delta, (time - elapsed_time) * _speed, ROAD_MIN, (ROAD_MAX - ROAD_MIN)*2/ROAD_STEPS); /* este ultimo es (max - min) / steps */
     
     elapsed_time = time;
+//    sprintf(_message_string, "SPEED %f --> 0", _speed);
+    
+    if (time/100 > last_add) {
+        last_add = time/100;
+        agregar_a_lista(&entity_header, create_entity());
+//        sprintf(_debug_string, "ASFASF %d", elapsed_time);
+    }
 }
