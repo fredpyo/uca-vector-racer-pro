@@ -1,6 +1,7 @@
 /*
 ** Motion Blur
-**
+** Sacado de acá:
+** http://www.codeproject.com/KB/openGL/MotionBlur.aspx
 */
 #include <gl/freeglut.h>
 #include "main.h"
