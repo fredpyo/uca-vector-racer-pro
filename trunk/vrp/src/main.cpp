@@ -131,7 +131,7 @@ void draw_text() {
     if (_show_debug) {
 	ortho_mode( 0, 0, _width, _height );
 	glDisable(GL_DEPTH_TEST);
-		
+    glDisable(GL_TEXTURE_2D);   		
         // TIMING
         glColor3f(1.0f, 1.0f, 0.0f);
         glRasterPos2i(3, 14);

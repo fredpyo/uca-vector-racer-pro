@@ -11,11 +11,11 @@
 #include <math.h>
 
 #include "main.h"
-#include "texture_processing.h"
 #include "imageloader.h"
 #include "texture.h"
 #include "utils.h"
 #include "sfx.h"
+#include "motionblur.h"
 
 #define AXIS_SIZE 10
 
@@ -63,7 +63,7 @@ int sentido_v = 1;
 float _speed = 1.1;
 
 // CAMARA
-int current_cam = 0;
+int current_cam = 1;
 
 
 /*
@@ -89,6 +89,8 @@ void game_init() {
     glHint (GL_FOG_HINT, GL_NICEST); // set the fog to look the nicest, may slow down on older cards
 
     //glEnable (GL_FOG); //enable the fog
+    
+    CreateMotionBlurTexture();
 
     music_stop(0);
 	music_play("g-storm.mp3");
@@ -539,42 +541,42 @@ void dibujar_horizonte() {
     int i;
     glPushMatrix();
 
-    glEnable (GL_BLEND);
-    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
     glBegin(GL_QUADS);
         for (i = 1; i >= -1; i-=2) {
             glColor4f(0.1, 0.3, 0.6, 1);
             glVertex3f(0*i, 0, -ROAD_MAX);
-            glColor4f(0.0, 0.0, 0.4, 0.3);
+            glColor4f(0.0, 0.0, 0.4, 1);
             glVertex3f(100*i, 0, -ROAD_MAX);
-            glColor4f(0.0, 0.0, 0.0, 0.3);
+            glColor4f(0.0, 0.0, 0.0, 1);
             glVertex3f(100*i, 100, -ROAD_MAX);
             glVertex3f(0*i, 100, -ROAD_MAX);
     
-            glColor4f(0.0, 0.0, 0.4, 0.3);
+            glColor4f(0.0, 0.0, 0.4, 1);
             glVertex3f(100*i, 0, -ROAD_MAX);
-            glColor4f(0.0, 0.0, 0.0, 0.3);
+            glColor4f(0.0, 0.0, 0.0, 1);
             glVertex3f(1000*i, 0, -ROAD_MAX);
             glVertex3f(1000*i, 100, -ROAD_MAX);
             glVertex3f(100*i, 100, -ROAD_MAX);
 
-            glColor4f(0.0, 0.0, 0.4, 0.3);
+            glColor4f(0.0, 0.0, 0.4, 1);
             glVertex3f(100*i, 0, -ROAD_MAX);
-            glColor4f(0.0, 0.0, 0.0, 0.3);
+            glColor4f(0.0, 0.0, 0.0, 1);
             glVertex3f(1000*i, 0, -ROAD_MAX);
             glVertex3f(1000*i, -40, -ROAD_MAX);
             glVertex3f(100*i, -40, -ROAD_MAX);
 
             glColor4f(0.1, 0.3, 0.6, 1);
             glVertex3f(0*i, 0, -ROAD_MAX);
-            glColor4f(0.0, 0.0, 0.4, 0.3);
+            glColor4f(0.0, 0.0, 0.4, 1);
             glVertex3f(100*i, 0, -ROAD_MAX);
-            glColor4f(0.0, 0.0, 0.0, 0.3);
+            glColor4f(0.0, 0.0, 0.0, 1);
             glVertex3f(100*i, -40, -ROAD_MAX);
             glVertex3f(0*i, -100, -ROAD_MAX);
         }
     glEnd();
+
+    glEnable (GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glDisable(GL_DEPTH_TEST);
     glBegin(GL_LINES);
@@ -594,42 +596,14 @@ void dibujar_horizonte() {
     glPopMatrix();
 }
 
-void do_draw(GLuint textureID) {
- 
+int do_draw() {
+    GLuint textureID = 0; 
     glEnable(GL_TEXTURE_2D);   
+
     if(textureID >= 0) glBindTexture(GL_TEXTURE_2D, textureID);
     
-    glPushMatrix();
-    glTranslatef(0.0f, 0.0f, 0.0f);
-
-    glPolygonMode(GL_FRONT_AND_BACK, _polygon_mode);
-
-    // esto se pinta sin luz ---
-    glDisable(GL_LIGHTING);
-    glEnable(GL_COLOR_MATERIAL);
-//        dibujar_grid();
-        //dibujar_eje();
-        dibujar_horizonte();
-        glTranslatef(0.0, 0.0, 20.0);
-
-        dibujar_cosa();
-        dibujar_mira();
-        dibujar_carretera();
-        //draw_text();
-    glPopMatrix();
-}
-
-
-
-/**
- * Dibujar la escena
- */
-void game_draw_scene() {
    struct Punto3D a;
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear all
-    glLoadIdentity(); // reset drawing perspective
-   
+    
    a.x = LOOK_AT_X;
    a.y = LOOK_AT_Y;
    a.z = LOOK_AT_Z;
@@ -648,8 +622,42 @@ void game_draw_scene() {
             0, 1, 0
         );
     }
+    
+    glPushMatrix();
+    glTranslatef(0.0f, 0.0f, 0.0f);
 
-    if( AnimateNextFrame(60)) {
+//    glPolygonMode(GL_FRONT_AND_BACK, _polygon_mode);
+
+    // esto se pinta sin luz ---
+    glDisable(GL_LIGHTING);
+    glEnable(GL_COLOR_MATERIAL);
+//        dibujar_grid();
+        //dibujar_eje();
+        dibujar_horizonte();
+        glTranslatef(0.0, 0.0, 20.0);
+
+        dibujar_cosa();
+        dibujar_mira();
+        dibujar_carretera();
+        //draw_text();
+    glPopMatrix();
+
+}
+
+
+
+/**
+ * Dibujar la escena
+ */
+void game_draw_scene() {
+   struct Punto3D a;
+
+/*    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear all
+    glLoadIdentity(); // reset drawing perspective
+  */ 
+
+
+/*    if( AnimateNextFrame(60)) {
         glViewport(0, 0, _tex_0_size, _tex_0_size);	
         render_motion_blur( _tex_0_id4);
         // draw
@@ -668,7 +676,11 @@ void game_draw_scene() {
 //    blur_tex_zoom(g_tex_0_id4, 1);
     do_draw(0);
     //draw_text();
-//	glutSwapBuffers() ;
+//	glutSwapBuffers() ;*/
+
+	RenderToMotionBlurTexture(1, do_draw);
+	ShowMotionBlurTexture();
+//	do_draw();
 }
 
 void game_handle_idle() {
