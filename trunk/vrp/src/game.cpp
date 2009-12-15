@@ -62,6 +62,8 @@ float _speed = 1.1;
 
 // CAMARA
 int current_cam = 1;
+int _last_impact = 0;
+struct Punto3D _look_from, _look_from_shake = {0, 0, 0};
 
 // ENTIDADES
 struct game_entity entity_header;
@@ -101,6 +103,8 @@ void game_init() {
 	
 	_speed = BASE_SPEED;
 	srand(time(NULL));
+	
+	_last_impact = -1500; // el ultimo impacto decimos que fue hace tiempo para que no suceda... todavía
 }
 
 /**
@@ -146,6 +150,8 @@ void game_handle_keypress(unsigned char key, int x, int y) {
         case '.':
             _speed += 1.1*BASE_SPEED;
             break;
+        case 'i':
+            _last_impact = glutGet(GLUT_ELAPSED_TIME);
     }
     
     sentido_h = (xx > 0 ? 1 : -1);
@@ -329,32 +335,6 @@ static void dibujar_carretera()  {
     glDisable(GL_BLEND);
 }
 
-bool AnimateNextFrame(int desiredFrameRate)
-{
-	static float lastTime = 0.0f;
-	float elapsedTime = 0.0;
-
-	// Get current time in seconds  (milliseconds * .001 = seconds)
-    float currentTime = GetTickCount() * 0.001f; 
-
-	// Get the elapsed time by subtracting the current time from the last time
-	elapsedTime = currentTime - lastTime;
-
-	// Check if the time since we last checked is over (1 second / framesPerSecond)
-    if( elapsedTime > (1.0f / desiredFrameRate) )
-    {
-		// Reset the last time
-        lastTime = currentTime;	
-
-		// Return TRUE, to animate the next frame of animation
-        return true;
-    }
-
-	// We don't animate right now.
-	return false;
-}
-
-
 void calcular_rotacion(struct Punto3D entrada, float * rot_x, float * rot_y) {
     // curva para el plano xz
     float aux = entrada.z / curvatura_h; // auxiliar para calcular 'x' y 'z' (es el parametro de la función f(a) = a^2, se divide por curvatura para obtener una porción mayor o menor de la formula
@@ -368,7 +348,7 @@ void calcular_rotacion(struct Punto3D entrada, float * rot_x, float * rot_y) {
     *rot_x = (-atan(-1/(2*(aux2))*curvatura_v) / PI * 180 + 90) * sentido_v;
     *rot_y = (atan(-1/(2*(aux))*curvatura_h) / PI * 180 - 90) * sentido_h;
     
-    sprintf(_debug_string, "Z:%f ROT_X=%f ROT_Y=%f", entrada.z, *rot_x, *rot_y);
+//    sprintf(_debug_string, "Z:%f ROT_X=%f ROT_Y=%f", entrada.z, *rot_x, *rot_y);
     
 }
 
@@ -411,6 +391,10 @@ void dibujar_auto() {
     glPopMatrix();
 }
 
+/**
+ * Dibujar una mira del final de la carretera
+ * La camara mira a una fracción de esta dirección
+ */
 void dibujar_mira() {
    struct Punto3D a;
    
@@ -421,10 +405,8 @@ void dibujar_mira() {
    calcular_coordenadas(a, &a);
    
     glPushMatrix();
+    glDisable(GL_DEPTH_TEST);
     glTranslatef(a.x, a.y, a.z);
-//    glRotatef(90.0, 0.0, 0.0, 0.0);
-//    glColor3f(1,.5,0);
-//    glScalef(5,5,5);
     
     glColor3f(1.0, 0.8, 0.0);
     glBegin(GL_LINES);
@@ -439,12 +421,26 @@ void dibujar_mira() {
   
         glVertex3f(a.x-1, a.y, a.z);
         glVertex3f(a.x-3, a.y, a.z);
-  
-  
     glEnd();
-    
+    glEnable(GL_DEPTH_TEST);    
     glPopMatrix();
-   
+}
+
+void shake() {
+    float elapsed;
+    if (glutGet(GLUT_ELAPSED_TIME) - _last_impact < 0500)  {
+        elapsed = 0500 - (glutGet(GLUT_ELAPSED_TIME) - _last_impact);
+        _look_from_shake.x = ((rand()/(float)RAND_MAX)*1 - 0.5) * (elapsed/0500);
+        _look_from_shake.y = ((rand()/(float)RAND_MAX)*1 - 0.5) * (elapsed/0500);
+        _look_from_shake.z = ((rand()/(float)RAND_MAX)*6 - 3) * (elapsed/0500);
+    } else {
+        _look_from_shake.x = 0;
+        _look_from_shake.y = 0;
+        _look_from_shake.z = 0;
+    }
+    
+    sprintf(_debug_string, "elapsed: %f x:%f, y:%f, z:%f", elapsed, _look_from_shake.x, _look_from_shake.y, _look_from_shake.z);
+    
 }
 
 /**
@@ -464,7 +460,6 @@ void dibujar_horizonte() {
     if (start == 0) {
         start = glutGet(GLUT_ELAPSED_TIME);
     }
-        
 
     // con el paso del tiempo, damos vuelta por la paleta de colores
     // HSL nos permite hacer este ciclo sin mucho problema, ya que solo se tiene que cambiar el HUE
@@ -589,6 +584,7 @@ int do_draw() {
    a.z = LOOK_AT_Z;
    
    calcular_coordenadas(a, &a);
+   shake();
 
     if (current_cam == 0) {
         gluLookAt(sin(_angley*3.14/180) * cos(_anglez*3.14/180) * _distance, cos(_angley*3.14/180) * _distance, sin(_angley*3.14/180) * sin(_anglez*3.14/180) * _distance,  // donde estoy
@@ -597,7 +593,7 @@ int do_draw() {
         );
     } else {
         gluLookAt(
-            -a.x/50,2-a.y/50,22,
+            -a.x/50 +_look_from_shake.x, 2-a.y/50  +_look_from_shake.y,22  +_look_from_shake.z,
             a.x/2,a.y/2,a.z,
             0, 1, 0
         );
