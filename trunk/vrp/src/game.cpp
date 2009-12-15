@@ -244,16 +244,16 @@ static void dibujar_carretera()  {
         a = i / curvatura_h; // auxiliar para calcular 'x' y 'z' (es el parametro de la función f(a) = a^2, se divide por curvatura para obtener una porción mayor o menor de la formula
         aux_x = (a*a)*sentido_h; // coordenada de x en el centro de la carretera
         
-        b = i / curvatura_v; // // auxiliar para calcular 'y' (es el parametro de la función f(b) = b^2, se divide por curvatura para obtener una porción mayor o menor de la formula
+        b = i / curvatura_v; // auxiliar para calcular 'y' (es el parametro de la función f(b) = b^2, se divide por curvatura para obtener una porción mayor o menor de la formula
         y = (b*b)*sentido_v/3; // coordenada y de la carretera
 
         // ahora unas cosas que usan trigonometría
-        // hallar el incremente de x con respecto al centro de la carretera (esto es para que la curvatura se vea real)
+        // hallar el incremento de x con respecto al centro de la carretera (esto es para que la curvatura se vea real)
         if (a == 0)
             x = ROAD_WIDTH;
         else
             x = sin(atan(-1/(2*(a))*curvatura_h*sentido_h)) * ROAD_WIDTH * sentido_h;
-        // hallar el incremente de z (esto es para que la curvatura se vea real)
+        // hallar el incremento de z (esto es para que la curvatura se vea real)
         if (a == 0)
             z = 0;
         else
@@ -351,23 +351,23 @@ bool AnimateNextFrame(int desiredFrameRate)
 	return false;
 }
 
-
 void calcular_coordenadas(struct Punto3D entrada, struct Punto3D * salida) {
     // curva para el plano xz
-    float aux = entrada.z / curvatura_h; // aux
-    float aux_x = (aux*aux)*sentido_h; // x
+    float aux = entrada.z / curvatura_h; // auxiliar para calcular 'x' y 'z' (es el parametro de la función f(a) = a^2, se divide por curvatura para obtener una porción mayor o menor de la formula
+    float aux_x = (aux*aux)*sentido_h; // coordenada de x en el centro de la carretera
     
     // curva para y
-    float aux2 = entrada.z / curvatura_v; // aux
-    float aux_y = (aux2*aux2)*sentido_v/3.0; // y
+    float aux2 = entrada.z / curvatura_v; // auxiliar para calcular 'y' (es el parametro de la función f(b) = b^2, se divide por curvatura para obtener una porción mayor o menor de la formula
+    float aux_y = (aux2*aux2)*sentido_v/3.0; // coordenada y de la carretera
     
-    // hallar el x y z real
+    // ahora unas cosas que usan trigonometría
+    // hallar el incrementO de x con respecto al centro de la carretera (esto es para que la curvatura se vea real)
     if (aux == 0)
         salida->x = entrada.x;
     else
         salida->x = aux_x + sin(atan(-1/(2*(aux))*curvatura_h * sentido_h)) * entrada.x * sentido_h;
 
-
+    // hallar el incremento de z (esto es para que la curvatura se vea real)
     if (aux == 0)
         salida->z = entrada.z;
     else
