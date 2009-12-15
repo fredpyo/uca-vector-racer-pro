@@ -52,6 +52,17 @@ struct game_entity *  borrar_de_lista(struct game_entity * entity) {
     return next; // retornar el siguiente para que la función anterior encadene
 }
 
+int game_entity_obstacle_instance() {
+    float probability = rand()/(float)RAND_MAX;
+    
+    if (probability > .75)
+        return GAME_ENTITY_INSTANCE_OBSTACLE_CIL;
+    else if (probability > .65)
+        return GAME_ENTITY_INSTANCE_OBSTACLE_CUBE;
+    else
+        return GAME_ENTITY_INSTANCE_OBSTACLE_PYR;
+}
+
 /**
  * Crear una nueva entidad
  */
@@ -62,7 +73,7 @@ struct game_entity *  create_entity() {
     nuevo = (struct game_entity *)malloc(sizeof(struct game_entity));
     
     nuevo->type = GAME_ENTITY_TYPE_OBSTACLE;
-    nuevo->instance = GAME_ENTITY_INSTANCE_OBSTACLE1;
+    nuevo->instance = game_entity_obstacle_instance();
     nuevo->pos.x = (rand()/(float)RAND_MAX)* (ROAD_WIDTH-0.3)*2 - (ROAD_WIDTH-0.3);
     nuevo->pos.y = 1;
     nuevo->pos.z = -ROAD_MAX;
