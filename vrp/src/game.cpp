@@ -402,54 +402,13 @@ void calcular_coordenadas(struct Punto3D entrada, struct Punto3D * salida) {
 //    sprintf(_debug_string, "entrada: %f,%f,%f, salida: %f,%f,%f", entrada.x,entrada.y,entrada.z, salida->x,salida->y,salida->z);
 }
 
-void dibujar_cosa() {
-    static float decremento = 0.01;
-    struct Punto3D a, b, c, d;
-    
-    a.x = 3;
-    a.y = 0;
-    a.z = -35.0 + decremento;
-//    decremento += 0.04;
-    decremento = wrap_f(decremento, _speed, -ROAD_MAX, 35);
-    
-    //delta = wrap_f(delta, (time - elapsed_time) * _speed * BASE_SPEED, ROAD_MIN, (ROAD_MAX - ROAD_MIN)*2/ROAD_STEPS); /* este ultimo es (max - min) / steps */
-    
-    calcular_coordenadas(a, &b);
-    
-    c.x = -b.x;
-    c.y = b.y;
-    c.z = b.z;
-
-    d.x = 0;
-    d.y = b.y;
-    d.z = b.z;
-    
-    glEnable (GL_BLEND);
-    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
+void dibujar_auto() {
     glPushMatrix();
-    glTranslatef(b.x, b.y, b.z);
-//    glRotatef(90.0, 0.0, 0.0, 0.0);
-    glColor4f(1,.5,0, calcular_alpha(b.z));
-    glutSolidCone(0.25, 0.5, 16, 2);
+        glColor3f(0.2, 0.3, 0.7);
+        glTranslatef(0,0.4,-4);
+        glRotatef(180, 0, 1, 0);
+        glutWireCone(0.35, 1.0, 8, 1);
     glPopMatrix();
-
-    glPushMatrix();
-    glTranslatef(d.x, d.y, d.z);
-    glRotatef(90.0, -1.0, 0, 0.0);
-    glColor4f(.5,1,0,calcular_alpha(d.z));
-    glutSolidCone(0.25, 0.5, 16, 2);
-    glPopMatrix();
-
-    glPushMatrix();
-    glTranslatef(c.x, c.y, c.z);
-    glRotatef(90.0, -1.0, -1.0, 0.0);
-    glColor4f(0,.5,1,calcular_alpha(c.z));
-    glutSolidCone(0.25, 0.5, 16, 2);
-    glPopMatrix();
-    
-    glDisable(GL_BLEND);
-    
 }
 
 void dibujar_mira() {
@@ -656,7 +615,7 @@ int do_draw() {
         glTranslatef(0.0, 0.0, 20.0);
 
         recorrer_lista(entity_header.next);
-        dibujar_cosa();
+        dibujar_auto();
         dibujar_mira();
         dibujar_carretera();
         //draw_text();
