@@ -475,12 +475,16 @@ void dibujar_horizonte() {
     glPushMatrix();
     
     static int start = 0; // offset del tiempo para poder dibujar bien el fondo
+    static int elapsed_time = 0;
     static struct hsl color_hsl[3] = {{172, 1, 0.5},{182, 1, 0.2},{192, 1, 0.1}}; // paleta de colores en HSL
     struct rgb color_rgb[3]; // variables auxiliares donde almacenaremos los HSL convertidos
+    static float orientation = 0;
 
     // guardamos el momento de inicio    
-    if (start == 0)
+    if (start == 0) {
         start = glutGet(GLUT_ELAPSED_TIME);
+    }
+        
 
     // con el paso del tiempo, damos vuelta por la paleta de colores
     // HSL nos permite hacer este ciclo sin mucho problema, ya que solo se tiene que cambiar el HUE
@@ -488,6 +492,9 @@ void dibujar_horizonte() {
         color_hsl[i].hue = ((glutGet(GLUT_ELAPSED_TIME) - start)/500 + 180 + i*50)%360;
         hsl2rgb(color_hsl[i], &color_rgb[i]);
     }
+
+    orientation += 0.1/curvatura_h * sentido_h * (glutGet(GLUT_ELAPSED_TIME) - elapsed_time);
+    glRotatef(orientation, 0.0, 1.0, 0.0);
 
     // dibujamos el horizonte
     glBegin(GL_QUADS);
@@ -585,6 +592,8 @@ void dibujar_horizonte() {
     glDisable(GL_BLEND);
     
     glPopMatrix();
+    
+    elapsed_time = glutGet(GLUT_ELAPSED_TIME);
 }
 
 int do_draw() {
