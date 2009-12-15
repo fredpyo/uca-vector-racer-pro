@@ -4,6 +4,7 @@
 #define ROAD_WIDTH 5
 
 extern float _speed;
+extern GLuint _green_texture;
 
 void game_draw_scene(void);
 void game_handle_keypress(unsigned char key, int x, int y);

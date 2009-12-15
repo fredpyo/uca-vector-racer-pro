@@ -90,7 +90,6 @@ void title_draw_lines(void)
 //    glBlendFunc (GL_ONE, GL_ONE);
     
     srand(213); // el mismo seed siempre para que renderee bien
-    glLineWidth(1);
 
     glBegin(GL_LINES);            
         for (z = 0; z < 600; z++) {
@@ -107,7 +106,6 @@ void title_draw_lines(void)
     glDisable(GL_BLEND);
 
     glEnable(GL_DEPTH_TEST);    
-     glLineWidth(1);   
     last_time = elapsed_time;
     
 }
@@ -197,7 +195,7 @@ void title_draw_scene(void)
     glColor3d(color,color,color);
 
     // preparar texturas
-	glEnable(GL_TEXTURE_2D);
+//	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, _texture_id2);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -218,9 +216,10 @@ void title_draw_scene(void)
         glEnd();
     glPopMatrix();
     
-    glDisable(GL_TEXTURE_2D);
+//    glDisable(GL_TEXTURE_2D);
     perspective_mode();
 
+    glDisable(GL_TEXTURE_2D);
     if (!title_draw_scene_fadein(2)) {
         title_draw_lines();
         title_draw_menu();

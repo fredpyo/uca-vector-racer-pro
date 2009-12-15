@@ -23,6 +23,12 @@ GLuint texture_load_texture(Image* image) {
 				 GL_UNSIGNED_BYTE, //GL_UNSIGNED_BYTE, because pixels are stored
 				                   //as unsigned numbers
 				 image->pixels);               //The actual pixel data
+
+//    gluBuild2DMipmaps(GL_TEXTURE_2D, 3, image->width, image->height, GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
+
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);	// Linear Filtering
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);	// Linear Filtering
+
 	return textureId; //Returns the id of the texture
 }
 
