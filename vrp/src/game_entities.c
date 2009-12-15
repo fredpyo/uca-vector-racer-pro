@@ -73,7 +73,7 @@ struct game_entity *  create_entity() {
     nuevo = (struct game_entity *)malloc(sizeof(struct game_entity));
     
     nuevo->type = GAME_ENTITY_TYPE_OBSTACLE;
-    nuevo->instance = game_entity_obstacle_instance();
+    nuevo->instance = game_entity_obstacle_instance(); //GAME_ENTITY_INSTANCE_OBSTACLE_CIL;
     nuevo->pos.x = (rand()/(float)RAND_MAX)* (ROAD_WIDTH-0.3)*2 - (ROAD_WIDTH-0.3);
     nuevo->pos.y = 1;
     nuevo->pos.z = -ROAD_MAX;

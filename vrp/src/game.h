@@ -13,4 +13,5 @@ void game_handle_idle();
 
 float calcular_alpha(float z);
 void calcular_coordenadas(struct Punto3D entrada, struct Punto3D * salida);
+void calcular_rotacion(struct Punto3D entrada, float * rot_x, float * rot_y);
 
