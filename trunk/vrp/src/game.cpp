@@ -75,6 +75,8 @@ struct game_entity entity_header;
 
 // AUTO
 struct Punto3D car_pos[3]; // 0 center, 1: bounding box min, 2: bounding box max
+int left_key = 0;
+int right_key = 0;
 
 /*
  * Inicialización
@@ -128,6 +130,7 @@ void game_init() {
     car_pos[2].x = car_pos[0].x + CAR_WIDTH/2;
     car_pos[2].y = car_pos[0].y + CAR_HEIGHT/2;
     car_pos[2].z = car_pos[0].z - CAR_LENGTH;
+    
 }
 
 /**
@@ -221,20 +224,34 @@ void car_move(int direction) {
 /**
  * Manejo de teclas especiales (flechas, función, etc)
  */
-void game_handle_keypress_special(int key, int x, int y) {
+void game_handle_keypress_special(int key, int x, int y, int state) {
     switch (key) {
         case GLUT_KEY_LEFT:
+            left_key = state;
             car_move(-1);    
             break;    
         case GLUT_KEY_RIGHT:
+            right_key = state;
             car_move(+1);
             break;        
         case GLUT_KEY_F2:
             current_cam = !current_cam;
             break;
     }
+    sprintf(_debug_string, "KEYS: left=%d right=%d", left_key, right_key);
+    
 }
 
+void game_handle_keypress_special_up(int key, int x, int y) {
+    switch (key) {
+        case GLUT_KEY_LEFT:
+            left_key = 0;
+            break;    
+        case GLUT_KEY_RIGHT:
+            right_key = 0;
+            break;        
+        }
+}
 
 /**
  * Manejo de clics del mouse
@@ -273,16 +290,12 @@ void game_handle_mouse_motion_passive (int x, int y){
 
 float calcular_alpha(float z) {
     float x;
-//    sprintf(_debug_string, "ROAD_MAX %d ROAD_MIN %d, FOG_FAR %d, FOG_NEAR %d", ROAD_MAX, ROAD_MIN, FOG_FAR, FOG_NEAR);
     if (z >= FOG_NEAR) {
-//        sprintf(_message_string, "Z:%f --> 1", z);
         return 1;
     } else if (z > FOG_FAR) {
         x = 1 - ((-z+FOG_NEAR) / (+FOG_NEAR-(float)FOG_FAR));
-//        sprintf(_message_string, "Z:%f --> %f", z, x);
         return x;
     } else {
-//        sprintf(_message_string, "Z:%f --> 0", z);
         return 0;
     }
 }
@@ -400,9 +413,6 @@ void calcular_rotacion(struct Punto3D entrada, float * rot_x, float * rot_y) {
     float test;
     *rot_x = (-atan(-1/(2*(aux2))*curvatura_v) / PI * 180 + 90) * sentido_v;
     *rot_y = (atan(-1/(2*(aux))*curvatura_h) / PI * 180 - 90) * sentido_h;
-    
-//    sprintf(_debug_string, "Z:%f ROT_X=%f ROT_Y=%f", entrada.z, *rot_x, *rot_y);
-    
 }
 
 void calcular_coordenadas(struct Punto3D entrada, struct Punto3D * salida) {
@@ -428,11 +438,6 @@ void calcular_coordenadas(struct Punto3D entrada, struct Punto3D * salida) {
         salida->z = entrada.z + cos(atan(-1/(2*(aux))*curvatura_h*sentido_h)) * entrada.x * sentido_h;
         
     salida->y = aux_y/* + entrada.y*/;
-    
-    //salida->z -= 2;
-    
-//    sprintf(_message_string, "Curvatura V: %f %d, aux2>%f,aux_y>%f", curvatura_v, sentido_v, aux2,aux_y);
-//    sprintf(_debug_string, "entrada: %f,%f,%f, salida: %f,%f,%f", entrada.x,entrada.y,entrada.z, salida->x,salida->y,salida->z);
 }
 
 /**
@@ -507,9 +512,6 @@ void shake() {
         _look_from_shake.y = 0;
         _look_from_shake.z = 0;
     }
-    
-//    sprintf(_debug_string, "elapsed: %f x:%f, y:%f, z:%f", elapsed, _look_from_shake.x, _look_from_shake.y, _look_from_shake.z);
-    
 }
 
 /**
@@ -647,17 +649,10 @@ void check_collisions() {
     calcular_coordenadas(car_pos[1], &e_min);
     calcular_coordenadas(car_pos[2], &e_max);
    
-    sprintf(_debug_string, "min:%f,%f,%f max:%f%f%f", e_min.x, e_min.y, e_min.z, e_max.x, e_max.y, e_max.z);
+//    sprintf(_debug_string, "min:%f,%f,%f max:%f%f%f", e_min.x, e_min.y, e_min.z, e_max.x, e_max.y, e_max.z);
 }
 
 int do_draw() {
-//    GLuint textureID = 0; 
-//    glEnable(GL_TEXTURE_2D);   
-
-//    if(textureID >= 0) glBindTexture(GL_TEXTURE_2D, textureID);
-
-//    sprintf(_debug_string, "ENABLED: %d", glIsEnabled(GL_TEXTURE_2D));
-    
    struct Punto3D a;
     
    a.x = LOOK_AT_X;

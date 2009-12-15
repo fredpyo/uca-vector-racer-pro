@@ -245,7 +245,7 @@ void title_handle_keypress(unsigned char key, int x, int y)
     }
 }
 
-void title_handle_keypress_special(int key, int x, int y) {
+void title_handle_keypress_special(int key, int x, int y, int state) {
     switch (key)
     {
         case GLUT_KEY_DOWN:
