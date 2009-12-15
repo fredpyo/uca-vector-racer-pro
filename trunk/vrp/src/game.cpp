@@ -34,6 +34,8 @@
 
 #define BASE_SPEED 0.01
 
+#define PI 3.14159265358979323846
+
 // BLUR STUFF
 GLuint _tex_0_id4; // textura donde se almacenara el "blur"
 int _tex_0_size = 512; // tamaño de la textura
@@ -349,6 +351,24 @@ bool AnimateNextFrame(int desiredFrameRate)
 
 	// We don't animate right now.
 	return false;
+}
+
+
+void calcular_rotacion(struct Punto3D entrada, float * rot_x, float * rot_y) {
+    // curva para el plano xz
+    float aux = entrada.z / curvatura_h; // auxiliar para calcular 'x' y 'z' (es el parametro de la función f(a) = a^2, se divide por curvatura para obtener una porción mayor o menor de la formula
+    float aux_x = (aux*aux)*sentido_h; // coordenada de x en el centro de la carretera
+    
+    // curva para y
+    float aux2 = entrada.z / curvatura_v; // auxiliar para calcular 'y' (es el parametro de la función f(b) = b^2, se divide por curvatura para obtener una porción mayor o menor de la formula
+    float aux_y = (aux2*aux2)*sentido_v/3.0; // coordenada y de la carretera
+    
+    float test;
+    *rot_x = (-atan(-1/(2*(aux2))*curvatura_v) / PI * 180 + 90) * sentido_v;
+    *rot_y = (atan(-1/(2*(aux))*curvatura_h) / PI * 180 - 90) * sentido_h;
+    
+    sprintf(_debug_string, "Z:%f ROT_X=%f ROT_Y=%f", entrada.z, *rot_x, *rot_y);
+    
 }
 
 void calcular_coordenadas(struct Punto3D entrada, struct Punto3D * salida) {
