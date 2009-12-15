@@ -68,6 +68,7 @@ void game_entity_render_obstacle(struct game_entity * entity, int elapsed_time) 
 
             break;
         case GAME_ENTITY_INSTANCE_OBSTACLE_CIL:
+            glDisable(GL_TEXTURE_2D);
             glRotatef(-90, 1,0,0);
             glTranslatef(0.0, 0.5, 0.0);
             glColor4f(1.0, 1.0, 0.0, calcular_alpha(a.z));
