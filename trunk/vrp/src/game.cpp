@@ -39,6 +39,7 @@
 
 // BLUR STUFF
 GLuint _tex_0_id4; // textura donde se almacenara el "blur"
+GLuint _green_texture; // textura verde
 int _tex_0_size = 512; // tamaño de la textura
 //float blur_zoom = 0; // factor de "zoom" de la textura
 //  GENERAL
@@ -105,6 +106,9 @@ void game_init() {
 	srand(time(NULL));
 	
 	_last_impact = -1500; // el ultimo impacto decimos que fue hace tiempo para que no suceda... todavía
+	
+    Image * image = loadBMP("img\\verde.bmp");
+	_green_texture = texture_load_texture(image);
 }
 
 /**
@@ -287,7 +291,8 @@ static void dibujar_carretera()  {
     // el suelo es transparente, habilitar transparencia
     glEnable (GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+    glDisable(GL_TEXTURE_2D);
+    
     // dibujar la carretera    
     for (j = ROAD_STEPS-1; j >= 0; j--) {
         alpha = calcular_alpha(vrts[j][0].z);
@@ -382,7 +387,11 @@ void calcular_coordenadas(struct Punto3D entrada, struct Punto3D * salida) {
 //    sprintf(_debug_string, "entrada: %f,%f,%f, salida: %f,%f,%f", entrada.x,entrada.y,entrada.z, salida->x,salida->y,salida->z);
 }
 
+/**
+ * Dibujar el auto
+ */
 void dibujar_auto() {
+    glDisable(GL_TEXTURE_2D);
     glPushMatrix();
         glColor3f(0.2, 0.3, 0.7);
         glTranslatef(0,0.4,-4);
@@ -439,7 +448,7 @@ void shake() {
         _look_from_shake.z = 0;
     }
     
-    sprintf(_debug_string, "elapsed: %f x:%f, y:%f, z:%f", elapsed, _look_from_shake.x, _look_from_shake.y, _look_from_shake.z);
+//    sprintf(_debug_string, "elapsed: %f x:%f, y:%f, z:%f", elapsed, _look_from_shake.x, _look_from_shake.y, _look_from_shake.z);
     
 }
 
@@ -448,13 +457,14 @@ void shake() {
  */
 void dibujar_horizonte() {
     int i;
-    glPushMatrix();
-    
     static int start = 0; // offset del tiempo para poder dibujar bien el fondo
     static int elapsed_time = 0;
     static struct hsl color_hsl[3] = {{172, 1, 0.5},{182, 1, 0.2},{192, 1, 0.1}}; // paleta de colores en HSL
     struct rgb color_rgb[3]; // variables auxiliares donde almacenaremos los HSL convertidos
     static float orientation = 0;
+
+    glPushMatrix();
+    glDisable(GL_TEXTURE_2D);
 
     // guardamos el momento de inicio    
     if (start == 0) {
@@ -572,10 +582,12 @@ void dibujar_horizonte() {
 }
 
 int do_draw() {
-    GLuint textureID = 0; 
-    glEnable(GL_TEXTURE_2D);   
+//    GLuint textureID = 0; 
+//    glEnable(GL_TEXTURE_2D);   
 
-    if(textureID >= 0) glBindTexture(GL_TEXTURE_2D, textureID);
+//    if(textureID >= 0) glBindTexture(GL_TEXTURE_2D, textureID);
+
+    sprintf(_debug_string, "ENABLED: %d", glIsEnabled(GL_TEXTURE_2D));
     
    struct Punto3D a;
     
@@ -611,12 +623,13 @@ int do_draw() {
         glTranslatef(0.0, 0.0, 20.0);
 
         recorrer_lista(entity_header.next);
+        glEnable(GL_COLOR_MATERIAL);
         dibujar_auto();
         dibujar_mira();
         dibujar_carretera();
         //draw_text();
     glPopMatrix();
-
+    sprintf(_debug_string, "ENABLED: %d", glIsEnabled(GL_TEXTURE_2D));
 }
 
 /**

@@ -48,9 +48,9 @@ void intro_draw_scene(void)
     // preparar texturas
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, _texture_id);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+/*	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+*/
     ortho_mode(0, 0, _width, _height);
 
     // dibujar el quad
@@ -66,8 +66,6 @@ void intro_draw_scene(void)
             glVertex3f(-amplitude, y1-amplitude, 0); // arriba izquierda
         glEnd();
     glPopMatrix();
-    
-    glDisable(GL_TEXTURE_2D);
     
     perspective_mode();
 }

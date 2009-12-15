@@ -208,7 +208,7 @@ void ranking_draw_scene(void)
     glColor3d(color,color,color);
 
     // preparar texturas
-	glEnable(GL_TEXTURE_2D);
+//	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, _texture_id3);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -229,7 +229,7 @@ void ranking_draw_scene(void)
         glEnd();
     glPopMatrix();
     
-    glDisable(GL_TEXTURE_2D);
+//    glDisable(GL_TEXTURE_2D);
     perspective_mode();
 
     ranking_draw_scores();

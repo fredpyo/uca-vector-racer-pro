@@ -25,7 +25,7 @@
 #include "utils.h"
 #include "sfx.h"
 
-#define INITIAL_SCENE SCENE_GAME
+#define INITIAL_SCENE SCENE_INTRO
 
 float fps = 0; // almacena el fps
 char _debug_string[512] = {0}; // buffer para mensajes de debug
@@ -187,6 +187,7 @@ void handle_idle(void)
 }
 
 void draw_scene() {
+    glEnable(GL_TEXTURE_2D);
     if (generic_handle_draw_scene)
         // si hay una función de dibujado seteado, dibujar
         generic_handle_draw_scene();
@@ -217,7 +218,7 @@ void vrp_init() {
     );
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-
+    glEnable(GL_TEXTURE_2D);
 }
 
 /**
