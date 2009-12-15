@@ -75,6 +75,7 @@ struct game_entity entity_header;
 
 // AUTO
 struct Punto3D car_pos[3]; // 0 center, 1: bounding box min, 2: bounding box max
+float _car_roll; // para cuando gira
 int left_key = 0;
 int right_key = 0;
 
@@ -202,14 +203,15 @@ void game_handle_keypress(unsigned char key, int x, int y) {
  * direction -1 izq
  *           +1 der
  */
-void car_move(int direction) {
-    if (direction == -1) {
+void car_move(float how_much) {
+/*    if (direction == -1) {
         if (car_pos[0].x - CAR_WIDTH > -ROAD_WIDTH)
             car_pos[0].x -= 0.1;
     } else {
         if (car_pos[0].x + CAR_WIDTH < ROAD_WIDTH)
             car_pos[0].x += 0.1;
-    }
+    }*/
+    car_pos[0].x += how_much;
 
     car_pos[1].x = car_pos[0].x - CAR_WIDTH/2;
 /*    car_pos[1].y = car_pos[0].y - CAR_HEIGHT/2;
@@ -228,17 +230,16 @@ void game_handle_keypress_special(int key, int x, int y, int state) {
     switch (key) {
         case GLUT_KEY_LEFT:
             left_key = state;
-            car_move(-1);    
+  
             break;    
         case GLUT_KEY_RIGHT:
             right_key = state;
-            car_move(+1);
             break;        
         case GLUT_KEY_F2:
             current_cam = !current_cam;
             break;
     }
-    sprintf(_debug_string, "KEYS: left=%d right=%d", left_key, right_key);
+    sprintf(_debug_string, "KEYS: left=%d right=%d roll=%f", left_key, right_key, _car_roll);
     
 }
 
@@ -449,17 +450,31 @@ void dibujar_auto() {
         glColor3f(0.2, 0.3, 0.7);
         glTranslatef(car_pos[0].x,car_pos[0].y,car_pos[0].z);
         glRotatef(180, 0, 1, 0);
+        glRotatef(_car_roll, 0, 0, 1);
         glutWireCone(CAR_WIDTH/2, 1.0, 8, 1);
+        glTranslatef(-0.4,0,0.0);
+        glutWireCone(CAR_WIDTH/3, 0.5, 6, 1);        
+        glTranslatef(0.8,0,0.0);        
+        glutWireCone(CAR_WIDTH/3, 0.5, 6, 1);
         
         glEnable (GL_BLEND);
         glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+        glLineWidth(5);
         glBegin(GL_LINES);
             glColor3f(0.2, 0.3, 0.7);
             glVertex3f(0,0,0);
-            glColor4f(0.2, 0.3, 0.7, 0);
+            glColor4f(0.2, 0.3, 0.7, 0.2);
             glVertex3f(0,0,-2);
         glEnd();
+        glTranslatef(-0.8,0,0.0);        
+        glBegin(GL_LINES);
+            glColor3f(0.2, 0.3, 0.7);
+            glVertex3f(0,0,0);
+            glColor4f(0.2, 0.3, 0.7, 0.2);
+            glVertex3f(0,0,-2);
+        glEnd();
+        glLineWidth(1);
         
         glDisable(GL_BLEND);
     glPopMatrix();
@@ -688,9 +703,9 @@ int do_draw() {
 
         recorrer_lista(entity_header.next);
         glEnable(GL_COLOR_MATERIAL);
-        dibujar_auto();
         dibujar_mira();
         dibujar_carretera();
+        dibujar_auto();
         //draw_text();
         check_collisions();
     glPopMatrix();
@@ -707,20 +722,29 @@ void game_draw_scene() {
 	ShowMotionBlurTexture();
 }
 
+/**
+ * Procesando entre frames
+ */
 void game_handle_idle() {
     static int elapsed_time = 0;
     static int last_add = 0;
     int time;
+    // tiempo transcurrido
 	time = glutGet(GLUT_ELAPSED_TIME);
-//    delta = wrap_f(delta, (time - elapsed_time) * _speed * 0.05 / 25, ROAD_MIN, (ROAD_MAX - ROAD_MIN)*2/ROAD_STEPS); /* este ultimo es (max - min) / steps */
     delta = wrap_f(delta, (time - elapsed_time) * _speed, ROAD_MIN, (ROAD_MAX - ROAD_MIN)*2/ROAD_STEPS); /* este ultimo es (max - min) / steps */
+
+    if (left_key || right_key)
+        _car_roll = (_car_roll + (time - elapsed_time) * _speed*100 * (-left_key + right_key))/2;
+    else
+        _car_roll = 0 /*_car_roll / ((time - elapsed_time))*/;
+    car_move((time - elapsed_time) * _speed/4 * (-left_key + right_key));
     
+    // almacenar el nuevo tiempo
     elapsed_time = time;
-//    sprintf(_message_string, "SPEED %f --> 0", _speed);
-    
+
+    // agregar     
     if (time/BASE_SPAWN_INTERVAL > last_add) {
         last_add = time/BASE_SPAWN_INTERVAL;
         agregar_a_lista(&entity_header, create_entity());
-//        sprintf(_debug_string, "ASFASF %d", elapsed_time);
     }
 }
