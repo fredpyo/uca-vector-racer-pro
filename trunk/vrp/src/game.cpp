@@ -29,6 +29,10 @@
 #define LOOK_AT_Y 10
 #define LOOK_AT_Z -ROAD_MAX
 
+#define CAR_WIDTH 0.7
+#define CAR_HEIGHT 0.7
+#define CAR_LENGTH 1.0
+
 #define FOG_FAR -(ROAD_MAX-ROAD_MIN)-10
 #define FOG_NEAR -(ROAD_MAX-ROAD_MIN)/10
 
@@ -69,6 +73,8 @@ struct Punto3D _look_from, _look_from_shake = {0, 0, 0};
 // ENTIDADES
 struct game_entity entity_header;
 
+// AUTO
+struct Punto3D car_pos[3]; // 0 center, 1: bounding box min, 2: bounding box max
 
 /*
  * Inicialización
@@ -109,6 +115,19 @@ void game_init() {
 	
     Image * image = loadBMP("img\\verde.bmp");
 	_green_texture = texture_load_texture(image);
+	
+	// posición inicial del auto
+	car_pos[0].x = 0;
+	car_pos[0].y = 0.4;
+	car_pos[0].z = -7;
+    // bounds del bouding box, minimos
+    car_pos[1].x = car_pos[0].x - CAR_WIDTH/2;
+    car_pos[1].y = car_pos[0].y - CAR_HEIGHT/2;
+    car_pos[1].z = car_pos[0].z;
+    // bounds del bouding box, maximos
+    car_pos[2].x = car_pos[0].x + CAR_WIDTH/2;
+    car_pos[2].y = car_pos[0].y + CAR_HEIGHT/2;
+    car_pos[2].z = car_pos[0].z - CAR_LENGTH;
 }
 
 /**
@@ -128,6 +147,18 @@ void game_handle_keypress(unsigned char key, int x, int y) {
         case '-':
         	_distance = constraint_f(_distance, 1.5, 5, 200);
 			break;
+        case 'f':
+            _anglez = wrap_f(_anglez, 3.0, 0.0, 360.0);
+            break;
+        case 'h':
+            _anglez = wrap_f(_anglez, -3.0, 0.0, 360.0);
+            break;
+        case 't':
+            _angley = wrap_f(_angley, -3.0, 0.0, 360);
+            break;
+        case 'g':
+            _angley = wrap_f(_angley, 3.0, 0.0, 360);
+            break;
  		case 'a':
         case 'A':
             if (xx > -15)
@@ -164,23 +195,40 @@ void game_handle_keypress(unsigned char key, int x, int y) {
     curvatura_v = (yy == 0 ? 100 : 1 * sqrt(1/yy*1/yy)+5);
 }
 
+/*
+ * direction -1 izq
+ *           +1 der
+ */
+void car_move(int direction) {
+    if (direction == -1) {
+        if (car_pos[0].x - CAR_WIDTH > -ROAD_WIDTH)
+            car_pos[0].x -= 0.1;
+    } else {
+        if (car_pos[0].x + CAR_WIDTH < ROAD_WIDTH)
+            car_pos[0].x += 0.1;
+    }
+
+    car_pos[1].x = car_pos[0].x - CAR_WIDTH/2;
+/*    car_pos[1].y = car_pos[0].y - CAR_HEIGHT/2;
+    car_pos[1].z = car_pos[0].z - CAR_LENGTH/2;*/
+
+    car_pos[2].x = car_pos[0].x + CAR_WIDTH/2;
+/*    car_pos[2].y = car_pos[0].y + CAR_HEIGHT/2;
+    car_pos[2].z = car_pos[0].z + CAR_LENGTH/2;*/
+}
+    
+
 /**
  * Manejo de teclas especiales (flechas, función, etc)
  */
 void game_handle_keypress_special(int key, int x, int y) {
     switch (key) {
         case GLUT_KEY_LEFT:
-            _anglez = wrap_f(_anglez, 3.0, 0.0, 360.0);
-            break;
+            car_move(-1);    
+            break;    
         case GLUT_KEY_RIGHT:
-            _anglez = wrap_f(_anglez, -3.0, 0.0, 360.0);
-            break;
-        case GLUT_KEY_UP:
-            _angley = wrap_f(_angley, -3.0, 0.0, 360);
-            break;
-        case GLUT_KEY_DOWN:
-            _angley = wrap_f(_angley, 3.0, 0.0, 360);
-            break;
+            car_move(+1);
+            break;        
         case GLUT_KEY_F2:
             current_cam = !current_cam;
             break;
@@ -394,9 +442,21 @@ void dibujar_auto() {
     glDisable(GL_TEXTURE_2D);
     glPushMatrix();
         glColor3f(0.2, 0.3, 0.7);
-        glTranslatef(0,0.4,-4);
+        glTranslatef(car_pos[0].x,car_pos[0].y,car_pos[0].z);
         glRotatef(180, 0, 1, 0);
-        glutWireCone(0.35, 1.0, 8, 1);
+        glutWireCone(CAR_WIDTH/2, 1.0, 8, 1);
+        
+        glEnable (GL_BLEND);
+        glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        glBegin(GL_LINES);
+            glColor3f(0.2, 0.3, 0.7);
+            glVertex3f(0,0,0);
+            glColor4f(0.2, 0.3, 0.7, 0);
+            glVertex3f(0,0,-2);
+        glEnd();
+        
+        glDisable(GL_BLEND);
     glPopMatrix();
 }
 
@@ -581,13 +641,22 @@ void dibujar_horizonte() {
     elapsed_time = glutGet(GLUT_ELAPSED_TIME);
 }
 
+void check_collisions() {
+    struct Punto3D e_min, e_max;
+   
+    calcular_coordenadas(car_pos[1], &e_min);
+    calcular_coordenadas(car_pos[2], &e_max);
+   
+    sprintf(_debug_string, "min:%f,%f,%f max:%f%f%f", e_min.x, e_min.y, e_min.z, e_max.x, e_max.y, e_max.z);
+}
+
 int do_draw() {
 //    GLuint textureID = 0; 
 //    glEnable(GL_TEXTURE_2D);   
 
 //    if(textureID >= 0) glBindTexture(GL_TEXTURE_2D, textureID);
 
-    sprintf(_debug_string, "ENABLED: %d", glIsEnabled(GL_TEXTURE_2D));
+//    sprintf(_debug_string, "ENABLED: %d", glIsEnabled(GL_TEXTURE_2D));
     
    struct Punto3D a;
     
@@ -628,8 +697,9 @@ int do_draw() {
         dibujar_mira();
         dibujar_carretera();
         //draw_text();
+        check_collisions();
     glPopMatrix();
-    sprintf(_debug_string, "ENABLED: %d", glIsEnabled(GL_TEXTURE_2D));
+//    sprintf(_debug_string, "ENABLED: %d", glIsEnabled(GL_TEXTURE_2D));
 }
 
 /**
