@@ -33,6 +33,7 @@
 #define FOG_NEAR -(ROAD_MAX-ROAD_MIN)/10
 
 #define BASE_SPEED 0.01
+#define BASE_SPAWN_INTERVAL 450
 
 #define PI 3.14159265358979323846
 
@@ -684,8 +685,8 @@ void game_handle_idle() {
     elapsed_time = time;
 //    sprintf(_message_string, "SPEED %f --> 0", _speed);
     
-    if (time/100 > last_add) {
-        last_add = time/100;
+    if (time/BASE_SPAWN_INTERVAL > last_add) {
+        last_add = time/BASE_SPAWN_INTERVAL;
         agregar_a_lista(&entity_header, create_entity());
 //        sprintf(_debug_string, "ASFASF %d", elapsed_time);
     }

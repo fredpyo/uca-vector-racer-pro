@@ -55,9 +55,9 @@ struct game_entity *  borrar_de_lista(struct game_entity * entity) {
 int game_entity_obstacle_instance() {
     float probability = rand()/(float)RAND_MAX;
     
-    if (probability > .75)
+    if (probability > .85)
         return GAME_ENTITY_INSTANCE_OBSTACLE_CIL;
-    else if (probability > .65)
+    else if (probability > .60)
         return GAME_ENTITY_INSTANCE_OBSTACLE_CUBE;
     else
         return GAME_ENTITY_INSTANCE_OBSTACLE_PYR;
