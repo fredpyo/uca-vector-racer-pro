@@ -259,7 +259,7 @@ void ranking_handle_keypress(unsigned char key, int x, int y)
 }
 
 
-void ranking_handle_keypress_special(int key, int x, int y) {
+void ranking_handle_keypress_special(int key, int x, int y, int state) {
     switch (key)
     {
     }

@@ -41,7 +41,7 @@ float _angle = 30.0; // para camara en modo perspectiva
 
 // generic pointers
 void (*generic_handle_keypress)(unsigned char key, int x, int y) = NULL;
-void (*generic_handle_keypress_special)(int key, int x, int y) = NULL;
+void (*generic_handle_keypress_special)(int key, int x, int y, int state) = NULL;
 void (*generic_handle_mouse_button)(int button, int state, int x, int y) = NULL;
 void (*generic_handle_mouse_motion)(int x, int y) = NULL;
 void (*generic_handle_mouse_passive_motion)(int x, int y) = NULL;
@@ -67,7 +67,16 @@ void handle_keypress_special(int key, int x, int y) {
             _show_debug = !_show_debug;
             break;
         default:
-            generic_handle_keypress_special(key, x, y);
+                generic_handle_keypress_special(key, x, y, 1);
+            break;
+    }
+}
+
+void handle_keypress_special_up(int key, int x, int y) {
+    switch (key) {
+        default:
+            if (generic_handle_keypress_special)
+                generic_handle_keypress_special(key, x, y, 0);
             break;
     }
 }
@@ -280,11 +289,15 @@ int main(int argc, char ** argv) {
     glutInitWindowSize(800,600);
 
     glutCreateWindow("Vector Racer Pro Extreme Edition");
+
+    // keyboard stuff
+    glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
     
     // handlers por todos lados
     glutDisplayFunc(draw_scene);
     glutKeyboardFunc(handle_keypress);
     glutSpecialFunc(handle_keypress_special);
+    glutSpecialUpFunc(handle_keypress_special_up);
     glutReshapeFunc(handle_resize);
     glutMouseFunc(handle_mouse_button);
     glutMotionFunc(handle_mouse_motion);
