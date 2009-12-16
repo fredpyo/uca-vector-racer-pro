@@ -212,6 +212,12 @@ void car_move(float how_much) {
             car_pos[0].x += 0.1;
     }*/
     car_pos[0].x += how_much;
+    
+    if (car_pos[0].x < -ROAD_WIDTH + CAR_WIDTH/2)
+        car_pos[0].x = -ROAD_WIDTH + CAR_WIDTH/2;
+    else if (car_pos[0].x > ROAD_WIDTH - CAR_WIDTH/2)
+        car_pos[0].x = ROAD_WIDTH - CAR_WIDTH/2;
+
 
     car_pos[1].x = car_pos[0].x - CAR_WIDTH/2;
 /*    car_pos[1].y = car_pos[0].y - CAR_HEIGHT/2;
