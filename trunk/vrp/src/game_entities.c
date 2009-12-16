@@ -69,9 +69,9 @@ int pick_game_entity_obstacle_instance() {
 /**
  * Setea los bounds de la entidad de acuerdo a su tipo
  */
-void set_game_entity_bounds(struct game_entity *) {
+void set_game_entity_bounds(struct game_entity * game_entity) {
 	switch(game_entity->instance) {
-		case GAME_ENTITY_INSTANCE_OBSTACLE_PYR;
+		case GAME_ENTITY_INSTANCE_OBSTACLE_PYR:
 			//glutWireCone(0.65, 1.0, 4, 1);
 			game_entity->bound_min.x = - 0.65/2;
 			game_entity->bound_min.y =   0;
@@ -80,7 +80,7 @@ void set_game_entity_bounds(struct game_entity *) {
 			game_entity->bound_max.y = + 1;
 			game_entity->bound_max.z = + 0.65/2;
 			break;
-		case GAME_ENTITY_INSTANCE_OBSTACLE_CUBE;
+		case GAME_ENTITY_INSTANCE_OBSTACLE_CUBE:
 			//-1 +1
 			game_entity->bound_min.x = - 1;
 			game_entity->bound_min.y = - 1;
