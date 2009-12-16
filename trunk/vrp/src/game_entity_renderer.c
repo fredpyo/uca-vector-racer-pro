@@ -9,7 +9,6 @@
 #include "game.h"
 #include "game_entities.h"
 
-
 void game_entity_render_obstacle(struct game_entity * entity, int elapsed_time) {
     static Punto3D a;
     float rot_x, rot_y;
