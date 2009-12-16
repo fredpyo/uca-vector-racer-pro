@@ -126,11 +126,11 @@ void game_init() {
     // bounds del bouding box, minimos
     car_pos[1].x = car_pos[0].x - CAR_WIDTH/2;
     car_pos[1].y = car_pos[0].y - CAR_HEIGHT/2;
-    car_pos[1].z = car_pos[0].z;
+    car_pos[1].z = car_pos[0].z - CAR_LENGTH;
     // bounds del bouding box, maximos
     car_pos[2].x = car_pos[0].x + CAR_WIDTH/2;
     car_pos[2].y = car_pos[0].y + CAR_HEIGHT/2;
-    car_pos[2].z = car_pos[0].z - CAR_LENGTH;
+    car_pos[2].z = car_pos[0].z;
     
 }
 
@@ -498,6 +498,20 @@ void dibujar_auto() {
         
         glDisable(GL_BLEND);
     glPopMatrix();
+    glPointSize(3);
+    glColor3f(1,0,0);
+    glPushMatrix();
+//        glTranslatef(car_pos[1].x,car_pos[1].y,car_pos[1].z);        
+        //glutWireCone(CAR_WIDTH/3, 0.5, 6, 1);
+        glBegin(GL_POINTS);glVertex3f(car_pos[1].x,car_pos[1].y,car_pos[1].z);glEnd();
+    glPopMatrix();
+    glColor3f(0,1,0);
+    glPushMatrix();
+//        glTranslatef(car_pos[2].x,car_pos[2].y,car_pos[2].z);        
+        //glutWireCone(CAR_WIDTH/3, 0.5, 6, 1);
+        glBegin(GL_POINTS);glVertex3f(car_pos[2].x,car_pos[2].y,car_pos[2].z);glEnd();
+    glPopMatrix();
+    glPointSize(1);
 }
 
 /**

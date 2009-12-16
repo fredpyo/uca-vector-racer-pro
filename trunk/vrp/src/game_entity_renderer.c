@@ -37,44 +37,63 @@ void game_entity_render_obstacle(struct game_entity * entity, int elapsed_time) 
 
         	glEnable(GL_TEXTURE_2D);
         	glBindTexture(GL_TEXTURE_2D, _green_texture);
-/*        	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);*/
             glColor4f(1.0, 1.0, 1.0, calcular_alpha(a.z));
-//            glColor3f(1.0, 1.0, 1.0);            
-//            glutSolidCube(1.4);
             glBegin(GL_QUADS);
-            // front
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	// Bottom Left Of The Texture and Quad
-			glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	// Bottom Right Of The Texture and Quad
-			glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	// Top Right Of The Texture and Quad
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	// Top Left Of The Texture and Quad
-            // right
-			glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	// Bottom Left Of The Texture and Quad
-			glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	// Bottom Right Of The Texture and Quad
-			glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	// Top Right Of The Texture and Quad
-			glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	// Top Left Of The Texture and Quad
-            // left
-			glTexCoord2f(0.0f, 0.0f); glVertex3f( -1.0f, -1.0f, -1.0f);	// Bottom Left Of The Texture and Quad
-			glTexCoord2f(1.0f, 0.0f); glVertex3f( -1.0f, -1.0f,  1.0f);	// Bottom Right Of The Texture and Quad
-			glTexCoord2f(1.0f, 1.0f); glVertex3f( -1.0f,  1.0f,  1.0f);	// Top Right Of The Texture and Quad
-			glTexCoord2f(0.0f, 1.0f); glVertex3f( -1.0f,  1.0f, -1.0f);	// Top Left Of The Texture and Quad
-			// top
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	// Bottom Left Of The Texture and Quad
-			glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	// Bottom Right Of The Texture and Quad
-			glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	// Top Right Of The Texture and Quad
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	// Top Left Of The Texture and Quad
-
+                // front
+    			glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	// Bottom Left Of The Texture and Quad
+    			glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	// Bottom Right Of The Texture and Quad
+    			glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	// Top Right Of The Texture and Quad
+    			glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	// Top Left Of The Texture and Quad
+                // right
+    			glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	// Bottom Left Of The Texture and Quad
+    			glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	// Bottom Right Of The Texture and Quad
+    			glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	// Top Right Of The Texture and Quad
+    			glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	// Top Left Of The Texture and Quad
+                // left
+    			glTexCoord2f(0.0f, 0.0f); glVertex3f( -1.0f, -1.0f, -1.0f);	// Bottom Left Of The Texture and Quad
+    			glTexCoord2f(1.0f, 0.0f); glVertex3f( -1.0f, -1.0f,  1.0f);	// Bottom Right Of The Texture and Quad
+    			glTexCoord2f(1.0f, 1.0f); glVertex3f( -1.0f,  1.0f,  1.0f);	// Top Right Of The Texture and Quad
+    			glTexCoord2f(0.0f, 1.0f); glVertex3f( -1.0f,  1.0f, -1.0f);	// Top Left Of The Texture and Quad
+    			// top
+    			glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	// Bottom Left Of The Texture and Quad
+    			glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	// Bottom Right Of The Texture and Quad
+    			glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	// Top Right Of The Texture and Quad
+    			glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	// Top Left Of The Texture and Quad
 			glEnd();
-
             break;
         case GAME_ENTITY_INSTANCE_OBSTACLE_CIL:
             glDisable(GL_TEXTURE_2D);
             glRotatef(-90, 1,0,0);
-            glTranslatef(0.0, 0.5, 0.0);
             glColor4f(1.0, 1.0, 0.0, calcular_alpha(a.z));
             glutSolidCylinder(0.2, 3.2, 8, 1);
             break;
     }
     glPopMatrix();
+    
+    glPointSize(2);
+    glColor3f(1,0,0);
+    a = entity->pos;
+    a.x += entity->bound_max.x;
+    a.y += entity->bound_max.y;
+    a.z += entity->bound_max.z;
+    calcular_coordenadas(a, &a);
+    glPushMatrix();
+        glBegin(GL_POINTS);
+            glVertex3f(a.x, a.y, a.z);
+        glEnd();
+    glPopMatrix();
+
+    glColor3f(0,1,0);
+    a = entity->pos;
+    a.x += entity->bound_min.x;
+    a.y += entity->bound_min.y;
+    a.z += entity->bound_min.z;
+    calcular_coordenadas(a, &a);
+    glPushMatrix();
+        glBegin(GL_POINTS);
+            glVertex3f(a.x, a.y, a.z);
+        glEnd();
+    glPopMatrix();
+    glPointSize(1);
 
 }
