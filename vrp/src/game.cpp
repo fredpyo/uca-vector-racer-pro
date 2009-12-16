@@ -108,7 +108,7 @@ void game_init() {
     music_stop(0);
 	music_play("g-storm.mp3");
 	
-	entity_header.next = NULL;
+//	entity_header.next = NULL;
 	entity_header.next = create_entity();
 	
 	_speed = BASE_SPEED;
@@ -499,13 +499,13 @@ void dibujar_auto() {
         glDisable(GL_BLEND);
     glPopMatrix();
     glPointSize(3);
-    glColor3f(1,0,0);
+    glColor3f(0,1,0);
     glPushMatrix();
 //        glTranslatef(car_pos[1].x,car_pos[1].y,car_pos[1].z);        
         //glutWireCone(CAR_WIDTH/3, 0.5, 6, 1);
         glBegin(GL_POINTS);glVertex3f(car_pos[1].x,car_pos[1].y,car_pos[1].z);glEnd();
     glPopMatrix();
-    glColor3f(0,1,0);
+    glColor3f(1,0,0);
     glPushMatrix();
 //        glTranslatef(car_pos[2].x,car_pos[2].y,car_pos[2].z);        
         //glutWireCone(CAR_WIDTH/3, 0.5, 6, 1);
@@ -553,8 +553,8 @@ void shake() {
     float elapsed;
     if (glutGet(GLUT_ELAPSED_TIME) - _last_impact < 0500)  {
         elapsed = 0500 - (glutGet(GLUT_ELAPSED_TIME) - _last_impact);
-        _look_from_shake.x = ((rand()/(float)RAND_MAX)*1 - 0.5) * (elapsed/0500);
-        _look_from_shake.y = ((rand()/(float)RAND_MAX)*1 - 0.5) * (elapsed/0500);
+        _look_from_shake.x = ((rand()/(float)RAND_MAX)*6 - 3) * (elapsed/0500);
+        _look_from_shake.y = ((rand()/(float)RAND_MAX)*6 - 3) * (elapsed/0500);
         _look_from_shake.z = ((rand()/(float)RAND_MAX)*6 - 3) * (elapsed/0500);
     } else {
         _look_from_shake.x = 0;
@@ -692,13 +692,17 @@ void dibujar_horizonte() {
     elapsed_time = glutGet(GLUT_ELAPSED_TIME);
 }
 
-void check_collisions() {
+/*void check_collisions() {
     struct Punto3D e_min, e_max;
    
     calcular_coordenadas(car_pos[1], &e_min);
     calcular_coordenadas(car_pos[2], &e_max);
    
 //    sprintf(_debug_string, "min:%f,%f,%f max:%f%f%f", e_min.x, e_min.y, e_min.z, e_max.x, e_max.y, e_max.z);
+}*/
+
+void on_collision() {
+    _last_impact = glutGet(GLUT_ELAPSED_TIME);
 }
 
 int do_draw() {
@@ -735,13 +739,13 @@ int do_draw() {
         dibujar_horizonte();
         glTranslatef(0.0, 0.0, 20.0);
 
-        recorrer_lista(entity_header.next);
+        recorrer_lista(&entity_header, car_pos);
         glEnable(GL_COLOR_MATERIAL);
         dibujar_mira();
         dibujar_carretera();
         dibujar_auto();
         //draw_text();
-        check_collisions();
+//        check_collisions();
     glPopMatrix();
 //    sprintf(_debug_string, "ENABLED: %d", glIsEnabled(GL_TEXTURE_2D));
 }

@@ -10,7 +10,38 @@
 #include "game_entities.h"
 #include "game_entity_renderer.h"
 
-void recorrer_lista(struct game_entity * entity) {
+int check_collisions(Punto3D car_bounds[2], game_entity * entity){
+    struct Punto3D e_min, e_max;
+    int collision;
+
+    e_min = entity->pos;
+    e_min.x += entity->bound_min.x;
+    e_min.y += entity->bound_min.y;
+    e_min.z += entity->bound_min.z;
+    calcular_coordenadas(e_min, &e_min);
+
+    e_max = entity->pos;
+    e_max.x += entity->bound_max.x;
+    e_max.y += entity->bound_max.y;
+    e_max.z += entity->bound_max.z;
+    calcular_coordenadas(e_max, &e_max);
+    
+    if (
+        !(car_bounds[0].x > e_max.x) && car_bounds[1].x > e_min.x &&
+        !(car_bounds[0].z > e_max.z) && car_bounds[1].z > e_min.z
+       ) {
+        collision = 1;
+    } else {
+        collision = 0;
+    }
+    
+//    sprintf(_debug_string, "e_min:%f,%f,%f e_max:%f,%f,%f COL: %d", e_min.x, e_min.y, e_min.z, e_max.x, e_max.x, e_max.x, collision);
+    
+    return collision;
+   
+}
+
+void recorrer_lista(struct game_entity * entity, Punto3D car_pos[3]) {
     static int elapsed_time = 0;
     int time;
 	time = glutGet(GLUT_ELAPSED_TIME);
@@ -18,17 +49,20 @@ void recorrer_lista(struct game_entity * entity) {
     glEnable (GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    while (entity) {
-        entity->renderer(entity, time - elapsed_time);
-        if (entity->next != NULL) {
-                sprintf(_message_string, "%f", entity->next->pos.z);
-            if (entity->next->pos.z > entity->next->dissapear_at) {
-
-                entity->next = borrar_de_lista(entity->next);
-            }
+    while (entity->next) {
+        entity->next->renderer(entity->next, time - elapsed_time);
+        if (check_collisions(&car_pos[1], entity->next)) {
+            entity->next = borrar_de_lista(entity->next);
+            on_collision();
         }
-        entity = entity->next;
-        
+        if (entity->next != NULL) {
+                if (entity->next->pos.z > entity->next->dissapear_at) {
+                    entity->next = borrar_de_lista(entity->next);
+                }
+        }
+        if (entity->next != NULL) {
+            entity = entity->next;
+        }
     }
     glDisable(GL_BLEND);
     elapsed_time = time;

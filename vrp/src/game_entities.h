@@ -26,7 +26,7 @@ struct game_entity {
 };
 
 
-void recorrer_lista(struct game_entity * entity);
+void recorrer_lista(struct game_entity * entity, Punto3D car_pos[3]);
 void agregar_a_lista(struct game_entity * entity, struct game_entity * list);
 struct game_entity * borrar_de_lista(struct game_entity * entity);
 struct game_entity * create_entity();
