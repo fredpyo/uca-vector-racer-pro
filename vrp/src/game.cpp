@@ -397,6 +397,20 @@ static void dibujar_carretera()  {
             glColor4f(1,1,1,0.0);
             glVertex3f(vrts[j][0].x-vrts[j][1].x*12,vrts[j][1].y+0.5,vrts[j][0].z+vrts[j][1].z*12);
         glEnd();
+        
+        // otras líneas más
+        if (j%2) {
+            glColor4f(1.0, 1.0, 1.0, 0.7*alpha);
+            glLineWidth(3);
+            glBegin(GL_LINES);
+                    glVertex3f(vrts[j][0].x+vrts[j][1].x/3,vrts[j][0].y-0.05,vrts[j][0].z-vrts[j][1].z/3);
+                    glVertex3f(vrts[j-1][0].x+vrts[j-1][1].x/3,vrts[j-1][0].y-0.05,vrts[j-1][0].z-vrts[j-1][1].z/3);
+                    glVertex3f(vrts[j][0].x-vrts[j][1].x/3,vrts[j][0].y-0.05,vrts[j][0].z+vrts[j][1].z/3);
+                    glVertex3f(vrts[j-1][0].x-vrts[j-1][1].x/3,vrts[j-1][0].y-0.05,vrts[j-1][0].z+vrts[j-1][1].z/3);
+    
+            glEnd();
+            glLineWidth(1);
+        }
     }
 
     glDisable(GL_BLEND);
