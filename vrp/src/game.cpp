@@ -853,6 +853,40 @@ void game_draw_scene() {
 	draw_hud();
 }
 
+void change_road_orientation() {
+    static float xx = 0;
+    static float yy = 0;
+    static float target_xx = 0;
+    static float target_yy = 0;
+    static int delay = 0;
+    static int start = 0;
+
+    float ratio;
+    float aux;
+    
+    if (glutGet(GLUT_ELAPSED_TIME) - start > delay) {
+        xx = target_xx;
+        yy = target_yy;
+        
+        target_xx = (rand()/(float)RAND_MAX) * 0.2 * _speed/0.1 * (rand()%2 ? 1 : -1);
+        target_yy = (rand()/(float)RAND_MAX) * 0.3 * _speed/0.1 * (rand()%2 ? 1 : -1);
+        start = glutGet(GLUT_ELAPSED_TIME);
+        delay = 5000;
+    } else {
+        ratio = (glutGet(GLUT_ELAPSED_TIME) - start) / (float)delay;
+        
+        aux = xx + (target_xx - xx)*ratio;
+        sentido_h = (aux > 0 ? 1 : -1);
+        curvatura_h = (aux == 0 ? 100 : 1 * sqrt(1/aux*1/aux)+5);
+        aux = yy + (target_yy - yy)*ratio;
+        sentido_v = (aux > 0 ? 1 : -1);
+        curvatura_v = (aux == 0 ? 100 : 1 * sqrt(1/aux*1/aux)+5);
+    }
+    
+//    sprintf(_debug_string, "xx=%f, yy=%f, target_xx=%f, target_yy=%f", xx, yy, target_xx, target_yy);
+    sprintf(_debug_string, "SPEED=%f", _speed);
+}
+
 /**
  * Procesando entre frames
  */
@@ -886,9 +920,11 @@ void game_handle_idle() {
         _score += 10;
     }
 
-    // agregar     
+    // agregar cosas
     if (time/BASE_SPAWN_INTERVAL > last_add) {
         last_add = time/BASE_SPAWN_INTERVAL;
         agregar_a_lista(&entity_header, create_entity());
     }
+    
+    change_road_orientation();
 }
