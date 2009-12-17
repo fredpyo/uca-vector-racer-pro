@@ -30,7 +30,7 @@
 float fps = 0; // almacena el fps
 char _debug_string[512] = {0}; // buffer para mensajes de debug
 char _message_string[512] = {0}; // buffer para mensajes
-int _show_debug = 1; // mostar mensajes de fps, debug etc
+int _show_debug = 0; // mostar mensajes de fps, debug etc
 
 using namespace std;
 

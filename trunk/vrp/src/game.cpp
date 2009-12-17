@@ -42,26 +42,21 @@
 #define PI 3.14159265358979323846
 
 // BLUR STUFF
-GLuint _tex_0_id4; // textura donde se almacenara el "blur"
 GLuint _green_texture; // textura verde
 int _tex_0_size = 512; // tamaño de la textura
 //float blur_zoom = 0; // factor de "zoom" de la textura
+
 //  GENERAL
-int _polygon_mode = GL_FILL; // modo de rellenado
 float _anglez = 90.0; // angulo x
 float _angley = 75.0; // angulo y
 float _distance = 30; // distancia al origen
-int _x; // vieja posicion del mouse en x
-int _y; // vieja posicion del mouse en y
-bool _dragging = false; // arrastrando?
-
-float delta = 0;
 
 // CARRETERA
 float curvatura_h = 100000.0;
 float curvatura_v = 100000.0;
 int sentido_h = 1;
 int sentido_v = 1;
+float delta = 0; // usado para "transladar" a  la carretera
 
 float _speed = 1.1;
 
@@ -79,40 +74,31 @@ float _car_roll; // para cuando gira
 int left_key = 0;
 int right_key = 0;
 
+// JUGADOR y JUEGO misc
+int _base_time = 0;
+int _lives = 3;
+int _level = 1;
+unsigned int _score = 0;
+
 /*
  * Inicialización
  */
 void game_init() {
-    GLfloat density = 0.3; //set the density to 0.3 which is acctually quite thick
-    GLfloat fogColor[4] = {0, 0, 0, 1.0}; //set the for color to grey
-    
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.0, 0.0, 0.0, 0.9);
     glPointSize(3.0);
-    texture_create_blank_render_texture( &_tex_0_id4, 512, 3, GL_RGB);
 
     glEnable (GL_DEPTH_TEST); //enable the depth testing
-
-    glFogfv (GL_FOG_COLOR, fogColor); //set the fog color to our color chosen above
-    glFogf (GL_FOG_DENSITY, density); //set the density to the value above
-    glFogi (GL_FOG_MODE, GL_LINEAR); //set the fog mode to GL_EXP2
-    glFogf(GL_FOG_START,20.0);                   /* Where wwe start fogging */
-    glFogf(GL_FOG_END,40.0);                       /* end */
-
-    glHint (GL_FOG_HINT, GL_NICEST); // set the fog to look the nicest, may slow down on older cards
-
-    //glEnable (GL_FOG); //enable the fog
     
     CreateMotionBlurTexture();
 
     music_stop(0);
 	music_play("g-storm.mp3");
 	
-//	entity_header.next = NULL;
 	entity_header.next = create_entity();
 	
 	_speed = BASE_SPEED;
-	srand(time(NULL));
+	srand(time(NULL)); // seed the random!
 	
 	_last_impact = -1500; // el ultimo impacto decimos que fue hace tiempo para que no suceda... todavía
 	
@@ -131,6 +117,8 @@ void game_init() {
     car_pos[2].x = car_pos[0].x + CAR_WIDTH/2;
     car_pos[2].y = car_pos[0].y + CAR_HEIGHT/2;
     car_pos[2].z = car_pos[0].z;
+    
+    _base_time = glutGet(GLUT_ELAPSED_TIME);
     
 }
 
@@ -259,41 +247,6 @@ void game_handle_keypress_special_up(int key, int x, int y) {
             right_key = 0;
             break;        
         }
-}
-
-/**
- * Manejo de clics del mouse
- */
-void game_handle_mouse_button (int button, int state, int x, int y) {
-//	printf("BotÃ³n del mouse: %d\n",button);
-	if (button == GLUT_RIGHT_BUTTON) {
-		if (state == GLUT_DOWN)
-			_dragging = true;
-		else
-			_dragging = false;
-	} else if ((button == 3 || button == 4) && state == GLUT_UP) {
-		_distance = constraint_f(_distance, -(3.5 - button) * 4, 5, 200);
-			;
-	}
-
-}
-
-/**
- * Manejo de movimiento del mouse con boton presionado
- */
-void game_handle_mouse_motion (int x, int y) {
-	_anglez = wrap_f(_anglez, 180 *((float)x - _x)/_height, 0, 360);
-	_angley = wrap_f(_angley, 180 *((float)_y - y)/_width, 0, 360);
-	_x = x;
-	_y = y;
-}
-
-/**
- * Manejo de movimiento del mouse sin boton presionado
- */
-void game_handle_mouse_motion_passive (int x, int y){
-	_x = x;
-	_y = y;
 }
 
 float calcular_alpha(float z) {
@@ -764,17 +717,87 @@ void dibujar_horizonte() {
     elapsed_time = glutGet(GLUT_ELAPSED_TIME);
 }
 
-/*void check_collisions() {
-    struct Punto3D e_min, e_max;
-   
-    calcular_coordenadas(car_pos[1], &e_min);
-    calcular_coordenadas(car_pos[2], &e_max);
-   
-//    sprintf(_debug_string, "min:%f,%f,%f max:%f%f%f", e_min.x, e_min.y, e_min.z, e_max.x, e_max.y, e_max.z);
-}*/
-
+/**
+ * Que hacer cuando chocamos
+ */
 void on_collision() {
-    _last_impact = glutGet(GLUT_ELAPSED_TIME);
+    _last_impact = glutGet(GLUT_ELAPSED_TIME); // SHAKE THAT SCREEN!
+    _lives--;
+}
+
+/**
+ * Dibujar el HUD
+ */
+void draw_hud() {
+    char buffer[100];
+    int offset;
+    
+    ortho_mode(0, _height, _width, 0);
+	glDisable(GL_DEPTH_TEST);
+    glDisable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // fondo
+    glColor4f(0, 0, 0, 0.65);
+    glBegin(GL_QUADS);
+        glVertex3f(0, 50, 0); // abajo izquierda
+        glVertex3f(_width, 50, 0); // abajo derecha
+        glVertex3f(_width, 0, 0); // arriba derecha
+        glVertex3f(0, 0, 0); // arriba izquierda
+    glEnd();
+    
+    // vidas
+    glColor3f(0.3f, 0.6f, 1.0f);
+    glRasterPos2i(10, 30);
+    sprintf(buffer, "Shields %d", _lives);
+    glutBitmapString(GLUT_BITMAP_9_BY_15, (unsigned char *) buffer);
+
+    // velocidad
+    glColor3f(0.3f, 1.0f, 0.6f);
+    glRasterPos2i(10, 10);
+    sprintf(buffer, "Speed ");
+    glutBitmapString(GLUT_BITMAP_9_BY_15, (unsigned char *) buffer);
+    sprintf(buffer, "%4.2f", _speed*1000 );
+    glutBitmapString(GLUT_BITMAP_HELVETICA_18, (unsigned char *) buffer);
+    sprintf(buffer, "km/h");
+    glutBitmapString(GLUT_BITMAP_9_BY_15, (unsigned char *) buffer);
+    
+    // elapsed time
+    glColor3f(1.0f, 0.6f, 0.3f);
+    offset = (_width - glutBitmapLength(GLUT_BITMAP_8_BY_13, (unsigned char *) "Elapsed time"))/2;
+    glRasterPos2i(offset, 30);
+    glutBitmapString(GLUT_BITMAP_8_BY_13, (unsigned char *) "Elapsed time");
+    sprintf(buffer, "%3.2f ", (glutGet(GLUT_ELAPSED_TIME) - _base_time)/1000.0 );
+    offset = (_width - glutBitmapLength(GLUT_BITMAP_8_BY_13, (unsigned char *) buffer))/2;
+    glRasterPos2i(offset, 10);
+    glutBitmapString(GLUT_BITMAP_HELVETICA_18, (unsigned char *) buffer);
+    
+    // level
+    glColor3f(0.3f, 1.0f, 0.6f);
+    glRasterPos2i(_width - 200, 30);
+    sprintf(buffer, "Level ");
+    glutBitmapString(GLUT_BITMAP_9_BY_15, (unsigned char *) buffer);
+    sprintf(buffer, "%d", _level );
+    glutBitmapString(GLUT_BITMAP_HELVETICA_18, (unsigned char *) buffer);
+
+    // score
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glRasterPos2i(_width - 200, 10);
+    sprintf(buffer, "Score %012u", _score);
+    glutBitmapString(GLUT_BITMAP_9_BY_15, (unsigned char *) buffer);
+
+
+/*    sprintf(_debug_string, "sine: %f", sine_value);
+
+    glColor4f(1, 1, 1, sine_value);
+    glRasterPos2i(offset, 300 + i*30);
+    glutBitmapString(GLUT_BITMAP_HELVETICA_18, (unsigned char *) menu_option_strings[i]);*/
+
+
+    
+    glDisable(GL_BLEND);
+    perspective_mode();
 }
 
 int do_draw() {
@@ -826,10 +849,11 @@ int do_draw() {
  * Dibujar la escena
  */
 void game_draw_scene() {
-   struct Punto3D a;
+    struct Punto3D a;
 
 	RenderToMotionBlurTexture(1, do_draw);
 	ShowMotionBlurTexture();
+	draw_hud();
 }
 
 /**
@@ -838,6 +862,7 @@ void game_draw_scene() {
 void game_handle_idle() {
     static int elapsed_time = 0;
     static int last_add = 0;
+    static int last_add_score = 0;
     int time;
     // tiempo transcurrido
 	time = glutGet(GLUT_ELAPSED_TIME);
@@ -851,6 +876,18 @@ void game_handle_idle() {
     
     // almacenar el nuevo tiempo
     elapsed_time = time;
+
+    // calcular el level
+    if (_level < (time - _base_time)/10000) {
+        _level = (time - _base_time)/10000;
+        _speed = _speed * 1.1;
+    }
+    
+    // agregar score al score :P
+    if (time - last_add_score > 1000) {
+        last_add_score = time;
+        _score += 10;
+    }
 
     // agregar     
     if (time/BASE_SPAWN_INTERVAL > last_add) {
