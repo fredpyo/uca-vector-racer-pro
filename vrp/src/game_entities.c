@@ -52,8 +52,12 @@ void recorrer_lista(struct game_entity * entity, Punto3D car_pos[3]) {
     while (entity->next) {
         entity->next->renderer(entity->next, time - elapsed_time);
         if (check_collisions(&car_pos[1], entity->next)) {
+            if (entity->next->type == GAME_ENTITY_TYPE_POWERUP) {
+                give_power_up(entity->next->instance);
+            } else {
+                on_collision();
+            }
             entity->next = borrar_de_lista(entity->next);
-            on_collision();
         }
         if (entity->next != NULL) {
                 if (entity->next->pos.z > entity->next->dissapear_at) {
@@ -84,6 +88,23 @@ struct game_entity *  borrar_de_lista(struct game_entity * entity) {
     next = entity->next; // almacenar el siguiente en la lista
     free(entity);
     return next; // retornar el siguiente para que la función anterior encadene
+}
+
+
+/**
+ * Elige una nueva entidad de manera probabilística
+ */
+int pick_game_entity_powerup_instance() {
+    float probability = rand()/(float)RAND_MAX;
+    
+    if (probability > .51)
+        return GAME_ENTITY_INSTANCE_POWERUP_LIFE;
+    else if (probability > .26)
+        return GAME_ENTITY_INSTANCE_POWERUP_SLOW;
+    else if (probability > .24)
+        return GAME_ENTITY_INSTANCE_POWERUP_INVINCIBLE;
+    else
+        return GAME_ENTITY_INSTANCE_POWERUP_RANDOM;
 }
 
 /**
@@ -133,6 +154,17 @@ void set_game_entity_bounds(struct game_entity * game_entity) {
 			game_entity->bound_max.y = + 3.2;
 			game_entity->bound_max.z = + 0.2/2;
 			break;
+		case GAME_ENTITY_INSTANCE_POWERUP_LIFE:
+        case GAME_ENTITY_INSTANCE_POWERUP_SLOW:
+        case GAME_ENTITY_INSTANCE_POWERUP_INVINCIBLE:
+        case GAME_ENTITY_INSTANCE_POWERUP_RANDOM:
+			game_entity->bound_min.x = - 0.45;
+			game_entity->bound_min.y = + 0.00;
+			game_entity->bound_min.z = - 0.45;
+			game_entity->bound_max.x = + 0.45;
+			game_entity->bound_max.y = + 0.90;
+			game_entity->bound_max.z = + 0.45;
+            break;            
 	}
 }
 
@@ -140,18 +172,24 @@ void set_game_entity_bounds(struct game_entity * game_entity) {
  * Crear una nueva entidad
  */
 struct game_entity *  create_entity() {
-    
     struct game_entity * nuevo = NULL;
-    
-    nuevo = (struct game_entity *)malloc(sizeof(struct game_entity));
-    
-    nuevo->type = GAME_ENTITY_TYPE_OBSTACLE;
-    nuevo->instance = pick_game_entity_obstacle_instance(); //GAME_ENTITY_INSTANCE_OBSTACLE_CIL;
+    float probability = rand()/(float)RAND_MAX;
+
+    nuevo = (struct game_entity *)malloc(sizeof(struct game_entity));    
+    if (probability > 0.90) {
+        nuevo->type = GAME_ENTITY_TYPE_POWERUP;
+        nuevo->instance = pick_game_entity_powerup_instance(); //GAME_ENTITY_INSTANCE_OBSTACLE_CIL;
+        nuevo->renderer = game_entity_render_powerup;
+    } else {
+        nuevo->type = GAME_ENTITY_TYPE_OBSTACLE;
+        nuevo->instance = pick_game_entity_obstacle_instance(); //GAME_ENTITY_INSTANCE_OBSTACLE_CIL;
+        nuevo->renderer = game_entity_render_obstacle;
+    }
+
     nuevo->pos.x = (rand()/(float)RAND_MAX)* (ROAD_WIDTH-0.3)*2 - (ROAD_WIDTH-0.3);
     nuevo->pos.y = 0;
     nuevo->pos.z = -ROAD_MAX;
     nuevo->dissapear_at = 0;
-    nuevo->renderer = game_entity_render_obstacle;
     nuevo->next = NULL;
 	// setear los bounds
 	set_game_entity_bounds(nuevo);
