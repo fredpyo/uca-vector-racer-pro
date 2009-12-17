@@ -117,11 +117,12 @@ void set_game_entity_bounds(struct game_entity * game_entity) {
 		case GAME_ENTITY_INSTANCE_OBSTACLE_CUBE:
 			//-1 +1
 			game_entity->bound_min.x = - 1;
-			game_entity->bound_min.y = - 1;
+			game_entity->bound_min.y =   0;
 			game_entity->bound_min.z = - 1;
 			game_entity->bound_max.x = + 1;
-			game_entity->bound_max.y = + 1;
+			game_entity->bound_max.y = + 2;
 			game_entity->bound_max.z = + 1;
+            game_entity->pos.y = 0;
 			break;
 		case GAME_ENTITY_INSTANCE_OBSTACLE_CIL:
 			//glutSolidCylinder(0.2, 3.2, 8, 1);
@@ -147,7 +148,7 @@ struct game_entity *  create_entity() {
     nuevo->type = GAME_ENTITY_TYPE_OBSTACLE;
     nuevo->instance = pick_game_entity_obstacle_instance(); //GAME_ENTITY_INSTANCE_OBSTACLE_CIL;
     nuevo->pos.x = (rand()/(float)RAND_MAX)* (ROAD_WIDTH-0.3)*2 - (ROAD_WIDTH-0.3);
-    nuevo->pos.y = 1;
+    nuevo->pos.y = 0;
     nuevo->pos.z = -ROAD_MAX;
     nuevo->dissapear_at = 0;
     nuevo->renderer = game_entity_render_obstacle;

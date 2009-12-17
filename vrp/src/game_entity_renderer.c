@@ -10,7 +10,7 @@
 #include "game_entities.h"
 
 void game_entity_render_obstacle(struct game_entity * entity, int elapsed_time) {
-    static Punto3D a;
+    static Punto3D a,b;
     float rot_x, rot_y;
     
     entity->pos.z += _speed * elapsed_time;
@@ -32,7 +32,7 @@ void game_entity_render_obstacle(struct game_entity * entity, int elapsed_time) 
             glutWireCone(0.65, 1.0, 4, 1);
             break;
         case GAME_ENTITY_INSTANCE_OBSTACLE_CUBE:
-            glTranslatef(0.0, 0.5, 0.0);
+            glTranslatef(0.0, 1, 0.0);
 
         	glEnable(GL_TEXTURE_2D);
         	glBindTexture(GL_TEXTURE_2D, _green_texture);
@@ -69,7 +69,7 @@ void game_entity_render_obstacle(struct game_entity * entity, int elapsed_time) 
     }
     glPopMatrix();
     
-    glPointSize(2);
+    /*glPointSize(2);
     glColor3f(1,0,0);
     a = entity->pos;
     a.x += entity->bound_max.x;
@@ -93,6 +93,17 @@ void game_entity_render_obstacle(struct game_entity * entity, int elapsed_time) 
             glVertex3f(a.x, a.y, a.z);
         glEnd();
     glPopMatrix();
-    glPointSize(1);
+    glPointSize(1);*/
+    a = entity->pos;
+    a.x += entity->bound_min.x;
+    a.y += entity->bound_min.y;
+    a.z += entity->bound_min.z;
+    calcular_coordenadas(a, &a);
+    b = entity->pos;
+    b.x += entity->bound_max.x;
+    b.y += entity->bound_max.y;
+    b.z += entity->bound_max.z;
+    calcular_coordenadas(b, &b);
+    dibujar_bounding_box(a,b);
 
 }

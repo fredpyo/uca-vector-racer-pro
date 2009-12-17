@@ -16,4 +16,4 @@ float calcular_alpha(float z);
 void calcular_coordenadas(struct Punto3D entrada, struct Punto3D * salida);
 void calcular_rotacion(struct Punto3D entrada, float * rot_x, float * rot_y);
 void on_collision(void);
-
+void dibujar_bounding_box(Punto3D min, Punto3D max);

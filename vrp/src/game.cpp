@@ -459,7 +459,77 @@ void calcular_coordenadas(struct Punto3D entrada, struct Punto3D * salida) {
     else
         salida->z = entrada.z + cos(atan(-1/(2*(aux))*curvatura_h*sentido_h)) * entrada.x * sentido_h;
         
-    salida->y = aux_y/* + entrada.y*/;
+    salida->y = aux_y + entrada.y;
+}
+
+/**
+ * Dibujar el "bouding box
+ */
+void dibujar_bounding_box(Punto3D min, Punto3D max) {
+    glDisable(GL_TEXTURE_2D);
+    glPushMatrix();
+        glPointSize(4);
+        glBegin(GL_LINE_STRIP);
+            // lejos
+            glColor3f(0, 1, 0);
+            glVertex3f(min.x, min.y, min.z);
+            glColor3f(0.3, 0.6, 0);
+            glVertex3f(min.x, max.y, min.z);
+            glColor3f(0.6, 0.3, 0);
+            glVertex3f(max.x, max.y, min.z);
+            glColor3f(0.3, 0.6, 0);
+            glVertex3f(max.x, min.y, min.z);
+            glColor3f(0, 1, 0);
+            glVertex3f(min.x, min.y, min.z);
+        glEnd();
+        glBegin(GL_LINE_STRIP);
+            // cerca
+            glColor3f(0.3, 0.6, 0);
+            glVertex3f(min.x, min.y, max.z);
+            glColor3f(0.6, 0.3, 0);
+            glVertex3f(min.x, max.y, max.z);
+            glColor3f(1, 0, 0);
+            glVertex3f(max.x, max.y, max.z);
+            glColor3f(0.6, 0.3, 0);
+            glVertex3f(max.x, min.y, max.z);
+            glColor3f(0.3, 0.6, 0);
+            glVertex3f(min.x, min.y, max.z);
+        glEnd();
+        glBegin(GL_LINE_STRIP);
+            // abajo
+            glColor3f(0, 1, 0);
+            glVertex3f(min.x, min.y, min.z);
+            glColor3f(0.3, 0.6, 0);
+            glVertex3f(min.x, min.y, max.z);
+            glColor3f(0.6, 0.3, 0);
+            glVertex3f(max.x, min.y, max.z);
+            glColor3f(0.3, 0.6, 0);
+            glVertex3f(max.x, min.y, min.z);
+            glColor3f(0, 1, 0);
+            glVertex3f(min.x, min.y, min.z);
+        glEnd();
+        glBegin(GL_LINE_STRIP);
+            // arriba
+            glColor3f(0.3, 0.6, 0);
+            glVertex3f(min.x, max.y, min.z);
+            glColor3f(0.3, 0.6, 0);
+            glVertex3f(min.x, max.y, max.z);
+            glColor3f(1, 0, 0);
+            glVertex3f(max.x, max.y, max.z);
+            glColor3f(0.6, 0.3, 0);
+            glVertex3f(max.x, max.y, min.z);
+            glColor3f(0.3, 0.6, 0);
+            glVertex3f(min.x, max.y, min.z);
+        glEnd();
+    
+        glColor3f(0,1,0);
+        glBegin(GL_POINTS);glVertex3f(min.x,min.y,min.z);glEnd();
+        glColor3f(1,0,0);
+        glBegin(GL_POINTS);glVertex3f(max.x,max.y,max.z);glEnd();
+
+    glPopMatrix();
+    glPointSize(1);
+
 }
 
 /**
@@ -499,20 +569,7 @@ void dibujar_auto() {
         
         glDisable(GL_BLEND);
     glPopMatrix();
-    glPointSize(3);
-    glColor3f(0,1,0);
-    glPushMatrix();
-//        glTranslatef(car_pos[1].x,car_pos[1].y,car_pos[1].z);        
-        //glutWireCone(CAR_WIDTH/3, 0.5, 6, 1);
-        glBegin(GL_POINTS);glVertex3f(car_pos[1].x,car_pos[1].y,car_pos[1].z);glEnd();
-    glPopMatrix();
-    glColor3f(1,0,0);
-    glPushMatrix();
-//        glTranslatef(car_pos[2].x,car_pos[2].y,car_pos[2].z);        
-        //glutWireCone(CAR_WIDTH/3, 0.5, 6, 1);
-        glBegin(GL_POINTS);glVertex3f(car_pos[2].x,car_pos[2].y,car_pos[2].z);glEnd();
-    glPopMatrix();
-    glPointSize(1);
+    dibujar_bounding_box(car_pos[1], car_pos[2]);
 }
 
 /**
