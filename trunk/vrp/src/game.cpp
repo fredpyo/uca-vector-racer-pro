@@ -242,7 +242,8 @@ void game_handle_keypress_special(int key, int x, int y, int state) {
             right_key = state;
             break;        
         case GLUT_KEY_F2:
-            current_cam = !current_cam;
+            if (state)
+                current_cam = !current_cam;
             break;
     }
     sprintf(_debug_string, "KEYS: left=%d right=%d roll=%f", left_key, right_key, _car_roll);
@@ -560,6 +561,20 @@ void shake() {
         _look_from_shake.x = 0;
         _look_from_shake.y = 0;
         _look_from_shake.z = 0;
+    }
+    
+    if (glutGet(GLUT_ELAPSED_TIME) - _last_impact < 50)  {
+        ortho_mode(0,0,1,1);
+        glDisable(GL_TEXTURE_2D);
+        glEnable(GL_BLEND);
+        glColor4f(1,1,1, 0.5);
+        glBegin(GL_QUADS);
+            glVertex3f(0,0,-1);
+            glVertex3f(1,0,-1);
+            glVertex3f(1,1,-1);
+            glVertex3f(0,1,-1);
+        glEnd();
+        perspective_mode();
     }
 }
 
