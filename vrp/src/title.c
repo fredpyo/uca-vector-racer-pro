@@ -265,6 +265,8 @@ void title_init() {
 	_texture_id2 = texture_load_texture(image);
 	delete image;
 
+    menu_selected = 0;
+
     music_stop(0);
 	music_play("test.ogg");
 	

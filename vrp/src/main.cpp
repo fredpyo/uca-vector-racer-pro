@@ -25,7 +25,7 @@
 #include "utils.h"
 #include "sfx.h"
 
-#define INITIAL_SCENE SCENE_INTRO
+#define INITIAL_SCENE SCENE_RANKING
 
 float fps = 0; // almacena el fps
 char _debug_string[512] = {0}; // buffer para mensajes de debug
