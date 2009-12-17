@@ -44,6 +44,10 @@
 
 // BLUR STUFF
 GLuint _green_texture; // textura verde
+GLuint _life_texture; // textura verde
+GLuint _slow_texture;
+GLuint _shield_texture;
+GLuint _random_texture;
 GLuint _game_over_texture; // textura game over
 int _tex_0_size = 512; // tamaño de la textura
 //float blur_zoom = 0; // factor de "zoom" de la textura
@@ -85,7 +89,7 @@ unsigned int _score = 0;
 // DEBUG
 int _show_bounds = 0;
 int _game_over_start = 0;
-    
+int _invincible_start = -20000;
 /*
  * Inicialización
  */
@@ -111,6 +115,18 @@ void game_init() {
     Image * image = loadBMP("img\\verde.bmp");
 	_green_texture = texture_load_texture(image);
     delete image;
+    image = loadBMP("img\\life.bmp");
+	_life_texture = texture_load_texture(image);
+	delete image;
+    image = loadBMP("img\\slow.bmp");
+	_slow_texture = texture_load_texture(image);
+	delete image;
+    image = loadBMP("img\\shield.bmp");
+	_shield_texture = texture_load_texture(image);
+	delete image;
+    image = loadBMP("img\\random.bmp");
+	_random_texture = texture_load_texture(image);
+	delete image;
     image = loadBMP("img\\game_over.bmp");
 	_game_over_texture = texture_load_texture(image);
 	delete image;
@@ -253,6 +269,27 @@ void game_handle_keypress_special_up(int key, int x, int y) {
             right_key = 0;
             break;        
         }
+}
+
+int still_invincible() {
+    return (glutGet(GLUT_ELAPSED_TIME) - _invincible_start) < 10000;
+}
+
+void give_power_up(int instance) {
+    switch (instance) {
+        case GAME_ENTITY_INSTANCE_POWERUP_LIFE:
+            _lives++;
+            break;
+        case GAME_ENTITY_INSTANCE_POWERUP_SLOW:
+            _speed = _speed / 1.1;
+            break;
+        case GAME_ENTITY_INSTANCE_POWERUP_INVINCIBLE:
+            _invincible_start = glutGet(GLUT_ELAPSED_TIME);
+            break;
+        case GAME_ENTITY_INSTANCE_POWERUP_RANDOM:
+            break;
+    }
+    sprintf(_debug_string, "%d", instance);
 }
 
 float calcular_alpha(float z) {
@@ -530,6 +567,16 @@ void dibujar_auto() {
         
         glDisable(GL_BLEND);
     glPopMatrix();
+    
+    if (still_invincible()) {
+        glPushMatrix();
+            glColor3f(1,1,0.6);
+            glTranslatef(car_pos[0].x,car_pos[0].y+0.5,car_pos[0].z);
+            glRotatef(90, 1, 0, 0);
+            glRotatef(glutGet(GLUT_ELAPSED_TIME)/7.0, 0, 0.3, 1);
+            glutSolidTorus(0.03, 0.3, 16,16);
+        glPopMatrix();
+    }
     dibujar_bounding_box(car_pos[1], car_pos[2]);
 }
 
@@ -729,8 +776,10 @@ void dibujar_horizonte() {
  * Que hacer cuando chocamos
  */
 void on_collision() {
-    _last_impact = glutGet(GLUT_ELAPSED_TIME); // SHAKE THAT SCREEN!
-    _lives--;
+    if (!still_invincible()) {
+        _last_impact = glutGet(GLUT_ELAPSED_TIME); // SHAKE THAT SCREEN!
+        _lives--;
+    }
 }
 
 /**
@@ -766,9 +815,9 @@ void draw_hud() {
     glRasterPos2i(10, 10);
     sprintf(buffer, "Speed ");
     glutBitmapString(GLUT_BITMAP_9_BY_15, (unsigned char *) buffer);
-    sprintf(buffer, "%4.2f", _speed*1000 );
+    sprintf(buffer, "%4.2f", _speed*100 );
     glutBitmapString(GLUT_BITMAP_HELVETICA_18, (unsigned char *) buffer);
-    sprintf(buffer, "km/h");
+    sprintf(buffer, "warp");
     glutBitmapString(GLUT_BITMAP_9_BY_15, (unsigned char *) buffer);
     
     // elapsed time
