@@ -64,7 +64,7 @@ int sentido_h = 1;
 int sentido_v = 1;
 float delta = 0; // usado para "transladar" a  la carretera
 
-float _speed = 1.1;
+float _speed = 2.1;
 
 // CAMARA
 int current_cam = 1;
@@ -107,7 +107,7 @@ void game_init() {
 	
 	entity_header.next = create_entity();
 	
-	_speed = BASE_SPEED;
+	_speed = BASE_SPEED*5;
 	srand(time(NULL)); // seed the random!
 	
 	_last_impact = -1500; // el ultimo impacto decimos que fue hace tiempo para que no suceda... todavía
