@@ -43,6 +43,7 @@
 
 // BLUR STUFF
 GLuint _green_texture; // textura verde
+GLuint _game_over_texture; // textura game over
 int _tex_0_size = 512; // tamaño de la textura
 //float blur_zoom = 0; // factor de "zoom" de la textura
 
@@ -82,7 +83,8 @@ unsigned int _score = 0;
 
 // DEBUG
 int _show_bounds = 0;
-
+int _game_over_start = 0;
+    
 /*
  * Inicialización
  */
@@ -107,6 +109,10 @@ void game_init() {
 	
     Image * image = loadBMP("img\\verde.bmp");
 	_green_texture = texture_load_texture(image);
+    delete image;
+    image = loadBMP("img\\game_over.bmp");
+	_game_over_texture = texture_load_texture(image);
+	delete image;
 	
 	// posición inicial del auto
 	car_pos[0].x = 0;
@@ -229,7 +235,7 @@ void game_handle_keypress_special(int key, int x, int y, int state) {
                 _show_bounds = !_show_bounds;
             break;
     }
-    sprintf(_debug_string, "KEYS: left=%d right=%d roll=%f", left_key, right_key, _car_roll);
+//    sprintf(_debug_string, "KEYS: left=%d right=%d roll=%f", left_key, right_key, _car_roll);
     
 }
 
@@ -783,15 +789,6 @@ void draw_hud() {
     glRasterPos2i(_width - 200, 10);
     sprintf(buffer, "Score %012u", _score);
     glutBitmapString(GLUT_BITMAP_9_BY_15, (unsigned char *) buffer);
-
-
-/*    sprintf(_debug_string, "sine: %f", sine_value);
-
-    glColor4f(1, 1, 1, sine_value);
-    glRasterPos2i(offset, 300 + i*30);
-    glutBitmapString(GLUT_BITMAP_HELVETICA_18, (unsigned char *) menu_option_strings[i]);*/
-
-
     
     glDisable(GL_BLEND);
     perspective_mode();
@@ -836,10 +833,49 @@ int do_draw() {
         dibujar_mira();
         dibujar_carretera();
         dibujar_auto();
-        //draw_text();
-//        check_collisions();
     glPopMatrix();
-//    sprintf(_debug_string, "ENABLED: %d", glIsEnabled(GL_TEXTURE_2D));
+}
+
+/**
+ * Dibujamos el game over
+ * primero hace un fade in con alpha
+ * y luego un fade out a negro
+ */
+void dibujar_game_over() {
+    float color = 1;
+    float alpha = 1;
+
+    if (_game_over_start == 0)
+        return;
+    
+    int elapsed = glutGet(GLUT_ELAPSED_TIME) - _game_over_start;
+    
+    if (elapsed < 500) {
+        alpha = (elapsed) / 500.0;
+    } else if (elapsed <= 2500) {
+        color = 1;
+    } else if (elapsed < 4000) {
+        color = 1 - ((elapsed - 2500) / 1500.0);
+    } else if (elapsed >= 4000) {
+        color = 0;
+        switch_to(SCENE_RANKING);
+    }
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, _game_over_texture);
+    ortho_mode(0,1,1,0);
+        glEnable(GL_BLEND);
+        glColor4f(color, color, color, alpha);
+        glDisable(GL_DEPTH_TEST);
+        glBegin(GL_QUADS);
+    		glTexCoord2f(0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 0.0f);	// Bottom Left Of The Texture and Quad
+    		glTexCoord2f(1.0f, 0.0f); glVertex3f(1.0f, 0.0f, 0.0f);	// Bottom Right Of The Texture and Quad
+    		glTexCoord2f(1.0f, 1.0f); glVertex3f(1.0f, 1.0f, 0.0f);	// Top Right Of The Texture and Quad
+    		glTexCoord2f(0.0f, 1.0f); glVertex3f(0.0f, 1.0f, 0.0f);	// Top Left Of The Texture and Quad
+		glEnd();
+        glDisable(GL_BLEND);
+        glEnable(GL_DEPTH_TEST);
+	perspective_mode();
 }
 
 /**
@@ -851,6 +887,8 @@ void game_draw_scene() {
 	RenderToMotionBlurTexture(1, do_draw);
 	ShowMotionBlurTexture();
 	draw_hud();
+	if (_lives <= 0)
+    	dibujar_game_over();
 }
 
 void change_road_orientation() {
@@ -884,7 +922,7 @@ void change_road_orientation() {
     }
     
 //    sprintf(_debug_string, "xx=%f, yy=%f, target_xx=%f, target_yy=%f", xx, yy, target_xx, target_yy);
-    sprintf(_debug_string, "SPEED=%f", _speed);
+//    sprintf(_debug_string, "SPEED=%f", _speed);
 }
 
 /**
@@ -926,5 +964,14 @@ void game_handle_idle() {
         agregar_a_lista(&entity_header, create_entity());
     }
     
+    // manejar la curvatura de la carretera
     change_road_orientation();
+    
+    // tiembla tiembla tiembla si es que perdimos
+    if (_lives <= 0) {
+        if (_game_over_start == 0) {
+            _game_over_start = glutGet(GLUT_ELAPSED_TIME);
+        }
+        _last_impact = glutGet(GLUT_ELAPSED_TIME)-250; // SHAKE THAT SCREEN!
+    }
 }
