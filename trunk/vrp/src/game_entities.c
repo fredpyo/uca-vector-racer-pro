@@ -97,14 +97,16 @@ struct game_entity *  borrar_de_lista(struct game_entity * entity) {
 int pick_game_entity_powerup_instance() {
     float probability = rand()/(float)RAND_MAX;
     
-    if (probability > .51)
+    if (probability > .70)
+        return GAME_ENTITY_INSTANCE_POWERUP_COIN;// GAME_ENTITY_INSTANCE_POWERUP_LIFE;
+    else if (probability > .60)
         return GAME_ENTITY_INSTANCE_POWERUP_LIFE;
-    else if (probability > .26)
+    else if (probability > .35)
         return GAME_ENTITY_INSTANCE_POWERUP_SLOW;
-    else if (probability > .24)
-        return GAME_ENTITY_INSTANCE_POWERUP_INVINCIBLE;
-    else
+    else if (probability > .5)
         return GAME_ENTITY_INSTANCE_POWERUP_RANDOM;
+    else
+        return GAME_ENTITY_INSTANCE_POWERUP_INVINCIBLE;
 }
 
 /**
@@ -112,7 +114,6 @@ int pick_game_entity_powerup_instance() {
  */
 int pick_game_entity_obstacle_instance() {
     float probability = rand()/(float)RAND_MAX;
-    
     if (probability > .85)
         return GAME_ENTITY_INSTANCE_OBSTACLE_CIL;
     else if (probability > .60)
@@ -127,7 +128,6 @@ int pick_game_entity_obstacle_instance() {
 void set_game_entity_bounds(struct game_entity * game_entity) {
 	switch(game_entity->instance) {
 		case GAME_ENTITY_INSTANCE_OBSTACLE_PYR:
-			//glutWireCone(0.65, 1.0, 4, 1);
 			game_entity->bound_min.x = - 0.65/2;
 			game_entity->bound_min.y =   0;
 			game_entity->bound_min.z = - 0.65/2;
@@ -136,7 +136,6 @@ void set_game_entity_bounds(struct game_entity * game_entity) {
 			game_entity->bound_max.z = + 0.65/2;
 			break;
 		case GAME_ENTITY_INSTANCE_OBSTACLE_CUBE:
-			//-1 +1
 			game_entity->bound_min.x = - 1;
 			game_entity->bound_min.y =   0;
 			game_entity->bound_min.z = - 1;
@@ -146,7 +145,6 @@ void set_game_entity_bounds(struct game_entity * game_entity) {
             game_entity->pos.y = 0;
 			break;
 		case GAME_ENTITY_INSTANCE_OBSTACLE_CIL:
-			//glutSolidCylinder(0.2, 3.2, 8, 1);
 			game_entity->bound_min.x = - 0.2/2;
 			game_entity->bound_min.y =   0;
 			game_entity->bound_min.z = - 0.2/2;
@@ -164,7 +162,15 @@ void set_game_entity_bounds(struct game_entity * game_entity) {
 			game_entity->bound_max.x = + 0.45;
 			game_entity->bound_max.y = + 0.90;
 			game_entity->bound_max.z = + 0.45;
-            break;            
+            break;
+        case GAME_ENTITY_INSTANCE_POWERUP_COIN:
+			game_entity->bound_min.x = - 0.30;
+			game_entity->bound_min.y = + 0.00;
+			game_entity->bound_min.z = - 0.30;
+			game_entity->bound_max.x = + 0.30;
+			game_entity->bound_max.y = + 0.60;
+			game_entity->bound_max.z = + 0.30;
+            break;
 	}
 }
 
@@ -179,7 +185,10 @@ struct game_entity *  create_entity() {
     if (probability > 0.90) {
         nuevo->type = GAME_ENTITY_TYPE_POWERUP;
         nuevo->instance = pick_game_entity_powerup_instance(); //GAME_ENTITY_INSTANCE_OBSTACLE_CIL;
-        nuevo->renderer = game_entity_render_powerup;
+        if (nuevo->instance != GAME_ENTITY_INSTANCE_POWERUP_COIN)
+            nuevo->renderer = game_entity_render_powerup;
+        else
+            nuevo->renderer = game_entity_render_coin;
     } else {
         nuevo->type = GAME_ENTITY_TYPE_OBSTACLE;
         nuevo->instance = pick_game_entity_obstacle_instance(); //GAME_ENTITY_INSTANCE_OBSTACLE_CIL;

@@ -65,6 +65,7 @@ int sentido_v = 1;
 float delta = 0; // usado para "transladar" a  la carretera
 
 float _speed = 2.1;
+float _speed_pause = 0;
 
 // CAMARA
 int current_cam = 1;
@@ -90,6 +91,7 @@ unsigned int _score = 0;
 int _show_bounds = 0;
 int _game_over_start = 0;
 int _invincible_start = -20000;
+int _lightsoff_start = -20000;
 /*
  * Inicialización
  */
@@ -149,7 +151,9 @@ void game_init() {
     _lives = 3;
     _level = 0;
     _score = 0;
-    
+
+    _invincible_start = -20000;
+    _lightsoff_start = -20000;    
 }
 
 /**
@@ -163,6 +167,20 @@ void game_handle_keypress(unsigned char key, int x, int y) {
         case 119: // w
             toggle_polygon_mode();
             break;*/
+        case 'p':
+        case 'P':
+            if (_speed) {
+                _speed_pause = _speed;
+                _speed = 0;
+            } else {
+                _speed = _speed_pause;
+                _speed_pause = 0;
+            }
+            break;
+        case 'l':
+        case 'L':
+            _lightsoff_start = glutGet(GLUT_ELAPSED_TIME);
+            break;
         case '+':
         	_distance = constraint_f(_distance, -1.5, 5, 200);
         	break;
@@ -271,10 +289,17 @@ void game_handle_keypress_special_up(int key, int x, int y) {
         }
 }
 
+int lights_off() {
+    return (glutGet(GLUT_ELAPSED_TIME) - _lightsoff_start) < 10000;
+}
+
 int still_invincible() {
     return (glutGet(GLUT_ELAPSED_TIME) - _invincible_start) < 10000;
 }
 
+/**
+ * Otorgar el powerup (o down) correspondiente
+ */
 void give_power_up(int instance) {
     switch (instance) {
         case GAME_ENTITY_INSTANCE_POWERUP_LIFE:
@@ -286,12 +311,24 @@ void give_power_up(int instance) {
         case GAME_ENTITY_INSTANCE_POWERUP_INVINCIBLE:
             _invincible_start = glutGet(GLUT_ELAPSED_TIME);
             break;
+        case GAME_ENTITY_INSTANCE_POWERUP_LIGHTSOFF:
+            _lightsoff_start  = glutGet(GLUT_ELAPSED_TIME);
+            break;
+        case GAME_ENTITY_INSTANCE_POWERUP_COIN:
+            _score += 100;
+            break;
+        case GAME_ENTITY_INSTANCE_POWERUP_SPEED:
+            _speed = _speed * 1.1;
+            break;
         case GAME_ENTITY_INSTANCE_POWERUP_RANDOM:
+            give_power_up((rand()%6)+5);
             break;
     }
-    sprintf(_debug_string, "%d", instance);
 }
 
+/**
+ * Calcular el alpha de acuerdo a la distancia
+ */
 float calcular_alpha(float z) {
     float x;
     if (z >= FOG_NEAR) {
@@ -848,6 +885,21 @@ void draw_hud() {
     perspective_mode();
 }
 
+/**
+ * Función auxiliar para hacer que la carretera parpadee
+ */
+int flash_road() {
+    static int start = 0;
+    
+    if (glutGet(GLUT_ELAPSED_TIME) - start < 250) {
+        return 1;
+    } else {
+        if (!(rand()%132))
+            start = glutGet(GLUT_ELAPSED_TIME);
+    }
+    return 0;
+}
+
 int do_draw() {
    struct Punto3D a;
     
@@ -879,13 +931,15 @@ int do_draw() {
     // esto se pinta sin luz ---
     glDisable(GL_LIGHTING);
     glEnable(GL_COLOR_MATERIAL);
-        dibujar_horizonte();
+        if (!lights_off())
+            dibujar_horizonte();
         glTranslatef(0.0, 0.0, 20.0);
 
         recorrer_lista(&entity_header, car_pos);
         glEnable(GL_COLOR_MATERIAL);
         dibujar_mira();
-        dibujar_carretera();
+        if (!lights_off() || (lights_off() && flash_road()))
+            dibujar_carretera();
         dibujar_auto();
     glPopMatrix();
 }

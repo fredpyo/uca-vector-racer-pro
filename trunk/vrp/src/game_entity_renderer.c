@@ -160,3 +160,43 @@ void game_entity_render_powerup(struct game_entity * entity, int elapsed_time) {
         dibujar_bounding_box(a,b);
     }
 }
+
+
+void game_entity_render_coin(struct game_entity * entity, int elapsed_time) {
+    static Punto3D a,b;
+    float rot_x, rot_y;
+    
+    // mover la entidad según el tiempo transcurrido y calcular sus coordenadas y orientación
+    entity->pos.z += _speed * elapsed_time;
+    calcular_coordenadas(entity->pos, &a);
+    calcular_rotacion(entity->pos, &rot_x, &rot_y);
+    
+    glPushMatrix();
+    glDisable(GL_TEXTURE_2D);
+    // transladamos a las coordenadas del objeto y lo orientamos según la normal de la carretera
+    glTranslatef(a.x, a.y, a.z); 
+    glRotatef(rot_y, 0, 1, 0);
+    glRotatef(rot_x, 1, 0, 0);
+
+    glRotatef(glutGet(GLUT_ELAPSED_TIME), 0, 1, 0);
+
+    glTranslatef(0.0, 0.5, -0.05);
+    glColor4f(1.0, 1.0, 0.0, calcular_alpha(a.z));
+    glutWireCylinder(0.2, 0.1, 16, 1);
+    glPopMatrix();
+
+    // calcular bounds para mostrarlos en pantalla    
+    if (_show_bounds) {
+        a = entity->pos;
+        a.x += entity->bound_min.x;
+        a.y += entity->bound_min.y;
+        a.z += entity->bound_min.z;
+        calcular_coordenadas(a, &a);
+        b = entity->pos;
+        b.x += entity->bound_max.x;
+        b.y += entity->bound_max.y;
+        b.z += entity->bound_max.z;
+        calcular_coordenadas(b, &b);
+        dibujar_bounding_box(a,b);
+    }
+}
