@@ -15,6 +15,7 @@ GLuint _texture_id2; // the id of the texture
 
 unsigned int menu_selected = 0;
 char menu_option_strings[4][20] = {"> Play >", "* Ranking *", "$ Options $", "- Exit -"};
+int first_time = 1;
 
 int title_draw_scene_fadein(int setup)
 {
@@ -22,6 +23,9 @@ int title_draw_scene_fadein(int setup)
     float elapsed_time;
     float alpha = 0;
     float color = 0;
+    
+    if (!first_time)
+        return 0;
     
     if (setup == 2) {
         elapsed_time = glutGet(GLUT_ELAPSED_TIME) - base_time;
@@ -41,6 +45,7 @@ int title_draw_scene_fadein(int setup)
             alpha = (2000 - (elapsed_time-4000)) / 2000;
             color = 1;
         } else {
+            first_time = 0;
             return 0;
         }
 
