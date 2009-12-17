@@ -29,7 +29,7 @@
 #define LOOK_AT_Y 10
 #define LOOK_AT_Z -ROAD_MAX
 
-#define CAR_WIDTH 0.7
+#define CAR_WIDTH 1.0
 #define CAR_HEIGHT 0.7
 #define CAR_LENGTH 1.0
 
@@ -79,6 +79,9 @@ int _base_time = 0;
 int _lives = 3;
 int _level = 1;
 unsigned int _score = 0;
+
+// DEBUG
+int _show_bounds = 0;
 
 /*
  * Inicialización
@@ -188,17 +191,10 @@ void game_handle_keypress(unsigned char key, int x, int y) {
 }
 
 /*
- * direction -1 izq
- *           +1 der
+ * direction - izq
+ *           + der
  */
 void car_move(float how_much) {
-/*    if (direction == -1) {
-        if (car_pos[0].x - CAR_WIDTH > -ROAD_WIDTH)
-            car_pos[0].x -= 0.1;
-    } else {
-        if (car_pos[0].x + CAR_WIDTH < ROAD_WIDTH)
-            car_pos[0].x += 0.1;
-    }*/
     car_pos[0].x += how_much;
     
     if (car_pos[0].x < -ROAD_WIDTH + CAR_WIDTH/2)
@@ -206,14 +202,9 @@ void car_move(float how_much) {
     else if (car_pos[0].x > ROAD_WIDTH - CAR_WIDTH/2)
         car_pos[0].x = ROAD_WIDTH - CAR_WIDTH/2;
 
-
+    // recalcular bounds
     car_pos[1].x = car_pos[0].x - CAR_WIDTH/2;
-/*    car_pos[1].y = car_pos[0].y - CAR_HEIGHT/2;
-    car_pos[1].z = car_pos[0].z - CAR_LENGTH/2;*/
-
     car_pos[2].x = car_pos[0].x + CAR_WIDTH/2;
-/*    car_pos[2].y = car_pos[0].y + CAR_HEIGHT/2;
-    car_pos[2].z = car_pos[0].z + CAR_LENGTH/2;*/
 }
     
 
@@ -232,6 +223,10 @@ void game_handle_keypress_special(int key, int x, int y, int state) {
         case GLUT_KEY_F2:
             if (state)
                 current_cam = !current_cam;
+            break;
+        case GLUT_KEY_F3:
+            if (state)
+                _show_bounds = !_show_bounds;
             break;
     }
     sprintf(_debug_string, "KEYS: left=%d right=%d roll=%f", left_key, right_key, _car_roll);
@@ -419,6 +414,8 @@ void calcular_coordenadas(struct Punto3D entrada, struct Punto3D * salida) {
  * Dibujar el "bouding box
  */
 void dibujar_bounding_box(Punto3D min, Punto3D max) {
+    if (!_show_bounds)
+        return;
     glDisable(GL_TEXTURE_2D);
     glPushMatrix();
         glPointSize(4);
@@ -495,11 +492,11 @@ void dibujar_auto() {
         glTranslatef(car_pos[0].x,car_pos[0].y,car_pos[0].z);
         glRotatef(180, 0, 1, 0);
         glRotatef(_car_roll, 0, 0, 1);
-        glutWireCone(CAR_WIDTH/2, 1.0, 8, 1);
+        glutWireCone(CAR_WIDTH/3, 1.0, 8, 1);
         glTranslatef(-0.4,0,0.0);
-        glutWireCone(CAR_WIDTH/3, 0.5, 6, 1);        
+        glutWireCone(CAR_WIDTH/5, 0.5, 6, 1);        
         glTranslatef(0.8,0,0.0);        
-        glutWireCone(CAR_WIDTH/3, 0.5, 6, 1);
+        glutWireCone(CAR_WIDTH/5, 0.5, 6, 1);
         
         glEnable (GL_BLEND);
         glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
