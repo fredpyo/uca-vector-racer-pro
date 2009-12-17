@@ -25,7 +25,7 @@
 #include "utils.h"
 #include "sfx.h"
 
-#define INITIAL_SCENE SCENE_RANKING
+#define INITIAL_SCENE SCENE_INTRO
 
 float fps = 0; // almacena el fps
 char _debug_string[512] = {0}; // buffer para mensajes de debug
@@ -60,6 +60,7 @@ void handle_keypress(unsigned char key, int x, int y) {
             break;
     }    
 }
+
 
 void handle_keypress_special(int key, int x, int y) {
     switch (key) {
