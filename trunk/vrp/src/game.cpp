@@ -129,6 +129,10 @@ void game_init() {
     car_pos[2].z = car_pos[0].z;
     
     _base_time = glutGet(GLUT_ELAPSED_TIME);
+    _game_over_start = 0;
+    _lives = 3;
+    _level = 0;
+    _score = 0;
     
 }
 

@@ -21,9 +21,12 @@ struct ranking
 struct ranking rankings[10];
 
 GLuint _texture_id3; // the id of the texture
-
+char _new_name[64] = {0};
+int _new_name_cursor = 0;
 
 int _new_record = -1;
+
+void save_ranking();
 
 /**
  * 0 = get
@@ -125,28 +128,29 @@ void ranking_draw_scores(void)
     // new record!
     if (_new_record > -1) {
         sine_value = (sin(glutGet(GLUT_ELAPSED_TIME)/300.0))/3 + 0.6;
-        offset = (_width - glutBitmapLength(GLUT_BITMAP_HELVETICA_18, (unsigned char *) "NEW RECORD!"))/2;
+        sprintf(buffer, "NEW RECORD! Type your name: %s", _new_name);
+        offset = (_width - glutBitmapLength(GLUT_BITMAP_HELVETICA_18, (unsigned char *) buffer))/2;
         glColor4f(1, 1, 1-sine_value, 1);
         glRasterPos2i(offset, 170);
-        glutBitmapString(GLUT_BITMAP_HELVETICA_18, (unsigned char *) "NEW RECORD!");
+        glutBitmapString(GLUT_BITMAP_HELVETICA_18, (unsigned char *) buffer);
     }
 
     // text
     for (i = 0; i < 10; i++) {
         sine_value = (sin(i + glutGet(GLUT_ELAPSED_TIME)/300.0))/3 + 0.6;
 
-        
         if (_new_record == i) {
             glBegin(GL_QUADS);
                 glColor4f(1, 0, 0, 0.7);
-                glVertex3f(0, 240+30*i, 0); // abajo izquierda
-                glVertex3f(_width, 240+30*i, 0); // abajo derecha
+                glVertex3f(0, 215+30*i, 0); // abajo izquierda
+                glVertex3f(_width, 215+30*i, 0); // abajo derecha
                 glVertex3f(_width, 240-30+30*i, 0); // arriba derecha
                 glVertex3f(0, 240-30+30*i, 0); // arriba izquierda
             glEnd();
         }
         
 //        sprintf(_debug_string, "sine: %f", sine_value);
+
         sprintf(buffer, "%d", rankings[i].score);
         sprintf(buffer, "%s%s%d", rankings[i].name,llenar_de_puntos(60 - strlen(rankings[i].name) - strlen(buffer)), rankings[i].score);
         offset = (_width - glutBitmapLength(GLUT_BITMAP_9_BY_15, (unsigned char *) buffer))/2;
@@ -225,8 +229,20 @@ void ranking_draw_scene(void)
 void ranking_handle_keypress(unsigned char key, int x, int y)
 {
     if (_new_record > -1) {
-        if (key >= ' ' && key <= '~') {
-           // DO SOMETHING!
+        if (key >= ' ' && key <= '~' && key != ',') {
+            if (_new_name_cursor < 20) {
+                _new_name[_new_name_cursor] = key;
+                _new_name_cursor++;
+            }
+        } else if (key == 8) {
+            if (_new_name_cursor > 0) {
+                _new_name_cursor--;
+            }
+            _new_name[_new_name_cursor] = 0;
+        } else if (key == 13) {
+            save_ranking();
+            latest_score(1, 0);
+            switch_to(SCENE_RANKING);
         }
     } else {
         switch (key) 
@@ -280,6 +296,25 @@ void parse_ranking()
     }
 }
 
+void save_ranking()
+{
+    FILE * fhandle;
+    char c;
+    int i=0;
+    
+    fhandle = fopen("ranking.txt", "w");
+    for (i = 0; i < 10; i++) {
+        if (_new_record < i)
+            fprintf(fhandle, "%s,%d\r\n", rankings[i-1].name, rankings[i-1].score);
+        else if (_new_record > i)
+            fprintf(fhandle, "%s,%d\r\n", rankings[i].name, rankings[i].score);
+        else {
+            fprintf(fhandle, "%s,%d\r\n", _new_name, latest_score(0,0));
+        }
+    }
+    fclose(fhandle);
+}
+
 void ranking_init() {
 	glEnable(GL_COLOR_MATERIAL);
     Image* image = loadBMP("img\\vrp.bmp");
@@ -288,6 +323,10 @@ void ranking_init() {
 
     music_stop(0);
 	music_play("test.ogg");
+
+    strcpy(_new_name, "");
+    _new_name_cursor = 0;
+    _new_record = -1;
 	
 	ranking_draw_scene_fadein(1);
 	parse_ranking();
