@@ -19,6 +19,7 @@
 #include "motionblur.h"
 #include "game_entities.h"
 #include "colors.h"
+#include "ranking.h"
 
 #define ROAD_MIN 0
 #define ROAD_MAX 145
@@ -858,6 +859,7 @@ void dibujar_game_over() {
         color = 1 - ((elapsed - 2500) / 1500.0);
     } else if (elapsed >= 4000) {
         color = 0;
+        latest_score(1, _score);
         switch_to(SCENE_RANKING);
     }
 

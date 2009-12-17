@@ -23,7 +23,20 @@ struct ranking rankings[10];
 GLuint _texture_id3; // the id of the texture
 
 
-int _new_record = 0;
+int _new_record = -1;
+
+/**
+ * 0 = get
+ * 1 = set
+ */
+int latest_score(int get_set, unsigned int score) {
+    static unsigned int lastest_score = 0;
+    if (get_set) {
+        lastest_score = score;
+    } else {
+        return lastest_score;
+    }
+}
 
 void ranking_draw_scene_fadein(int setup)
 {
@@ -52,7 +65,7 @@ void ranking_draw_scene_fadein(int setup)
         }
         
         // debug :D
-        sprintf(_debug_string, "alpha: %f, color: %f", alpha, color);
+//        sprintf(_debug_string, "alpha: %f, color: %f", alpha, color);
         
         // render fader
         glDisable(GL_DEPTH_TEST);
@@ -72,40 +85,6 @@ void ranking_draw_scene_fadein(int setup)
 
         perspective_mode();
     }
-}
-
-void ranking_draw_lines(void)
-{
-    static float last_time = glutGet(GLUT_ELAPSED_TIME);
-    float elapsed_time;
-    int time = glutGet(GLUT_ELAPSED_TIME);
-    int speed = 2;
-    float speed1 = 0.1;
-    float speed2 = 2;
-    int z = 300;
-    float x, y;
-    
-    elapsed_time = glutGet(GLUT_ELAPSED_TIME) - last_time;
-
-/*        glEnable (GL_BLEND);
-        glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-*/
-    
-    glBegin(GL_LINES);
-    glColor4f(1, 1, 0.5, 0.5);
-        for (z = 0; z < 600; z ++) {
-            x = (((time*-speed + (int)(sin(z*1) * 10000))%10000)/100.0) + 50;
-            y = cos(z*10) * 2;
-//            y = 1;
-            glVertex3f(x, y,-z/6.0);
-            glVertex3f(x + 2, y,-z/6.0);
-        }
-
-    glEnd();
-    
-    
-    last_time = elapsed_time;
-    
 }
 
 char * llenar_de_puntos(int cantidad)
@@ -140,23 +119,34 @@ void ranking_draw_scores(void)
         glVertex3f(_width, 250, 0); // arriba derecha
         glVertex3f(0, 250, 0); // arriba izquierda
     glEnd();
-    
+
+    sprintf(_debug_string, ">>>>>>>>>>>>> %d", latest_score(0,0));
+
+    // new record!
+    if (_new_record > -1) {
+        sine_value = (sin(glutGet(GLUT_ELAPSED_TIME)/300.0))/3 + 0.6;
+        offset = (_width - glutBitmapLength(GLUT_BITMAP_HELVETICA_18, (unsigned char *) "NEW RECORD!"))/2;
+        glColor4f(1, 1, 1-sine_value, 1);
+        glRasterPos2i(offset, 170);
+        glutBitmapString(GLUT_BITMAP_HELVETICA_18, (unsigned char *) "NEW RECORD!");
+    }
+
     // text
     for (i = 0; i < 10; i++) {
         sine_value = (sin(i + glutGet(GLUT_ELAPSED_TIME)/300.0))/3 + 0.6;
 
-        /*
-        if (menu_selected == i) {
+        
+        if (_new_record == i) {
             glBegin(GL_QUADS);
                 glColor4f(1, 0, 0, 0.7);
-                glVertex3f(0, _height-290+30*i, 0); // abajo izquierda
-                glVertex3f(_width, _height-290+30*i, 0); // abajo derecha
-                glVertex3f(_width, _height-290-30+30*i, 0); // arriba derecha
-                glVertex3f(0, _height-290-30+30*i, 0); // arriba izquierda
+                glVertex3f(0, 240+30*i, 0); // abajo izquierda
+                glVertex3f(_width, 240+30*i, 0); // abajo derecha
+                glVertex3f(_width, 240-30+30*i, 0); // arriba derecha
+                glVertex3f(0, 240-30+30*i, 0); // arriba izquierda
             glEnd();
-        }*/ 
+        }
         
-        sprintf(_debug_string, "sine: %f", sine_value);
+//        sprintf(_debug_string, "sine: %f", sine_value);
         sprintf(buffer, "%d", rankings[i].score);
         sprintf(buffer, "%s%s%d", rankings[i].name,llenar_de_puntos(60 - strlen(rankings[i].name) - strlen(buffer)), rankings[i].score);
         offset = (_width - glutBitmapLength(GLUT_BITMAP_9_BY_15, (unsigned char *) buffer))/2;
@@ -165,7 +155,6 @@ void ranking_draw_scores(void)
         glutBitmapString(GLUT_BITMAP_9_BY_15, (unsigned char *) buffer);
     }
         
-
     offset = (_width - glutBitmapLength(GLUT_BITMAP_HELVETICA_12, (unsigned char *) "PRESS ANY KEY TO CONTINUE"))/2;
     glColor4f(1, 1-sine_value, 1-sine_value, 1);
     glRasterPos2i(offset, _height - 70);
@@ -199,9 +188,6 @@ void ranking_draw_scene(void)
         0.0, 0.0, -1.0, // a donde miro
         0.0, 1.0, 0.0 // mi arriba
     );
-
-//    blur_tex_zoom(_texture_id3, 100, 512, 256);
-
  
     // borrar y preparar colores
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -229,22 +215,16 @@ void ranking_draw_scene(void)
         glEnd();
     glPopMatrix();
     
-//    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_TEXTURE_2D);
     perspective_mode();
 
     ranking_draw_scores();
-
-/*    title_draw_lines();
-    title_draw_menu();*/
-    
-//    title_draw_scene_fadein(0);
-
 
 }
 
 void ranking_handle_keypress(unsigned char key, int x, int y)
 {
-    if (_new_record) {
+    if (_new_record > -1) {
         if (key >= ' ' && key <= '~') {
            // DO SOMETHING!
         }
@@ -289,6 +269,15 @@ void parse_ranking()
         }
     }
     fclose(fhandle);
+    
+    // ver si el nuevo score es mejor que alguno del ranking en el archivo
+    for (i = 0; i < 10; i++) {
+        if (latest_score(0,0) >= rankings[i].score) {
+            _new_record = i;
+            sprintf(_message_string, "FOUND NEW RECORD %d", i);
+            break;
+        }
+    }
 }
 
 void ranking_init() {
