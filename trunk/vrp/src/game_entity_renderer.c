@@ -74,15 +74,17 @@ void game_entity_render_obstacle(struct game_entity * entity, int elapsed_time) 
     glPopMatrix();
 
     // calcular bounds para mostrarlos en pantalla    
-    a = entity->pos;
-    a.x += entity->bound_min.x;
-    a.y += entity->bound_min.y;
-    a.z += entity->bound_min.z;
-    calcular_coordenadas(a, &a);
-    b = entity->pos;
-    b.x += entity->bound_max.x;
-    b.y += entity->bound_max.y;
-    b.z += entity->bound_max.z;
-    calcular_coordenadas(b, &b);
-    dibujar_bounding_box(a,b);
+    if (_show_bounds) {
+        a = entity->pos;
+        a.x += entity->bound_min.x;
+        a.y += entity->bound_min.y;
+        a.z += entity->bound_min.z;
+        calcular_coordenadas(a, &a);
+        b = entity->pos;
+        b.x += entity->bound_max.x;
+        b.y += entity->bound_max.y;
+        b.z += entity->bound_max.z;
+        calcular_coordenadas(b, &b);
+        dibujar_bounding_box(a,b);
+    }
 }
