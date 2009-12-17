@@ -9,20 +9,25 @@
 #include "game.h"
 #include "game_entities.h"
 
+/**
+ * Renderear obstaculos
+ */
 void game_entity_render_obstacle(struct game_entity * entity, int elapsed_time) {
     static Punto3D a,b;
     float rot_x, rot_y;
     
+    // mover la entidad según el tiempo transcurrido y calcular sus coordenadas y orientación
     entity->pos.z += _speed * elapsed_time;
     calcular_coordenadas(entity->pos, &a);
     calcular_rotacion(entity->pos, &rot_x, &rot_y);
-
+    
     glPushMatrix();
+    // transladamos a las coordenadas del objeto y lo orientamos según la normal de la carretera
     glTranslatef(a.x, a.y, a.z); 
-
     glRotatef(rot_y, 0, 1, 0);
     glRotatef(rot_x, 1, 0, 0);
 
+    // según sea el tipo de entidad, la dibujamos de acuerdo a su tipo
     switch (entity->instance) {
         case GAME_ENTITY_INSTANCE_OBSTACLE_PYR:
             glDisable(GL_TEXTURE_2D);
@@ -33,7 +38,6 @@ void game_entity_render_obstacle(struct game_entity * entity, int elapsed_time) 
             break;
         case GAME_ENTITY_INSTANCE_OBSTACLE_CUBE:
             glTranslatef(0.0, 1, 0.0);
-
         	glEnable(GL_TEXTURE_2D);
         	glBindTexture(GL_TEXTURE_2D, _green_texture);
             glColor4f(1.0, 1.0, 1.0, calcular_alpha(a.z));
@@ -68,32 +72,8 @@ void game_entity_render_obstacle(struct game_entity * entity, int elapsed_time) 
             break;
     }
     glPopMatrix();
-    
-    /*glPointSize(2);
-    glColor3f(1,0,0);
-    a = entity->pos;
-    a.x += entity->bound_max.x;
-    a.y += entity->bound_max.y;
-    a.z += entity->bound_max.z;
-    calcular_coordenadas(a, &a);
-    glPushMatrix();
-        glBegin(GL_POINTS);
-            glVertex3f(a.x, a.y, a.z);
-        glEnd();
-    glPopMatrix();
 
-    glColor3f(0,1,0);
-    a = entity->pos;
-    a.x += entity->bound_min.x;
-    a.y += entity->bound_min.y;
-    a.z += entity->bound_min.z;
-    calcular_coordenadas(a, &a);
-    glPushMatrix();
-        glBegin(GL_POINTS);
-            glVertex3f(a.x, a.y, a.z);
-        glEnd();
-    glPopMatrix();
-    glPointSize(1);*/
+    // calcular bounds para mostrarlos en pantalla    
     a = entity->pos;
     a.x += entity->bound_min.x;
     a.y += entity->bound_min.y;
@@ -105,5 +85,4 @@ void game_entity_render_obstacle(struct game_entity * entity, int elapsed_time) 
     b.z += entity->bound_max.z;
     calcular_coordenadas(b, &b);
     dibujar_bounding_box(a,b);
-
 }
