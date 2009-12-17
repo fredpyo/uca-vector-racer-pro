@@ -246,14 +246,16 @@ void title_handle_keypress(unsigned char key, int x, int y)
 }
 
 void title_handle_keypress_special(int key, int x, int y, int state) {
-    switch (key)
-    {
-        case GLUT_KEY_DOWN:
-            menu_selected = (menu_selected+1)%4;
-            break;            
-        case GLUT_KEY_UP:
-            menu_selected = (menu_selected-1)%4;
-            break;            
+    if (state) {
+        switch (key)
+        {
+            case GLUT_KEY_DOWN:
+                menu_selected = (menu_selected+1)%4;
+                break;            
+            case GLUT_KEY_UP:
+                menu_selected = (menu_selected-1)%4;
+                break;            
+        }
     }
 }
 
