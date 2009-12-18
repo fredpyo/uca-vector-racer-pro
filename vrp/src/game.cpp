@@ -863,9 +863,12 @@ void dibujar_horizonte() {
  */
 void on_collision() {
     if (!still_invincible() && _lives > 0) {
-        sfx_play_sample(SFX_BOOM1);
         _last_impact = glutGet(GLUT_ELAPSED_TIME); // SHAKE THAT SCREEN!
         _lives--;
+        if (_lives)
+            sfx_play_sample(SFX_BOOM1);
+        else
+            sfx_play_sample(SFX_BOOM2);
     }
 }
 

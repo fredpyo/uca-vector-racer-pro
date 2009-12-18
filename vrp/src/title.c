@@ -246,7 +246,8 @@ void title_handle_keypress(unsigned char key, int x, int y)
             else if (menu_selected == 1)
                 switch_to(SCENE_RANKING);
             else if (menu_selected == 2)
-                switch_to(SCENE_OPTIONS);
+                1;
+//                switch_to(SCENE_OPTIONS);
             else
                 exit(0);
             break;

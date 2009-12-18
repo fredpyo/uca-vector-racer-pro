@@ -45,7 +45,7 @@ void sfx_play_sample(int sample) {
             FSOUND_PlaySound(20, sample_boom1);
             break;
         case SFX_BOOM2:
-            FSOUND_PlaySound(21, sample_boom1);
+            FSOUND_PlaySound(21, sample_boom2);
             break;
         case SFX_POWERUP:
             FSOUND_PlaySound(22, sample_power_up);
