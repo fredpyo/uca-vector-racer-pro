@@ -993,7 +993,7 @@ int do_draw() {
             dibujar_horizonte();
         glTranslatef(0.0, 0.0, 20.0);
 
-        recorrer_lista(&entity_header, car_pos);
+        recorrer_lista(&entity_header);
         glEnable(GL_COLOR_MATERIAL);
 //        dibujar_mira();
         if (!lights_off() || (lights_off() && flash_road()))
