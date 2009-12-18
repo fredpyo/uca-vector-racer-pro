@@ -50,6 +50,7 @@ void (*generic_handle_idle)(void) = NULL;
 
 
 // Funciones genéricas, usando punteros a funciones
+// tecla normal
 void handle_keypress(unsigned char key, int x, int y) {
     switch (key) {
         case 27: //Esq
@@ -61,7 +62,7 @@ void handle_keypress(unsigned char key, int x, int y) {
     }    
 }
 
-
+// tecla especial DOWN
 void handle_keypress_special(int key, int x, int y) {
     switch (key) {
         case GLUT_KEY_F1:
@@ -73,6 +74,7 @@ void handle_keypress_special(int key, int x, int y) {
     }
 }
 
+// tecla especial UP
 void handle_keypress_special_up(int key, int x, int y) {
     switch (key) {
         default:
@@ -82,14 +84,17 @@ void handle_keypress_special_up(int key, int x, int y) {
     }
 }
 
+// mouse
 void handle_mouse_button (int button, int state, int x, int y) {
 
 }
 
+// mouse
 void handle_mouse_motion (int x, int y) {
     
 }
 
+// mouse
 void handle_mouse_passive_motion (int x, int y) {
 
 }
@@ -114,6 +119,9 @@ void handle_resize(int w, int h) {
     glLoadIdentity();
 }
 
+/**
+ * Cambiar a modo ortogonal
+ */
 void ortho_mode(int left, int top, int right, int bottom)
 {
 	glMatrixMode(GL_PROJECTION); // Switch to our projection matrix so that we can change it to ortho mode, not perspective.
@@ -124,6 +132,9 @@ void ortho_mode(int left, int top, int right, int bottom)
 	glLoadIdentity(); // Initialize the current model view matrix with the identity matrix
 }
 
+/**
+ * Volver a perspectiva
+ */
 void perspective_mode()										// Set Up A Perspective View
 {
 	glMatrixMode( GL_PROJECTION ); // Enter into our projection matrix mode
@@ -196,6 +207,9 @@ void handle_idle(void)
     glutPostRedisplay();
 }
 
+/**
+ * Dibujar la excena
+ */
 void draw_scene() {
     glEnable(GL_TEXTURE_2D);
     if (generic_handle_draw_scene)
