@@ -37,6 +37,7 @@ struct game_entity {
 
 void recorrer_lista(struct game_entity * entity);
 void agregar_a_lista(struct game_entity * entity, struct game_entity * list);
+void vaciar_lista(struct game_entity * entity);
 struct game_entity * borrar_de_lista(struct game_entity * entity);
 struct game_entity * create_entity();
 

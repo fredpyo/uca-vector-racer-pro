@@ -104,6 +104,13 @@ struct game_entity *  borrar_de_lista(struct game_entity * entity) {
     return next; // retornar el siguiente para que la función anterior encadene
 }
 
+/**
+ * Vaciar la lista
+ */
+void vaciar_lista(struct game_entity * entity) {
+    while (entity)
+        entity = borrar_de_lista(entity);    
+};
 
 /**
  * Elige una nueva entidad de manera probabilística

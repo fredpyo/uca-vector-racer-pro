@@ -249,9 +249,11 @@ void vrp_init() {
  * Scene switcher
  */
 int switch_to(int scene) {
-    int current_scene = -1;
+    static int current_scene = -1;
     // kill stuff from previous scene
     if (current_scene != -1) {
+        if (current_scene == SCENE_TITLE)
+            title_exit();
         generic_handle_keypress = NULL;
         generic_handle_keypress_special = NULL;
         generic_handle_mouse_button = NULL;
