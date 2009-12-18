@@ -24,19 +24,21 @@ void intro_draw_scene(void)
     float color = 0; // color para aclarar / oscurecer
     const double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0; // tiempo transcurrido
     const double a = t*90.0; // parametro para funcion senoidal
-    float amplitude = 10; // amplitud de la función senoidal
+    float amplitude = 10*0; // amplitud de la función senoidal
     
     // calcular las Ys de nuestro quad
     float y1 = amplitude * sin(t);
     float y2 = amplitude * sin(t+0.5);
     
     // desastres de tiempos transcurridos
-    if (glutGet(GLUT_ELAPSED_TIME) < 2000)
-        color = glutGet(GLUT_ELAPSED_TIME)/2000.0;
-    else if (glutGet(GLUT_ELAPSED_TIME) > 15000) {
+    if (glutGet(GLUT_ELAPSED_TIME) < 3000)
+        color = 0;
+    if (glutGet(GLUT_ELAPSED_TIME) < 5000)
+        color = (glutGet(GLUT_ELAPSED_TIME) - 3000)/2000.0;
+    else if (glutGet(GLUT_ELAPSED_TIME) > 12000) {
         switch_to(SCENE_TITLE);
-    } else if (glutGet(GLUT_ELAPSED_TIME) > 10000)
-        color = 1 - (glutGet(GLUT_ELAPSED_TIME)-10000)/5000.0;
+    } else if (glutGet(GLUT_ELAPSED_TIME) > 7000)
+        color = 1 - (glutGet(GLUT_ELAPSED_TIME)-7000)/5000.0;
     else {
         color = 1;
     }
@@ -80,9 +82,9 @@ void intro_handle_keypress(unsigned char key, int x, int y)
 
 void intro_init() {
 	glEnable(GL_COLOR_MATERIAL);
-    Image* image = loadBMP("img\\penguin_pirate_large.bmp");
+    Image* image = loadBMP("img\\fs.bmp");
 	_texture_id = texture_load_texture(image);
 	delete image;
 
-	music_play("logo music.ogg");
+	music_play("binaryzoo.mp3");
 }
