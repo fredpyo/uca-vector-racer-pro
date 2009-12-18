@@ -97,16 +97,17 @@ struct game_entity *  borrar_de_lista(struct game_entity * entity) {
 int pick_game_entity_powerup_instance() {
     float probability = rand()/(float)RAND_MAX;
     
+    sprintf(_debug_string, "%f", probability);
+    
     if (probability > .70)
         return GAME_ENTITY_INSTANCE_POWERUP_COIN;// GAME_ENTITY_INSTANCE_POWERUP_LIFE;
-    else if (probability > .60)
+    if (probability > .60)
         return GAME_ENTITY_INSTANCE_POWERUP_LIFE;
-    else if (probability > .35)
+    if (probability > .45)
         return GAME_ENTITY_INSTANCE_POWERUP_SLOW;
-    else if (probability > .5)
+    if (probability > .05)
         return GAME_ENTITY_INSTANCE_POWERUP_RANDOM;
-    else
-        return GAME_ENTITY_INSTANCE_POWERUP_INVINCIBLE;
+    return GAME_ENTITY_INSTANCE_POWERUP_INVINCIBLE;
 }
 
 /**
