@@ -25,3 +25,4 @@ void sfx_init();
 void music_play(char * filename);
 void music_stop(int fade);
 void sfx_play_sample(int sample);
+void music_invicible_play();

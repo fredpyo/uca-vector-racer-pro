@@ -24,6 +24,7 @@ struct ranking rankings[10];
 char _new_name[64] = {0};
 int _new_name_cursor = 0;
 int _new_record = -1; // posición del nuevo record
+int _was_best = 0;
 
 void save_ranking();
 
@@ -284,13 +285,24 @@ void ranking_init() {
 	_texture_id3 = texture_load_texture(image);
 	delete image;
 
-    music_stop(0);
-	music_play("test.ogg");
-
     for (i = 0; i < 64; i++) _new_name[i] = 0;
     _new_name_cursor = 0;
     _new_record = -1;
 	
 	parse_ranking();
+
+    if (!_was_best) {
+        music_stop(0);
+        if (_new_record > -1) {
+        	music_play("69 - Hurrah for the Champion (Winning Run).mp3");
+            // esto es para que al cambiar de escena, de escribir a ver, sigua la musica    
+            _was_best = 1;
+        } else {
+        	music_play("60 - Step 70's (Option).mp3");
+        }
+    } else {
+        _was_best = 0;
+    }
+    	
 }
 
