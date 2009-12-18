@@ -1,5 +1,8 @@
 #include "colors.h"
 
+/**
+ * Convertir de HSL a RGB
+ */
 void hsl2rgb(struct hsl source_color, struct rgb * destination_color) {
     float temp1, temp2, r_temp, b_temp, g_temp, aux_h;
     if (source_color.lightness == 0) {

@@ -106,17 +106,18 @@ void game_init() {
 
     glEnable (GL_DEPTH_TEST); //enable the depth testing
     
-    CreateMotionBlurTexture();
+    CreateMotionBlurTexture(); // just in case
 
+    // play that funky music
     music_stop(0);
 	music_play("g-storm.mp3");
 	
+	// entidades
 	entity_header.next = create_entity();
 	
+	// velocidad y seed
 	_speed = BASE_SPEED*5;
 	srand(time(NULL)); // seed the random!
-	
-	_last_impact = -1500; // el ultimo impacto decimos que fue hace tiempo para que no suceda... todavía
 	
     Image * image = loadBMP("img\\verde.bmp");
 	_green_texture = texture_load_texture(image);
@@ -150,14 +151,17 @@ void game_init() {
     car_pos[2].y = car_pos[0].y + CAR_HEIGHT/2;
     car_pos[2].z = car_pos[0].z;
     
+    // tiempo base (para elapsed time) e indicadores del hud    
     _base_time = glutGet(GLUT_ELAPSED_TIME);
-    _game_over_start = 0;
     _lives = 3;
     _level = 0;
     _score = 0;
 
+    // contadores
     _invincible_start = -20000;
     _lightsoff_start = -20000;    
+    _game_over_start = 0;
+	_last_impact = -1500; // el ultimo impacto decimos que fue hace tiempo para que no suceda... todavía
 }
 
 /**
@@ -167,10 +171,6 @@ void game_handle_keypress(unsigned char key, int x, int y) {
     static float xx = 0;
     static float yy = 0;
     switch (key) {
-/*        case 87: // W
-        case 119: // w
-            toggle_polygon_mode();
-            break;*/
         case 'p':
         case 'P':
             if (_speed) {
@@ -208,7 +208,7 @@ void game_handle_keypress(unsigned char key, int x, int y) {
         case 'g':
             _angley = wrap_f(_angley, 3.0, 0.0, 360);
             break;
- 		case 'a':
+/* 		case 'a':
         case 'A':
             if (xx > -15)
                 xx = xx - 0.04;
@@ -227,7 +227,7 @@ void game_handle_keypress(unsigned char key, int x, int y) {
         case 'S':
             if (yy < 15)
                 yy = yy - 0.04;
-            break;
+            break;*/
         case ',':
             _speed -= 1.1*BASE_SPEED;
             break;
@@ -298,10 +298,16 @@ void game_handle_keypress_special_up(int key, int x, int y) {
         }
 }
 
+/**
+ * Retorna 1 si el efecto de lights_off sigue activo
+ */
 int lights_off() {
     return (glutGet(GLUT_ELAPSED_TIME) - _lightsoff_start) < 10000;
 }
 
+/**
+ * Retorna 1 si el efecto de invincible sigue actvo
+ */
 int still_invincible() {
     return (glutGet(GLUT_ELAPSED_TIME) - _invincible_start) < 10000;
 }
@@ -472,6 +478,9 @@ static void dibujar_carretera()  {
     glDisable(GL_BLEND);
 }
 
+/**
+ * Calcula la rotación sobre x e y de un objeto para un x,y,z dado sobre la carretera
+ */
 void calcular_rotacion(struct Punto3D entrada, float * rot_x, float * rot_y) {
     // curva para el plano xz
     float aux = entrada.z / curvatura_h; // auxiliar para calcular 'x' y 'z' (es el parametro de la función f(a) = a^2, se divide por curvatura para obtener una porción mayor o menor de la formula
@@ -481,11 +490,14 @@ void calcular_rotacion(struct Punto3D entrada, float * rot_x, float * rot_y) {
     float aux2 = entrada.z / curvatura_v; // auxiliar para calcular 'y' (es el parametro de la función f(b) = b^2, se divide por curvatura para obtener una porción mayor o menor de la formula
     float aux_y = (aux2*aux2)*sentido_v/3.0; // coordenada y de la carretera
     
-    float test;
+    // calcular los angulos
     *rot_x = (-atan(-1/(2*(aux2))*curvatura_v) / PI * 180 + 90) * sentido_v;
     *rot_y = (atan(-1/(2*(aux))*curvatura_h) / PI * 180 - 90) * sentido_h;
 }
 
+/**
+ * Calcula la posiciçon de un objeto sobre la carretera para un x,y,z, dado
+ */
 void calcular_coordenadas(struct Punto3D entrada, struct Punto3D * salida) {
     // curva para el plano xz
     float aux = entrada.z / curvatura_h; // auxiliar para calcular 'x' y 'z' (es el parametro de la función f(a) = a^2, se divide por curvatura para obtener una porción mayor o menor de la formula
@@ -580,7 +592,6 @@ void dibujar_bounding_box(Punto3D min, Punto3D max) {
 
     glPopMatrix();
     glPointSize(1);
-
 }
 
 /**
@@ -620,7 +631,8 @@ void dibujar_auto() {
         
         glDisable(GL_BLEND);
     glPopMatrix();
-    
+
+    // dibujar halo    
     if (still_invincible()) {
         glPushMatrix();
             glColor3f(1,1,0.6);
@@ -668,6 +680,9 @@ void dibujar_mira() {
     glPopMatrix();
 }
 
+/**
+ * Calcula cuanto tiene que templar la camara en este frame
+ */
 void shake() {
     float elapsed;
     if (glutGet(GLUT_ELAPSED_TIME) - _last_impact < 0500)  {
@@ -835,6 +850,9 @@ void on_collision() {
     }
 }
 
+/**
+ * Pequeña función para imprimir los shields como asteriscos o numeros
+ */
 char * draw_shield()
 {
     static char string[10];
@@ -958,6 +976,9 @@ int flash_road() {
     return 0;
 }
 
+/**
+ * Función de dibujado, coloca la cámara e invoca al resto
+ */
 int do_draw() {
    struct Punto3D a;
     
@@ -1047,6 +1068,7 @@ void dibujar_game_over() {
 
 /**
  * Dibujar la escena
+ * Permite dibujar con o sin motionblur
  */
 void game_draw_scene() {
     struct Punto3D a;
@@ -1065,6 +1087,9 @@ void game_draw_scene() {
     	dibujar_game_over();
 }
 
+/**
+ * Cambiar la orientación de la carretera
+ */
 void change_road_orientation() {
     static float xx = 0;
     static float yy = 0;
@@ -1075,6 +1100,20 @@ void change_road_orientation() {
 
     float ratio;
     float aux;
+    
+    if (_lives <= 0) {
+        xx = 0;
+        yy = 0;
+        target_xx = 0;
+        target_yy = 0;
+        aux = xx + (target_xx - xx)*ratio;
+        sentido_h = (aux > 0 ? 1 : -1);
+        curvatura_h = (aux == 0 ? 100 : 1 * sqrt(1/aux*1/aux)+5);
+        aux = yy + (target_yy - yy)*ratio;
+        sentido_v = (aux > 0 ? 1 : -1);
+        curvatura_v = (aux == 0 ? 100 : 1 * sqrt(1/aux*1/aux)+5);
+        return;     
+    }
     
     if (glutGet(GLUT_ELAPSED_TIME) - start > delay) {
         xx = target_xx;
@@ -1094,9 +1133,6 @@ void change_road_orientation() {
         sentido_v = (aux > 0 ? 1 : -1);
         curvatura_v = (aux == 0 ? 100 : 1 * sqrt(1/aux*1/aux)+5);
     }
-    
-//    sprintf(_debug_string, "xx=%f, yy=%f, target_xx=%f, target_yy=%f", xx, yy, target_xx, target_yy);
-//    sprintf(_debug_string, "SPEED=%f", _speed);
 }
 
 /**
@@ -1145,6 +1181,9 @@ void game_handle_idle() {
     if (_lives <= 0) {
         if (_game_over_start == 0) {
             _game_over_start = glutGet(GLUT_ELAPSED_TIME);
+            // quitar todos los elementos de nuestra lista de entidades
+            vaciar_lista(entity_header.next);
+            entity_header.next = NULL;
         }
         _last_impact = glutGet(GLUT_ELAPSED_TIME)-250; // SHAKE THAT SCREEN!
     }
