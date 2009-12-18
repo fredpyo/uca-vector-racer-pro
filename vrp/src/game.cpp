@@ -92,6 +92,7 @@ int _show_bounds = 0;
 int _game_over_start = 0;
 int _invincible_start = -20000;
 int _lightsoff_start = -20000;
+int _use_motion_blur = 1;
 /*
  * Inicialización
  */
@@ -177,6 +178,11 @@ void game_handle_keypress(unsigned char key, int x, int y) {
                 _speed_pause = 0;
             }
             break;
+        case 'm':
+        case 'M':
+            _use_motion_blur = !_use_motion_blur;
+            break;
+
         case 'l':
         case 'L':
             _lightsoff_start = glutGet(GLUT_ELAPSED_TIME);
@@ -819,6 +825,20 @@ void on_collision() {
     }
 }
 
+char * draw_shield()
+{
+    static char string[10];
+    int i;
+    if (_lives > 6)
+        sprintf(string, "%d", _lives);
+    else {
+        for (i = 0; i < _lives; i++)
+            string[i] = '*';
+        string[i] = 0;
+    }
+    return string;
+}
+
 /**
  * Dibujar el HUD
  */
@@ -844,7 +864,7 @@ void draw_hud() {
     // vidas
     glColor3f(0.3f, 0.6f, 1.0f);
     glRasterPos2i(10, 30);
-    sprintf(buffer, "Shields %d", _lives);
+    sprintf(buffer, "Shields %s", draw_shield());
     glutBitmapString(GLUT_BITMAP_9_BY_15, (unsigned char *) buffer);
 
     // velocidad
@@ -993,8 +1013,15 @@ void dibujar_game_over() {
 void game_draw_scene() {
     struct Punto3D a;
 
-	RenderToMotionBlurTexture(1, do_draw);
-	ShowMotionBlurTexture();
+    if (_use_motion_blur) {
+    	RenderToMotionBlurTexture(1, do_draw);
+    	ShowMotionBlurTexture();
+    } else {
+    	glClearColor(0.0,0.0,0.0,0.0);
+    	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear The Screen And The Depth Buffer
+    	glLoadIdentity();
+    	do_draw();
+    }
 	draw_hud();
 	if (_lives <= 0)
     	dibujar_game_over();
