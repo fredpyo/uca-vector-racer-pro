@@ -218,6 +218,11 @@ void game_handle_keypress(unsigned char key, int x, int y) {
     static float xx = 0;
     static float yy = 0;
     switch (key) {
+        case 13:
+        case ' ':
+            if (_lives <= 0 && _game_over_start > 0)
+                switch_to(SCENE_RANKING);
+            break;
         case 'p':
         case 'P':
             if (_speed) {
@@ -339,17 +344,6 @@ void game_handle_keypress_special(int key, int x, int y, int state) {
     }
 //    sprintf(_debug_string, "KEYS: left=%d right=%d roll=%f", left_key, right_key, _car_roll);
     
-}
-
-void game_handle_keypress_special_up(int key, int x, int y) {
-    switch (key) {
-        case GLUT_KEY_LEFT:
-            left_key = 0;
-            break;    
-        case GLUT_KEY_RIGHT:
-            right_key = 0;
-            break;        
-        }
 }
 
 /**
@@ -1067,7 +1061,6 @@ void dibujar_game_over() {
         color = 1 - ((elapsed - 2500) / 3500.0);
     } else if (elapsed >= 6000) {
         color = 0;
-        latest_score(1, _score);
         switch_to(SCENE_RANKING);
     }
 
@@ -1209,6 +1202,8 @@ void game_handle_idle() {
             entity_header.next = NULL;
             music_stop(0);
             music_play("53 - The Fall (Retire).mp3");
+            // almacenar el score
+            latest_score(1, _score);
         }
         _last_impact = glutGet(GLUT_ELAPSED_TIME)-250; // SHAKE THAT SCREEN!
     }
