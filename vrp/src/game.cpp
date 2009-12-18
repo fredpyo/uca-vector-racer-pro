@@ -1141,8 +1141,8 @@ void change_road_orientation() {
         xx = target_xx;
         yy = target_yy;
         
-        target_xx = (rand()/(float)RAND_MAX) * 0.2 * _speed/0.1 * (rand()%2 ? 1 : -1);
-        target_yy = (rand()/(float)RAND_MAX) * 0.3 * _speed/0.1 * (rand()%2 ? 1 : -1);
+        target_xx = (rand()/(float)RAND_MAX) * 0.1 * _speed/0.1 * (rand()%2 ? 1 : -1);
+        target_yy = (rand()/(float)RAND_MAX) * 0.2 * _speed/0.1 * (rand()%2 ? 1 : -1);
         start = glutGet(GLUT_ELAPSED_TIME);
         delay = 5000;
     } else {
@@ -1173,7 +1173,7 @@ void game_handle_idle() {
         _car_roll = (_car_roll + (time - elapsed_time) * _speed*100 * (-left_key + right_key))/2;
     else
         _car_roll = 0 /*_car_roll / ((time - elapsed_time))*/;
-    car_move((time - elapsed_time) * _speed/4 * (-left_key + right_key));
+    car_move((time - elapsed_time) * _speed/8 * (-left_key + right_key));
     
     // almacenar el nuevo tiempo
     elapsed_time = time;
