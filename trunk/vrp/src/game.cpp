@@ -93,6 +93,9 @@ int _game_over_start = 0;
 int _invincible_start = -20000;
 int _lightsoff_start = -20000;
 int _use_motion_blur = 1;
+int _last_powerup = -100000;
+char _last_powerup_message[100];
+
 /*
  * Inicialización
  */
@@ -307,23 +310,30 @@ int still_invincible() {
  * Otorgar el powerup (o down) correspondiente
  */
 void give_power_up(int instance) {
+    _last_powerup = glutGet(GLUT_ELAPSED_TIME);
     switch (instance) {
         case GAME_ENTITY_INSTANCE_POWERUP_LIFE:
+            sprintf(_last_powerup_message, "+1 SHIELDS");
             _lives++;
             break;
         case GAME_ENTITY_INSTANCE_POWERUP_SLOW:
+            sprintf(_last_powerup_message, "Speed DOWN");
             _speed = _speed / 1.1;
             break;
         case GAME_ENTITY_INSTANCE_POWERUP_INVINCIBLE:
+            sprintf(_last_powerup_message, "I'm INVINCIBLE!");
             _invincible_start = glutGet(GLUT_ELAPSED_TIME);
             break;
         case GAME_ENTITY_INSTANCE_POWERUP_LIGHTSOFF:
+            sprintf(_last_powerup_message, "Woops! Lights OFF!");
             _lightsoff_start  = glutGet(GLUT_ELAPSED_TIME);
             break;
         case GAME_ENTITY_INSTANCE_POWERUP_COIN:
+            sprintf(_last_powerup_message, "KaChing! +100 points");
             _score += 100;
             break;
         case GAME_ENTITY_INSTANCE_POWERUP_SPEED:
+            sprintf(_last_powerup_message, "Speed UP! Show me what you got!");
             _speed = _speed * 1.1;
             break;
         case GAME_ENTITY_INSTANCE_POWERUP_RANDOM:
@@ -845,6 +855,7 @@ char * draw_shield()
 void draw_hud() {
     char buffer[100];
     int offset;
+    float aux;
     
     ortho_mode(0, _height, _width, 0);
 	glDisable(GL_DEPTH_TEST);
@@ -900,6 +911,33 @@ void draw_hud() {
     glRasterPos2i(_width - 200, 10);
     sprintf(buffer, "Score %012u", _score);
     glutBitmapString(GLUT_BITMAP_9_BY_15, (unsigned char *) buffer);
+    
+    // last powerup
+    if (glutGet(GLUT_ELAPSED_TIME) - _last_powerup < 2500) {
+        offset = (_width - glutBitmapLength(GLUT_BITMAP_8_BY_13, (unsigned char *) _last_powerup_message))/2;
+        glRasterPos2i(offset, 60);
+        glutBitmapString(GLUT_BITMAP_HELVETICA_18, (unsigned char *) _last_powerup_message);
+    }
+    
+    // invincibility
+    if (still_invincible()) {
+        aux = (10000 - (glutGet(GLUT_ELAPSED_TIME) - _invincible_start))/1000.0;
+        glColor3f(0, aux/10, 0);
+        glRasterPos2i(10, 60);
+        glutBitmapString(GLUT_BITMAP_9_BY_15, (unsigned char *) "Invincible ");
+        sprintf(buffer, "%2.2f", aux ) ;
+        glutBitmapString(GLUT_BITMAP_HELVETICA_18, (unsigned char *) buffer);
+    }
+    
+    // lights off
+    if (lights_off()) {
+        aux = (10000 - (glutGet(GLUT_ELAPSED_TIME) - _lightsoff_start))/1000.0;
+        glColor3f((aux/10)/2 + 0.5, 0, 0);
+        glRasterPos2i(_width - 200, 60);
+        glutBitmapString(GLUT_BITMAP_9_BY_15, (unsigned char *) "Lights off ");
+        sprintf(buffer, "%2.2f", aux ) ;
+        glutBitmapString(GLUT_BITMAP_HELVETICA_18, (unsigned char *) buffer);
+    }
     
     glDisable(GL_BLEND);
     perspective_mode();
