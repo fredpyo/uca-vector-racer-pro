@@ -18,17 +18,17 @@ struct ranking
     int score;
 };
 
-struct ranking rankings[10];
-
 GLuint _texture_id3; // the id of the texture
+
+struct ranking rankings[10];
 char _new_name[64] = {0};
 int _new_name_cursor = 0;
-
-int _new_record = -1;
+int _new_record = -1; // posición del nuevo record
 
 void save_ranking();
 
 /**
+ * Setear u obtener el ultimo score obtenido por jugador
  * 0 = get
  * 1 = set
  */
@@ -41,55 +41,9 @@ int latest_score(int get_set, unsigned int score) {
     }
 }
 
-void ranking_draw_scene_fadein(int setup)
-{
-    static float base_time;
-    float elapsed_time;
-    float alpha = 0;
-    float color = 0;
-    
-    if (setup == 1)
-        base_time = glutGet(GLUT_ELAPSED_TIME);
-    else {
-        ortho_mode(0, 0, _width, _height);
-
-        elapsed_time = glutGet(GLUT_ELAPSED_TIME) - base_time;
-        
-        if (elapsed_time < 3000) {
-            alpha = (3000 - elapsed_time)/3000;
-        } else if (elapsed_time < 4000) {
-            alpha = (elapsed_time - 3000)/1000;
-            color = 1;
-        } else if (elapsed_time < 6000) {
-            alpha = (2000 - (elapsed_time-4000)) / 2000;
-            color = 1;
-        } else {
-            return;
-        }
-        
-        // debug :D
-//        sprintf(_debug_string, "alpha: %f, color: %f", alpha, color);
-        
-        // render fader
-        glDisable(GL_DEPTH_TEST);
-        glEnable (GL_BLEND);
-        glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        glColor4f(color, color, color, alpha);
-        glBegin(GL_QUADS);
-            glVertex3f(0, _height, 0); // abajo izquierda
-            glVertex3f(_width, _height, 0); // abajo derecha
-            glVertex3f(_width, 0, 0); // arriba derecha
-            glVertex3f(0, 0, 0); // arriba izquierda
-        glEnd();
-        
-        glDisable (GL_BLEND);
-        glEnable(GL_DEPTH_TEST);
-
-        perspective_mode();
-    }
-}
-
+/**
+ * Llenar de puntitos
+ */
 char * llenar_de_puntos(int cantidad)
 {
     static char puntos[51];
@@ -99,6 +53,9 @@ char * llenar_de_puntos(int cantidad)
     return puntos;
 }
 
+/**
+ * Dibujar puntajes
+ */
 void ranking_draw_scores(void)
 {
     int i;
@@ -122,8 +79,6 @@ void ranking_draw_scores(void)
         glVertex3f(_width, 250, 0); // arriba derecha
         glVertex3f(0, 250, 0); // arriba izquierda
     glEnd();
-
-    sprintf(_debug_string, ">>>>>>>>>>>>> %d", latest_score(0,0));
 
     // new record!
     if (_new_record > -1) {
@@ -149,8 +104,6 @@ void ranking_draw_scores(void)
             glEnd();
         }
         
-//        sprintf(_debug_string, "sine: %f", sine_value);
-
         sprintf(buffer, "%d", rankings[i].score);
         sprintf(buffer, "%s%s%d", rankings[i].name,llenar_de_puntos(60 - strlen(rankings[i].name) - strlen(buffer)), rankings[i].score);
         offset = (_width - glutBitmapLength(GLUT_BITMAP_9_BY_15, (unsigned char *) buffer))/2;
@@ -198,7 +151,6 @@ void ranking_draw_scene(void)
     glColor3d(color,color,color);
 
     // preparar texturas
-//	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, _texture_id3);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -223,11 +175,11 @@ void ranking_draw_scene(void)
     perspective_mode();
 
     ranking_draw_scores();
-
 }
 
 void ranking_handle_keypress(unsigned char key, int x, int y)
 {
+    // si hay un nuevo record, simular un INPUT BOX
     if (_new_record > -1) {
         if (key >= ' ' && key <= '~' && key != ',') {
             if (_new_name_cursor < 20) {
@@ -244,6 +196,7 @@ void ranking_handle_keypress(unsigned char key, int x, int y)
             latest_score(1, 0);
             switch_to(SCENE_RANKING);
         }
+    // si no hay nuevo record... todo normal nomás
     } else {
         switch (key) 
         {
@@ -254,13 +207,15 @@ void ranking_handle_keypress(unsigned char key, int x, int y)
     }
 }
 
-
 void ranking_handle_keypress_special(int key, int x, int y, int state) {
     switch (key)
     {
     }
 }
 
+/**
+ * Leer el archivo de ranking y comparar con el nuevo record (si es que lo hay)
+ */
 void parse_ranking()
 {
     FILE * fhandle;
@@ -296,6 +251,9 @@ void parse_ranking()
     }
 }
 
+/**
+ * Guardar el ranking, incluyendo el nuevo record, desplazando todos los demás hacia abajo
+ */
 void save_ranking()
 {
     FILE * fhandle;
@@ -315,7 +273,12 @@ void save_ranking()
     fclose(fhandle);
 }
 
+/**
+ * Init
+ */
 void ranking_init() {
+    int i;
+    
 	glEnable(GL_COLOR_MATERIAL);
     Image* image = loadBMP("img\\vrp.bmp");
 	_texture_id3 = texture_load_texture(image);
@@ -324,11 +287,10 @@ void ranking_init() {
     music_stop(0);
 	music_play("test.ogg");
 
-    strcpy(_new_name, "");
+    for (i = 0; i < 64; i++) _new_name[i] = 0;
     _new_name_cursor = 0;
     _new_record = -1;
 	
-	ranking_draw_scene_fadein(1);
 	parse_ranking();
 }
 
