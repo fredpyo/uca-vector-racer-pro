@@ -57,7 +57,8 @@ void handle_keypress(unsigned char key, int x, int y) {
             exit(0);
         default:
             // genericness galore!
-            generic_handle_keypress(key, x, y);
+            if (generic_handle_keypress)
+                generic_handle_keypress(key, x, y);
             break;
     }    
 }
@@ -69,6 +70,7 @@ void handle_keypress_special(int key, int x, int y) {
             _show_debug = !_show_debug;
             break;
         default:
+            if (generic_handle_keypress_special)
                 generic_handle_keypress_special(key, x, y, 1);
             break;
     }
@@ -232,7 +234,6 @@ void vrp_init() {
     glClearColor(0.0, 0.0, 0.0, 0.9);
     glPointSize(3.0);    
     sfx_init();
-//    music_play("test.ogg");
 
     glMatrixMode(GL_PROJECTION);
     gluPerspective(45.0, // cam angle
