@@ -1,6 +1,6 @@
 /*
-**
-**
+** game entity renderer
+** Renderea las entidades
 */
 
 #include <math.h>
@@ -91,7 +91,9 @@ void game_entity_render_obstacle(struct game_entity * entity, int elapsed_time) 
     }
 }
 
-
+/**
+ * Renderea los powerups esféricos
+ */
 void game_entity_render_powerup(struct game_entity * entity, int elapsed_time) {
     static Punto3D a,b;
     float rot_x, rot_y;
@@ -107,12 +109,10 @@ void game_entity_render_powerup(struct game_entity * entity, int elapsed_time) {
     glRotatef(rot_y, 0, 1, 0);
     glRotatef(rot_x, 1, 0, 0);
 
-//    glRotatef(sin(glutGet(GLUT_ELAPSED_TIME)/300.0)*180, 0, 1, 0);
     glRotatef(sin(glutGet(GLUT_ELAPSED_TIME)/300.0)*180, 0, 1, 0);
     glTranslatef(0,sin(glutGet(GLUT_ELAPSED_TIME)/200.0+entity->pos.x)*0.3+0.2,0);
 
-
-    // según sea el tipo de entidad, la dibujamos de acuerdo a su tipo
+    // según sea el tipo de entidad, seteamos su textura...
     switch (entity->instance) {
         case GAME_ENTITY_INSTANCE_POWERUP_LIFE:
         	glBindTexture(GL_TEXTURE_2D, _life_texture);
@@ -127,16 +127,18 @@ void game_entity_render_powerup(struct game_entity * entity, int elapsed_time) {
         	glBindTexture(GL_TEXTURE_2D, _random_texture);
             break;
     }
+    // ... y como todos son esferas, se dibujan igual
 	glEnable(GL_TEXTURE_2D);
+
+    // todo esto para mapear la textura a glut solid sphere
     glTexGeni(GL_S, GL_TEXTURE_GEN_MODE,GL_OBJECT_LINEAR);
     glTexGeni(GL_T, GL_TEXTURE_GEN_MODE,GL_OBJECT_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    
     glEnable(GL_TEXTURE_GEN_S);
     glEnable(GL_TEXTURE_GEN_T);
 
+    // transladamos y pintamos
     glTranslatef(0.0, 0.5, 0.0);
     glColor4f(1.0, 1.0, 1.0, calcular_alpha(a.z));
     glutSolidSphere(0.45, 16, 16);
@@ -161,7 +163,9 @@ void game_entity_render_powerup(struct game_entity * entity, int elapsed_time) {
     }
 }
 
-
+/**
+ * Renderea el powerup coin
+ */
 void game_entity_render_coin(struct game_entity * entity, int elapsed_time) {
     static Punto3D a,b;
     float rot_x, rot_y;
@@ -178,8 +182,8 @@ void game_entity_render_coin(struct game_entity * entity, int elapsed_time) {
     glRotatef(rot_y, 0, 1, 0);
     glRotatef(rot_x, 1, 0, 0);
 
+    // transladamos y pintamos
     glRotatef(glutGet(GLUT_ELAPSED_TIME), 0, 1, 0);
-
     glTranslatef(0.0, 0.5, -0.05);
     glColor4f(1.0, 1.0, 0.0, calcular_alpha(a.z));
     glutWireCylinder(0.2, 0.1, 16, 1);
