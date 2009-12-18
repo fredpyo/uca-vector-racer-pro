@@ -190,6 +190,11 @@ void game_handle_keypress(unsigned char key, int x, int y) {
         case 'L':
             _lightsoff_start = glutGet(GLUT_ELAPSED_TIME);
             break;
+        case 'i':
+        case 'I':
+            _invincible_start = glutGet(GLUT_ELAPSED_TIME);
+            break;
+
         case '+':
         	_distance = constraint_f(_distance, -1.5, 5, 200);
         	break;
@@ -234,7 +239,7 @@ void game_handle_keypress(unsigned char key, int x, int y) {
         case '.':
             _speed += 1.1*BASE_SPEED;
             break;
-        case 'i':
+        case 's':
             _last_impact = glutGet(GLUT_ELAPSED_TIME);
     }
     
@@ -317,28 +322,35 @@ int still_invincible() {
  */
 void give_power_up(int instance) {
     _last_powerup = glutGet(GLUT_ELAPSED_TIME);
+
     switch (instance) {
         case GAME_ENTITY_INSTANCE_POWERUP_LIFE:
+            sfx_play_sample(SFX_POWERUP_GOOD);
             sprintf(_last_powerup_message, "+1 SHIELDS");
             _lives++;
             break;
         case GAME_ENTITY_INSTANCE_POWERUP_SLOW:
+            sfx_play_sample(SFX_POWERUP_GOOD);
             sprintf(_last_powerup_message, "Speed DOWN");
             _speed = _speed / 1.1;
             break;
         case GAME_ENTITY_INSTANCE_POWERUP_INVINCIBLE:
+            sfx_play_sample(SFX_POWERUP_GOOD);
             sprintf(_last_powerup_message, "I'm INVINCIBLE!");
             _invincible_start = glutGet(GLUT_ELAPSED_TIME);
             break;
         case GAME_ENTITY_INSTANCE_POWERUP_LIGHTSOFF:
+            sfx_play_sample(SFX_POWERUP_BAD);
             sprintf(_last_powerup_message, "Woops! Lights OFF!");
             _lightsoff_start  = glutGet(GLUT_ELAPSED_TIME);
             break;
         case GAME_ENTITY_INSTANCE_POWERUP_COIN:
+            sfx_play_sample(SFX_POWERUP);
             sprintf(_last_powerup_message, "KaChing! +100 points");
             _score += 100;
             break;
         case GAME_ENTITY_INSTANCE_POWERUP_SPEED:
+            sfx_play_sample(SFX_POWERUP_BAD);
             sprintf(_last_powerup_message, "Speed UP! Show me what you got!");
             _speed = _speed * 1.1;
             break;
@@ -844,7 +856,8 @@ void dibujar_horizonte() {
  * Que hacer cuando chocamos
  */
 void on_collision() {
-    if (!still_invincible()) {
+    if (!still_invincible() && _lives > 0) {
+        sfx_play_sample(SFX_BOOM1);
         _last_impact = glutGet(GLUT_ELAPSED_TIME); // SHAKE THAT SCREEN!
         _lives--;
     }
@@ -1182,6 +1195,7 @@ void game_handle_idle() {
         if (_game_over_start == 0) {
             _game_over_start = glutGet(GLUT_ELAPSED_TIME);
             // quitar todos los elementos de nuestra lista de entidades
+            sprintf(_debug_string, "VACIANDO....");
             vaciar_lista(entity_header.next);
             entity_header.next = NULL;
         }
