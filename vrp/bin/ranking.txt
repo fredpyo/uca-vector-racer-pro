@@ -1,10 +1,10 @@
-Crazy Dude,10
-Mega Racer,9
-Meteoro,8
-Tester,7
-Tux Racer,6
-Luigi,5
-Mr. T (he's got computer skills!),4
-Not so happy :(,3
-Lemming Topo,2
-WTH ^_^,1
+Top Vector Racer,1000
+Mega Racer,900
+Meteoro,800
+Tester,700
+Tux Racer,600
+Luigi,500
+Mr. T's got computer skills - fool!,400
+Newbie,300
+Racer,200
+Easy as Pie,100
