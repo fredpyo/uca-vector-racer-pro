@@ -100,6 +100,9 @@ char _last_powerup_message[100];
  * Inicialización
  */
 void game_init() {
+    // seed
+	srand(time(NULL)); // seed the random!
+        
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.0, 0.0, 0.0, 0.9);
     glPointSize(3.0);
@@ -110,14 +113,14 @@ void game_init() {
 
     // play that funky music
     music_stop(0);
-	music_play("g-storm.mp3");
+	music_play(0);
 	
 	// entidades
 	entity_header.next = create_entity();
 	
-	// velocidad y seed
+	// velocidad
 	_speed = BASE_SPEED*5;
-	srand(time(NULL)); // seed the random!
+
 	
     Image * image = loadBMP("img\\verde.bmp");
 	_green_texture = texture_load_texture(image);
@@ -165,6 +168,50 @@ void game_init() {
 }
 
 /**
+ * Otorgar el powerup (o down) correspondiente
+ */
+void give_power_up(int instance) {
+    _last_powerup = glutGet(GLUT_ELAPSED_TIME);
+
+    switch (instance) {
+        case GAME_ENTITY_INSTANCE_POWERUP_LIFE:
+            sfx_play_sample(SFX_POWERUP_GOOD);
+            sprintf(_last_powerup_message, "+1 SHIELDS");
+            _lives++;
+            break;
+        case GAME_ENTITY_INSTANCE_POWERUP_SLOW:
+            sfx_play_sample(SFX_POWERUP_GOOD);
+            sprintf(_last_powerup_message, "Speed DOWN");
+            _speed = _speed / 1.1;
+            break;
+        case GAME_ENTITY_INSTANCE_POWERUP_INVINCIBLE:
+            sfx_play_sample(SFX_POWERUP_GOOD);
+            sprintf(_last_powerup_message, "I'm INVINCIBLE!");
+            _invincible_start = glutGet(GLUT_ELAPSED_TIME);
+            music_invicible_play();
+            break;
+        case GAME_ENTITY_INSTANCE_POWERUP_LIGHTSOFF:
+            sfx_play_sample(SFX_POWERUP_BAD);
+            sprintf(_last_powerup_message, "Woops! Lights OFF!");
+            _lightsoff_start  = glutGet(GLUT_ELAPSED_TIME);
+            break;
+        case GAME_ENTITY_INSTANCE_POWERUP_COIN:
+            sfx_play_sample(SFX_POWERUP);
+            sprintf(_last_powerup_message, "KaChing! +100 points");
+            _score += 100;
+            break;
+        case GAME_ENTITY_INSTANCE_POWERUP_SPEED:
+            sfx_play_sample(SFX_POWERUP_BAD);
+            sprintf(_last_powerup_message, "Speed UP! Show me what you got!");
+            _speed = _speed * 1.1;
+            break;
+        case GAME_ENTITY_INSTANCE_POWERUP_RANDOM:
+            give_power_up((rand()%6)+5);
+            break;
+    }
+}
+
+/**
  * Manejo de teclas convencionales
  */
 void game_handle_keypress(unsigned char key, int x, int y) {
@@ -188,11 +235,13 @@ void game_handle_keypress(unsigned char key, int x, int y) {
 
         case 'l':
         case 'L':
-            _lightsoff_start = glutGet(GLUT_ELAPSED_TIME);
+            //_lightsoff_start = glutGet(GLUT_ELAPSED_TIME);
+            give_power_up(GAME_ENTITY_INSTANCE_POWERUP_LIGHTSOFF);
             break;
         case 'i':
         case 'I':
-            _invincible_start = glutGet(GLUT_ELAPSED_TIME);
+            //_invincible_start = glutGet(GLUT_ELAPSED_TIME);
+            give_power_up(GAME_ENTITY_INSTANCE_POWERUP_INVINCIBLE);
             break;
 
         case '+':
@@ -315,49 +364,6 @@ int lights_off() {
  */
 int still_invincible() {
     return (glutGet(GLUT_ELAPSED_TIME) - _invincible_start) < 10000;
-}
-
-/**
- * Otorgar el powerup (o down) correspondiente
- */
-void give_power_up(int instance) {
-    _last_powerup = glutGet(GLUT_ELAPSED_TIME);
-
-    switch (instance) {
-        case GAME_ENTITY_INSTANCE_POWERUP_LIFE:
-            sfx_play_sample(SFX_POWERUP_GOOD);
-            sprintf(_last_powerup_message, "+1 SHIELDS");
-            _lives++;
-            break;
-        case GAME_ENTITY_INSTANCE_POWERUP_SLOW:
-            sfx_play_sample(SFX_POWERUP_GOOD);
-            sprintf(_last_powerup_message, "Speed DOWN");
-            _speed = _speed / 1.1;
-            break;
-        case GAME_ENTITY_INSTANCE_POWERUP_INVINCIBLE:
-            sfx_play_sample(SFX_POWERUP_GOOD);
-            sprintf(_last_powerup_message, "I'm INVINCIBLE!");
-            _invincible_start = glutGet(GLUT_ELAPSED_TIME);
-            break;
-        case GAME_ENTITY_INSTANCE_POWERUP_LIGHTSOFF:
-            sfx_play_sample(SFX_POWERUP_BAD);
-            sprintf(_last_powerup_message, "Woops! Lights OFF!");
-            _lightsoff_start  = glutGet(GLUT_ELAPSED_TIME);
-            break;
-        case GAME_ENTITY_INSTANCE_POWERUP_COIN:
-            sfx_play_sample(SFX_POWERUP);
-            sprintf(_last_powerup_message, "KaChing! +100 points");
-            _score += 100;
-            break;
-        case GAME_ENTITY_INSTANCE_POWERUP_SPEED:
-            sfx_play_sample(SFX_POWERUP_BAD);
-            sprintf(_last_powerup_message, "Speed UP! Show me what you got!");
-            _speed = _speed * 1.1;
-            break;
-        case GAME_ENTITY_INSTANCE_POWERUP_RANDOM:
-            give_power_up((rand()%6)+5);
-            break;
-    }
 }
 
 /**
@@ -1054,9 +1060,9 @@ void dibujar_game_over() {
         alpha = (elapsed) / 500.0;
     } else if (elapsed <= 2500) {
         color = 1;
-    } else if (elapsed < 4000) {
-        color = 1 - ((elapsed - 2500) / 1500.0);
-    } else if (elapsed >= 4000) {
+    } else if (elapsed < 6000) {
+        color = 1 - ((elapsed - 2500) / 3500.0);
+    } else if (elapsed >= 6000) {
         color = 0;
         latest_score(1, _score);
         switch_to(SCENE_RANKING);
@@ -1198,6 +1204,8 @@ void game_handle_idle() {
             sprintf(_debug_string, "VACIANDO....");
             vaciar_lista(entity_header.next);
             entity_header.next = NULL;
+            music_stop(0);
+            music_play("53 - The Fall (Retire).mp3");
         }
         _last_impact = glutGet(GLUT_ELAPSED_TIME)-250; // SHAKE THAT SCREEN!
     }
