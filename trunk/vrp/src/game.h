@@ -10,6 +10,7 @@ extern GLuint _slow_texture;
 extern GLuint _shield_texture;
 extern GLuint _random_texture;
 extern int _show_bounds;
+extern struct Punto3D car_pos[3];
 
 void game_draw_scene(void);
 void game_handle_keypress(unsigned char key, int x, int y);

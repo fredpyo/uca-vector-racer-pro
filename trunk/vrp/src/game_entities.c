@@ -49,7 +49,7 @@ int check_collisions(Punto3D car_bounds[2], game_entity * entity){
 /**
  * Recorre la lista de entidades, las dibuja, verifica colisiones y si debe borrar alguna que ya no se vea
  */
-void recorrer_lista(struct game_entity * entity, Punto3D car_pos[3]) {
+void recorrer_lista(struct game_entity * entity) {
     static int elapsed_time = 0;
     int time;
 	time = glutGet(GLUT_ELAPSED_TIME);
