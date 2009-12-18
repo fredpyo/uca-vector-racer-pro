@@ -995,7 +995,7 @@ int do_draw() {
 
         recorrer_lista(&entity_header, car_pos);
         glEnable(GL_COLOR_MATERIAL);
-        dibujar_mira();
+//        dibujar_mira();
         if (!lights_off() || (lights_off() && flash_road()))
             dibujar_carretera();
         dibujar_auto();

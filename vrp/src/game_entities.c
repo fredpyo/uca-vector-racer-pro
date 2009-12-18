@@ -10,22 +10,28 @@
 #include "game_entities.h"
 #include "game_entity_renderer.h"
 
+/**
+ * Verificar si hubo una colisión entre el auto y la entidad
+ */
 int check_collisions(Punto3D car_bounds[2], game_entity * entity){
     struct Punto3D e_min, e_max;
     int collision;
 
+    // calcular el bounding box de la entidad en el sistema de coordenadas distorsionado
+    // min
     e_min = entity->pos;
     e_min.x += entity->bound_min.x;
     e_min.y += entity->bound_min.y;
     e_min.z += entity->bound_min.z;
     calcular_coordenadas(e_min, &e_min);
-
+    // max
     e_max = entity->pos;
     e_max.x += entity->bound_max.x;
     e_max.y += entity->bound_max.y;
     e_max.z += entity->bound_max.z;
     calcular_coordenadas(e_max, &e_max);
     
+    // verificar la colisión
     if (
         !(car_bounds[0].x > e_max.x) && car_bounds[1].x > e_min.x &&
         !(car_bounds[0].z > e_max.z) && car_bounds[1].z > e_min.z
@@ -35,12 +41,14 @@ int check_collisions(Punto3D car_bounds[2], game_entity * entity){
         collision = 0;
     }
     
-//    sprintf(_debug_string, "e_min:%f,%f,%f e_max:%f,%f,%f COL: %d", e_min.x, e_min.y, e_min.z, e_max.x, e_max.x, e_max.x, collision);
-    
+   // do it
     return collision;
    
 }
 
+/**
+ * Recorre la lista de entidades, las dibuja, verifica colisiones y si debe borrar alguna que ya no se vea
+ */
 void recorrer_lista(struct game_entity * entity, Punto3D car_pos[3]) {
     static int elapsed_time = 0;
     int time;
@@ -49,21 +57,27 @@ void recorrer_lista(struct game_entity * entity, Punto3D car_pos[3]) {
     glEnable (GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    while (entity->next) {
+    while (entity->next) { // recorrer
+        // renderear
         entity->next->renderer(entity->next, time - elapsed_time);
+        // verificar colisión y ver que hacer si es un powerup u obstaculo
         if (check_collisions(&car_pos[1], entity->next)) {
             if (entity->next->type == GAME_ENTITY_TYPE_POWERUP) {
                 give_power_up(entity->next->instance);
             } else {
                 on_collision();
             }
+            // borrar el elemento porque chocamos contra el
             entity->next = borrar_de_lista(entity->next);
         }
+        // si hay otro elemento en la lista
         if (entity->next != NULL) {
+                // ver si ya debe desaparecer
                 if (entity->next->pos.z > entity->next->dissapear_at) {
                     entity->next = borrar_de_lista(entity->next);
                 }
         }
+        // avanzar al siguiente elemento
         if (entity->next != NULL) {
             entity = entity->next;
         }
@@ -96,11 +110,9 @@ struct game_entity *  borrar_de_lista(struct game_entity * entity) {
  */
 int pick_game_entity_powerup_instance() {
     float probability = rand()/(float)RAND_MAX;
-    
-    sprintf(_debug_string, "%f", probability);
-    
+
     if (probability > .70)
-        return GAME_ENTITY_INSTANCE_POWERUP_COIN;// GAME_ENTITY_INSTANCE_POWERUP_LIFE;
+        return GAME_ENTITY_INSTANCE_POWERUP_COIN;
     if (probability > .60)
         return GAME_ENTITY_INSTANCE_POWERUP_LIFE;
     if (probability > .45)
@@ -182,26 +194,36 @@ struct game_entity *  create_entity() {
     struct game_entity * nuevo = NULL;
     float probability = rand()/(float)RAND_MAX;
 
+    // reservamos la memoria
     nuevo = (struct game_entity *)malloc(sizeof(struct game_entity));    
+    // hay una probabilidad del 90% que sea un obstaculo, y una del 10% que sea un powerup
     if (probability > 0.90) {
+        // crear el powerup, su tipo, instancia y renderer
         nuevo->type = GAME_ENTITY_TYPE_POWERUP;
-        nuevo->instance = pick_game_entity_powerup_instance(); //GAME_ENTITY_INSTANCE_OBSTACLE_CIL;
+        nuevo->instance = pick_game_entity_powerup_instance();
         if (nuevo->instance != GAME_ENTITY_INSTANCE_POWERUP_COIN)
             nuevo->renderer = game_entity_render_powerup;
         else
             nuevo->renderer = game_entity_render_coin;
     } else {
+        // crear el obstáculo, su tipo, instancia y renderer
         nuevo->type = GAME_ENTITY_TYPE_OBSTACLE;
-        nuevo->instance = pick_game_entity_obstacle_instance(); //GAME_ENTITY_INSTANCE_OBSTACLE_CIL;
+        nuevo->instance = pick_game_entity_obstacle_instance();
         nuevo->renderer = game_entity_render_obstacle;
     }
 
+    // posicionar a alguna distancia random de la carretera con respecto a la distancia al centro
     nuevo->pos.x = (rand()/(float)RAND_MAX)* (ROAD_WIDTH-0.3)*2 - (ROAD_WIDTH-0.3);
+    // el resto de los elementos de posición son por defecto
     nuevo->pos.y = 0;
     nuevo->pos.z = -ROAD_MAX;
+    // desaparece cuando z >= 0
     nuevo->dissapear_at = 0;
+    // no hay next... todavía
     nuevo->next = NULL;
 	// setear los bounds
 	set_game_entity_bounds(nuevo);
+
+	// retornar
     return nuevo;
 }

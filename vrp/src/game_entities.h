@@ -22,15 +22,16 @@ struct Punto3D {
     float z;
 };
 
+// representa una entidad del juego
 struct game_entity {
-    int type;
-    int instance;
-    struct Punto3D pos;
-    float dissapear_at;
-    struct Punto3D bound_min;
-    struct Punto3D bound_max;
-    void (*renderer)(struct game_entity * game_entity, int elapsed_time);
-    struct game_entity * next;
+    int type; // el tipo, si es obstaculo, powerup, etc --> GAME_ENTITY_TYPE_*
+    int instance; // el objeto en si instanciado en esta entidad (cubo, piramide, vida, slow) --> --> GAME_ENTITY_ISNTANCE_*
+    struct Punto3D pos; // posición con respecto a una carretera recta
+    float dissapear_at; // desaparecer luego de pasar este umbral
+    struct Punto3D bound_min; // bounding box minimum
+    struct Punto3D bound_max; // bouding box maximum
+    void (*renderer)(struct game_entity * game_entity, int elapsed_time); // funcion que se encarga de renderear
+    struct game_entity * next; // siguiente elemento de la lista
 };
 
 
