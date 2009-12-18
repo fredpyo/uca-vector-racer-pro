@@ -1,0 +1,947 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.47 r22583"
+   sodipodi:docname="normal de la curva.svg">
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.5"
+     inkscape:cx="1760.9272"
+     inkscape:cy="120.97141"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1680"
+     inkscape:window-height="976"
+     inkscape:window-x="-4"
+     inkscape:window-y="-3"
+     inkscape:window-maximized="1" />
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="DotM"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="DotM"
+       style="overflow:visible">
+      <path
+         id="path4517"
+         d="M -2.5,-1.0 C -2.5,1.7600000 -4.7400000,4.0 -7.5,4.0 C -10.260000,4.0 -12.5,1.7600000 -12.5,-1.0 C -12.5,-3.7600000 -10.260000,-6.0 -7.5,-6.0 C -4.7400000,-6.0 -2.5,-3.7600000 -2.5,-1.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none;marker-end:none"
+         transform="scale(0.4) translate(7.4, 1)" />
+    </marker>
+    <linearGradient
+       id="linearGradient4292">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop4294" />
+      <stop
+         style="stop-color:#f4f4f4;stop-opacity:1;"
+         offset="1"
+         id="stop4296" />
+    </linearGradient>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective10" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4292"
+       id="linearGradient4298"
+       x1="236.5"
+       y1="601.86218"
+       x2="236.5"
+       y2="773.12341"
+       gradientUnits="userSpaceOnUse" />
+    <filter
+       inkscape:collect="always"
+       id="filter4330">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="2.994"
+         id="feGaussianBlur4332" />
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4292"
+       id="linearGradient4445"
+       gradientUnits="userSpaceOnUse"
+       x1="236.5"
+       y1="601.86218"
+       x2="236.5"
+       y2="773.12341"
+       gradientTransform="matrix(1.1674277,0,0,1.1231672,15.403349,366.87036)" />
+    <inkscape:perspective
+       id="perspective5665"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+  </defs>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="opacity:0.5;color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect5781"
+       width="1140"
+       height="820"
+       x="1003.5"
+       y="305.86218"
+       rx="5"
+       ry="5"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/hud etiquetado.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       rx="5"
+       ry="5"
+       y="435.36218"
+       x="-92"
+       height="341"
+       width="657"
+       id="rect4300"
+       style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.52249444000000000;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;filter:url(#filter4330);opacity:0.5"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/normal de la curva.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="color:#000000;fill:url(#linearGradient4298);stroke:#909090;stroke-width:1.52249444000000000;stroke-opacity:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;fill-opacity:1"
+       id="rect4290"
+       width="657"
+       height="341"
+       x="-92"
+       y="431.36218"
+       ry="5"
+       rx="5"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/normal de la curva.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       id="g4244"
+       transform="translate(80.129513,0)"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/normal de la curva.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <path
+         sodipodi:nodetypes="cc"
+         id="path2816"
+         d="m 244.28572,470.93361 c 73.38044,26.5889 110.91602,108.38067 108.7454,188.35255"
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         id="path2820"
+         d="m 237,499.36218 23,-53"
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         id="path2822"
+         d="m 326,660.36218 53,0"
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <g
+         id="g3229">
+        <path
+           id="path3231"
+           d="m 246.35714,503.86218 c 0,0 25.14286,-49.21429 25.14286,-49.21429"
+           style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+        <path
+           id="path3233"
+           d="m 258.71429,511.86218 c 0,0 27.28571,-45.42857 27.28571,-45.42857"
+           style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+        <path
+           id="path3235"
+           d="m 271.57143,518.36218 c 0,0 29.42857,-41.64286 29.42857,-41.64286"
+           style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+        <path
+           id="path3237"
+           d="m 280.42857,527.86218 c 0,0 31.57143,-37.85714 31.57143,-37.85714"
+           style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+        <path
+           id="path3239"
+           d="m 290.78571,536.86218 c 0,0 33.71429,-34.07143 33.71429,-34.07143"
+           style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+        <path
+           id="path3241"
+           d="m 301.64286,548.36218 c 0,0 35.85714,-30.28571 35.85714,-30.28571"
+           style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+        <path
+           id="path3243"
+           d="m 310,560.86218 c 0,0 38,-26.5 38,-26.5"
+           style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+        <path
+           id="path3245"
+           d="m 317.35714,575.86218 c 0,0 40.14286,-22.71429 40.14286,-22.71429"
+           style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+        <path
+           id="path3247"
+           d="m 322.71429,590.36218 c 0,0 42.28571,-18.92857 42.28571,-18.92857"
+           style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+        <path
+           id="path3249"
+           d="m 325.57143,604.86218 c 0,0 44.42857,-15.14286 44.42857,-15.14286"
+           style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+        <path
+           id="path3251"
+           d="m 326.42857,619.36218 c 0,0 46.57143,-11.35714 46.57143,-11.35714"
+           style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+        <path
+           id="path3253"
+           d="m 328.28571,634.36218 c 0,0 48.71429,-7.57143 48.71429,-7.57143"
+           style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+        <path
+           id="path3255"
+           d="m 328.64286,646.86218 c 0,0 50.85714,-3.78571 50.85714,-3.78571"
+           style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      </g>
+    </g>
+    <g
+       id="g4226"
+       transform="translate(30.165228,0)"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/normal de la curva.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <path
+         sodipodi:nodetypes="cc"
+         id="path3278"
+         d="m 4.28572,470.93361 c 73.38044,26.5889 110.91602,108.38067 108.7454,188.35255"
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         id="path3282"
+         d="m 86,660.36218 53,0"
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m -23,470.86218 53,0"
+         id="path3310" />
+      <path
+         id="path3340"
+         d="m 4.78571,484.39789 c 0,0 53,0 53,0"
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         id="path3342"
+         d="m 22.57143,497.93361 c 0,0 53,0 53,0"
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         id="path3344"
+         d="m 36.35714,511.46932 c 0,0 53,0 53,0"
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         id="path3346"
+         d="m 46.14286,525.00504 c 0,0 53,0 53,0"
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         id="path3348"
+         d="m 55.92857,538.54075 c 0,0 53,0 53,0"
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         id="path3350"
+         d="m 63.71429,552.07647 c 0,0 53,0 53,0"
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         id="path3352"
+         d="m 69.5,565.61218 c 0,0 53,0 53,0"
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         id="path3354"
+         d="m 75.28571,579.14789 c 0,0 53,0 53,0"
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         id="path3356"
+         d="m 79.07143,592.68361 c 0,0 53,0 53,0"
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         id="path3358"
+         d="m 80.85714,606.21932 c 0,0 53,0 53,0"
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         id="path3360"
+         d="m 84.64286,619.75504 c 0,0 53,0 53,0"
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         id="path3362"
+         d="m 86.42857,633.29075 c 0,0 53,0 53,0"
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         id="path3364"
+         d="m 86.21429,646.82647 c 0,0 53,0 53,0"
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <text
+       sodipodi:linespacing="100%"
+       id="text3404"
+       y="712.36218"
+       x="263"
+       style="font-size:11.51480865px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Arial;-inkscape-font-specification:Arial"
+       xml:space="preserve"><tspan
+         id="tspan3412"
+         y="712.36218"
+         x="263"
+         sodipodi:role="line" /></text>
+    <flowRoot
+       transform="translate(10,3)"
+       style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       id="flowRoot3423"
+       xml:space="preserve"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/normal de la curva.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><flowRegion
+         id="flowRegion3425"><rect
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+           y="680.36218"
+           x="243"
+           height="97"
+           width="270"
+           id="rect3427" /></flowRegion><flowPara
+         id="flowPara3435">Tomando en cuenta la normal de la curva, se pueden trazar tramos mas naturales que sigan la curvatura de la carretera. Esto también sirve para colocar obstáculos correctamente.</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4215"
+       style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       transform="translate(-290,3)"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/normal de la curva.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><flowRegion
+         id="flowRegion4217"><rect
+           id="rect4219"
+           width="270"
+           height="97"
+           x="243"
+           y="680.36218"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial" /></flowRegion><flowPara
+         id="flowPara4221">Sin tomar en cuenta la normal de la carretera es dificil hacer que puntos proyectados a partir del centro de la misma luzcan naturalmente proyectados, lo cual resta al realismo de las perspectiva.</flowPara></flowRoot>    <rect
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       style="opacity:0.5;color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.52249444;marker:none;visibility:visible;display:inline;overflow:visible;filter:url(#filter4330);enable-background:accumulate"
+       id="rect4355"
+       width="657"
+       height="341"
+       x="-92"
+       y="855.36218"
+       ry="4.4828081"
+       rx="4.2961092"
+       transform="matrix(1.1638438,0,0,1.1153723,16.250944,-97.856101)" />
+    <rect
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       rx="5"
+       ry="5.0000005"
+       y="851.36224"
+       x="-92"
+       height="383"
+       width="767"
+       id="rect4357"
+       style="color:#000000;fill:url(#linearGradient4445);fill-opacity:1;stroke:#909090;stroke-width:1.52249444;stroke-opacity:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    <path
+       style="fill:none;stroke:#ff0303;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#DotM);marker-mid:none;marker-end:url(#DotM)"
+       d="m -59,952.36218 148,0"
+       id="path4447"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       id="path5449"
+       d="m 125,912.36218 148,0"
+       style="fill:none;stroke:#00d090;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#DotM);marker-mid:none;marker-end:url(#DotM)"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ff0a0a;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+       x="-66.440315"
+       y="977.36218"
+       id="text5451"
+       sodipodi:linespacing="100%"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5453"
+         x="-66.440315"
+         y="977.36218">a.min</tspan></text>
+    <text
+       sodipodi:linespacing="100%"
+       id="text5455"
+       y="977.36218"
+       x="50.411247"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ff0a0a;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+       xml:space="preserve"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         y="977.36218"
+         x="50.411247"
+         id="tspan5457"
+         sodipodi:role="line">a.max</tspan></text>
+    <text
+       sodipodi:linespacing="100%"
+       id="text5459"
+       y="899.36218"
+       x="117.07532"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#00b980;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+       xml:space="preserve"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         y="899.36218"
+         x="117.07532"
+         id="tspan5461"
+         sodipodi:role="line">b.min</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#00b980;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+       x="233.53625"
+       y="899.36218"
+       id="text5463"
+       sodipodi:linespacing="100%"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5465"
+         x="233.53625"
+         y="899.36218">b.max</tspan></text>
+    <flowRoot
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       transform="translate(-279,314)"
+       style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       id="flowRoot5469"
+       xml:space="preserve"><flowRegion
+         id="flowRegion5471"><rect
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+           y="680.36218"
+           x="243"
+           height="97"
+           width="270"
+           id="rect5473" /></flowRegion><flowPara
+         id="flowPara5475"
+         style="font-size:18px">No hay colisión</flowPara></flowRoot>    <path
+       id="path5477"
+       d="m 369,952.36218 148,0"
+       style="fill:none;stroke:#ff0303;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#DotM);marker-mid:none;marker-end:url(#DotM)"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#00d090;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#DotM);marker-mid:none;marker-end:url(#DotM)"
+       d="m 493,912.36218 148,0"
+       id="path5479"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       sodipodi:linespacing="100%"
+       id="text5481"
+       y="977.36218"
+       x="361.55969"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ff0a0a;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+       xml:space="preserve"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         y="977.36218"
+         x="361.55969"
+         id="tspan5483"
+         sodipodi:role="line">a.min</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ff0a0a;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+       x="478.41125"
+       y="977.36218"
+       id="text5485"
+       sodipodi:linespacing="100%"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5487"
+         x="478.41125"
+         y="977.36218">a.max</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#00b980;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+       x="485.07532"
+       y="899.36218"
+       id="text5489"
+       sodipodi:linespacing="100%"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5491"
+         x="485.07532"
+         y="899.36218">b.min</tspan></text>
+    <text
+       sodipodi:linespacing="100%"
+       id="text5493"
+       y="899.36218"
+       x="601.53625"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#00b980;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+       xml:space="preserve"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         y="899.36218"
+         x="601.53625"
+         id="tspan5495"
+         sodipodi:role="line">b.max</tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot5497"
+       style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       transform="translate(121,314)"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><flowRegion
+         id="flowRegion5499"><rect
+           id="rect5501"
+           width="270"
+           height="97"
+           x="243"
+           y="680.36218"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial" /></flowRegion><flowPara
+         style="font-size:18px"
+         id="flowPara5503">Si hay colisión</flowPara></flowRoot>    <path
+       style="fill:none;stroke:#ff0303;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#DotM);marker-mid:none;marker-end:url(#DotM)"
+       d="m 441,1144.3622 148,0"
+       id="path5505"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       id="path5507"
+       d="m 405,1104.3622 148,0"
+       style="fill:none;stroke:#00d090;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#DotM);marker-mid:none;marker-end:url(#DotM)"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ff0a0a;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+       x="433.55969"
+       y="1169.3622"
+       id="text5509"
+       sodipodi:linespacing="100%"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5511"
+         x="433.55969"
+         y="1169.3622">a.min</tspan></text>
+    <text
+       sodipodi:linespacing="100%"
+       id="text5513"
+       y="1169.3622"
+       x="550.41125"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ff0a0a;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+       xml:space="preserve"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         y="1169.3622"
+         x="550.41125"
+         id="tspan5515"
+         sodipodi:role="line">a.max</tspan></text>
+    <text
+       sodipodi:linespacing="100%"
+       id="text5517"
+       y="1091.3622"
+       x="397.07532"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#00b980;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+       xml:space="preserve"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         y="1091.3622"
+         x="397.07532"
+         id="tspan5519"
+         sodipodi:role="line">b.min</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#00b980;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+       x="513.53625"
+       y="1091.3622"
+       id="text5521"
+       sodipodi:linespacing="100%"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5523"
+         x="513.53625"
+         y="1091.3622">b.max</tspan></text>
+    <flowRoot
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       transform="translate(121,508)"
+       style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       id="flowRoot5525"
+       xml:space="preserve"><flowRegion
+         id="flowRegion5527"><rect
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+           y="680.36218"
+           x="243"
+           height="97"
+           width="270"
+           id="rect5529" /></flowRegion><flowPara
+         id="flowPara5531"
+         style="font-size:18px">Si hay colisión</flowPara></flowRoot>    <path
+       id="path5533"
+       d="m 121,1144.3622 148,0"
+       style="fill:none;stroke:#ff0303;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#DotM);marker-mid:none;marker-end:url(#DotM)"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#00d090;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#DotM);marker-mid:none;marker-end:url(#DotM)"
+       d="m -55,1104.3622 148,0"
+       id="path5535"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       sodipodi:linespacing="100%"
+       id="text5537"
+       y="1169.3622"
+       x="113.55968"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ff0a0a;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+       xml:space="preserve"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         y="1169.3622"
+         x="113.55968"
+         id="tspan5539"
+         sodipodi:role="line">a.min</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ff0a0a;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+       x="230.41125"
+       y="1169.3622"
+       id="text5541"
+       sodipodi:linespacing="100%"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5543"
+         x="230.41125"
+         y="1169.3622">a.max</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#00b980;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+       x="-62.924683"
+       y="1091.3622"
+       id="text5545"
+       sodipodi:linespacing="100%"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5547"
+         x="-62.924683"
+         y="1091.3622">b.min</tspan></text>
+    <text
+       sodipodi:linespacing="100%"
+       id="text5549"
+       y="1091.3622"
+       x="53.536247"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#00b980;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+       xml:space="preserve"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         y="1091.3622"
+         x="53.536247"
+         id="tspan5551"
+         sodipodi:role="line">b.max</tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot5553"
+       style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       transform="translate(-279,508)"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/bounds 1d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><flowRegion
+         id="flowRegion5555"><rect
+           id="rect5557"
+           width="270"
+           height="97"
+           x="243"
+           y="680.36218"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial" /></flowRegion><flowPara
+         style="font-size:18px"
+         id="flowPara5559">No hay colisión</flowPara></flowRoot>    <image
+       y="344.36218"
+       x="1168"
+       id="image5667"
+       height="642"
+       width="815"
+       xlink:href="file:///media/Giga_drive/Dev/C/vectorracerpro/trunk/documentaci%C3%B3n/img/hud.png"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/hud etiquetado.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <flowRoot
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/hud etiquetado.png"
+       transform="translate(716,272)"
+       style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       id="flowRoot5671"
+       xml:space="preserve"><flowRegion
+         id="flowRegion5673"><rect
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+           y="680.36218"
+           x="243"
+           height="97"
+           width="270"
+           id="rect5675" /></flowRegion><flowPara
+         id="flowPara5677"
+         style="font-size:18px">HUD</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot5679"
+       style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       transform="matrix(2.894323,0,0,2.894323,45.870968,-1037.8698)"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/hud etiquetado.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><flowRegion
+         id="flowRegion5681"><rect
+           id="rect5683"
+           width="270"
+           height="97"
+           x="243"
+           y="680.36218"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial" /></flowRegion><flowPara
+         style="font-size:18px"
+         id="flowPara5685">{</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot5687"
+       style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       transform="translate(705,166)"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/hud etiquetado.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><flowRegion
+         id="flowRegion5689"><rect
+           id="rect5691"
+           width="270"
+           height="97"
+           x="243"
+           y="680.36218"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial" /></flowRegion><flowPara
+         style="font-size:18px"
+         id="flowPara5693">Cuenta regresiva</flowPara><flowPara
+         style="font-size:18px"
+         id="flowPara5695">invulnerabilidad</flowPara></flowRoot>    <flowRoot
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/hud etiquetado.png"
+       transform="translate(1690,174)"
+       style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       id="flowRoot5697"
+       xml:space="preserve"><flowRegion
+         id="flowRegion5699"><rect
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+           y="680.36218"
+           x="243"
+           height="97"
+           width="270"
+           id="rect5701" /></flowRegion><flowPara
+         id="flowPara5703"
+         style="font-size:18px">Cuenta regresiva</flowPara><flowPara
+         id="flowPara5705"
+         style="font-size:18px">lights off</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot5707"
+       style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       transform="translate(1462,346)"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/hud etiquetado.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><flowRegion
+         id="flowRegion5709"><rect
+           id="rect5711"
+           width="270"
+           height="97"
+           x="243"
+           y="680.36218"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial" /></flowRegion><flowPara
+         style="font-size:18px"
+         id="flowPara5715">Nivel y Score</flowPara></flowRoot>    <flowRoot
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/hud etiquetado.png"
+       transform="translate(1227,331.75)"
+       style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       id="flowRoot5719"
+       xml:space="preserve"><flowRegion
+         id="flowRegion5721"><rect
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+           y="680.36218"
+           x="243"
+           height="97"
+           width="270"
+           id="rect5723" /></flowRegion><flowPara
+         id="flowPara5725"
+         style="font-size:18px">Tiempo Transcurrido</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot5727"
+       style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       transform="translate(835,354)"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/hud etiquetado.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><flowRegion
+         id="flowRegion5729"><rect
+           id="rect5731"
+           width="270"
+           height="97"
+           x="243"
+           y="680.36218"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial" /></flowRegion><flowPara
+         style="font-size:18px"
+         id="flowPara5733">Vidas y Velocidad</flowPara></flowRoot>    <flowRoot
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/hud etiquetado.png"
+       transform="translate(1097,396)"
+       style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       id="flowRoot5735"
+       xml:space="preserve"><flowRegion
+         id="flowRegion5737"><rect
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+           y="680.36218"
+           x="243"
+           height="97"
+           width="270"
+           id="rect5739" /></flowRegion><flowPara
+         id="flowPara5741"
+         style="font-size:18px">Mensaje del Powerup</flowPara></flowRoot>    <g
+       id="g5747"
+       transform="matrix(1.5454545,0,0,1.1764705,-850.63636,-175.60793)"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/hud etiquetado.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <path
+         style="fill:#ffffff;stroke:#ffffff;stroke-width:3.70809937;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         d="m 1579,1005.3622 -6,-29.00002"
+         id="path5745" />
+      <path
+         id="path5743"
+         d="m 1579,1005.3622 -6,-29.00002"
+         style="fill:none;stroke:#000000;stroke-width:1.48323977;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <g
+       transform="matrix(-5.1493659,0,0,4.7203653,9605.7757,-3678.1194)"
+       id="g5751"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/hud etiquetado.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <path
+         id="path5753"
+         d="m 1579,1005.3622 -6,-29.00002"
+         style="fill:#ffffff;stroke:#ffffff;stroke-width:1.0141573;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:0.40566292;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         d="m 1579,1005.3622 -6,-29.00002"
+         id="path5755" />
+    </g>
+    <g
+       id="g5757"
+       transform="matrix(-1.706528,0,0,1.4268711,3911.8632,-416.22048)"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/hud etiquetado.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <path
+         style="fill:#ffffff;stroke:#ffffff;stroke-width:3.20420957;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         d="m 1579,1005.3622 -6,-29.00002"
+         id="path5759" />
+      <path
+         id="path5761"
+         d="m 1579,1005.3622 -6,-29.00002"
+         style="fill:none;stroke:#000000;stroke-width:1.28168392;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <g
+       transform="matrix(1.706528,0,0,1.4268711,-856.11306,-415.22048)"
+       id="g5763"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/hud etiquetado.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <path
+         id="path5765"
+         d="m 1579,1005.3622 -6,-29.00002"
+         style="fill:#ffffff;stroke:#ffffff;stroke-width:3.20420957;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:1.28168392;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         d="m 1579,1005.3622 -6,-29.00002"
+         id="path5767" />
+    </g>
+    <g
+       id="g5769"
+       transform="matrix(0,4.6180865,-3.2935453,0,5235.3246,-6382.4921)"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/hud etiquetado.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <path
+         style="fill:#ffffff;stroke:#ffffff;stroke-width:1.28205645;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         d="m 1579,1005.3622 -6,-29.00002"
+         id="path5771" />
+      <path
+         id="path5773"
+         d="m 1579,1005.3622 -6,-29.00002"
+         style="fill:none;stroke:#000000;stroke-width:0.51282263;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <g
+       transform="matrix(0,4.6180865,3.2272456,0,-2068.8805,-6378.4921)"
+       id="g5775"
+       inkscape:export-filename="/media/Giga_drive/Dev/C/vectorracerpro/trunk/documentación/img/hud etiquetado.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <path
+         id="path5777"
+         d="m 1579,1005.3622 -6,-29.00002"
+         style="fill:#ffffff;stroke:#ffffff;stroke-width:1.29515862;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:0.51806349;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         d="m 1579,1005.3622 -6,-29.00002"
+         id="path5779" />
+    </g>
+  </g>
+</svg>
