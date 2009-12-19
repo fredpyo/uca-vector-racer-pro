@@ -306,9 +306,14 @@ void game_handle_keypress(unsigned char key, int x, int y) {
 /*
  * direction - izq
  *           + der
+ * Calcula cuanto debe moverse el auto hacia la izquierda y derecha considerando un tiempo delta
+ * desde la ultima vez que se tuvo que calcular su movimiento
+ * También calcula un pequeño factor de inercia en las curvas // Thanks Niko!
  */
-void car_move(float how_much) {
-    car_pos[0].x += how_much;
+void car_move(int time_delta) {
+    car_pos[0].x += time_delta * _speed/8 * (-left_key + right_key);
+    // inercia, movimiento opuesto a la curvatura y relativo a la velocidad
+    car_pos[0].x -= sentido_h * 0.1/curvatura_h * _speed*10; 
     
     if (car_pos[0].x < -ROAD_WIDTH + CAR_WIDTH/2)
         car_pos[0].x = -ROAD_WIDTH + CAR_WIDTH/2;
@@ -613,9 +618,9 @@ void dibujar_auto() {
     glDisable(GL_TEXTURE_2D);
     glPushMatrix();
         glColor3f(0.2, 0.3, 0.7);
-        glTranslatef(car_pos[0].x,car_pos[0].y,car_pos[0].z);
+        glTranslatef(car_pos[0].x,car_pos[0].y+sin(glutGet(GLUT_ELAPSED_TIME)/300.0)*0.05,car_pos[0].z);
         glRotatef(180, 0, 1, 0);
-        glRotatef(_car_roll, 0, 0, 1);
+        glRotatef(sin(_car_roll)*45, 0, 0, 1);
         glutWireCone(CAR_WIDTH/3, 1.0, 8, 1);
         glTranslatef(-0.4,0,0.0);
         glutWireCone(CAR_WIDTH/5, 0.5, 6, 1);        
@@ -1162,11 +1167,9 @@ void game_handle_idle() {
 	time = glutGet(GLUT_ELAPSED_TIME);
     delta = wrap_f(delta, (time - elapsed_time) * _speed, ROAD_MIN, (ROAD_MAX - ROAD_MIN)*2/ROAD_STEPS); /* este ultimo es (max - min) / steps */
 
-    if (left_key || right_key)
-        _car_roll = (_car_roll + (time - elapsed_time) * _speed*100 * (-left_key + right_key))/2;
-    else
-        _car_roll = 0 /*_car_roll / ((time - elapsed_time))*/;
-    car_move((time - elapsed_time) * _speed/8 * (-left_key + right_key));
+    _car_roll = (-left_key + right_key) - _car_roll + (_car_roll /20* delta);
+    
+    car_move(time - elapsed_time);
     
     // almacenar el nuevo tiempo
     elapsed_time = time;
