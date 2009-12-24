@@ -1,8 +1,32 @@
+VECTOR RACER PRO
+================
+23 de Diciembre de 2009
+
+AUTORES
+=======
+Federico Cáceres <fede.caceres@gmail.com>
+Sergio Stanichevsky <sergio.sta@gmail.com>
+
+CREDITOS
+========
+Las músicas y sonidos son de:
+- Introducción y sonidos -> Echoes, un juego por binary zoo
+- Música del título -> proyecto ocremix: Sonic_&_Knuckles_Catapult_OC_ReMix.mp3
+- Musicas de ranking y carrera -> F-Zero GX (... no se cual es la licencia para estos tracks...)
+- Otro track de las carreras -> proyecto ocremix: Extreme-G_G-Storm_OC_ReMix.mp3
+
 Ok, un poco de instrucciones:
 
 CONTROLES
 =========
-flechas hacia la izquierda y derecha
+Flechas izquierda y derecha: moverse a la izquierda y derecha respectivamente
+
+F1: Habilitar en indicador de FPS
+F2: Cambiar a otra cámara (cheat)
+F3: Mostrar los bounding boxes (solo para debug... y curiosos)
+M: Habilitar o deshabilitar el modo con motion blur (recomendado si tienes un fps < 130)
+I: Invulnerabilidad automática (como si agarrases el powerup)
+L: Lights off (como el powerdown)
 
 OBSTACULOS
 ==========
