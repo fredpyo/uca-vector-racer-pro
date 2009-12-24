@@ -39,6 +39,7 @@
 
 #define BASE_SPEED 0.01
 #define BASE_SPAWN_INTERVAL 450
+#define INVINCIBLE_TIME 13000
 
 #define PI 3.14159265358979323846
 
@@ -313,7 +314,7 @@ void game_handle_keypress(unsigned char key, int x, int y) {
 void car_move(int time_delta) {
     car_pos[0].x += time_delta * _speed/8 * (-left_key + right_key);
     // inercia, movimiento opuesto a la curvatura y relativo a la velocidad
-    car_pos[0].x -= sentido_h * 0.1/curvatura_h * _speed*10; 
+    car_pos[0].x -= sentido_h * 0.3/curvatura_h * _speed*10; 
     
     if (car_pos[0].x < -ROAD_WIDTH + CAR_WIDTH/2)
         car_pos[0].x = -ROAD_WIDTH + CAR_WIDTH/2;
@@ -362,7 +363,7 @@ int lights_off() {
  * Retorna 1 si el efecto de invincible sigue actvo
  */
 int still_invincible() {
-    return (glutGet(GLUT_ELAPSED_TIME) - _invincible_start) < 10000;
+    return (glutGet(GLUT_ELAPSED_TIME) - _invincible_start) < INVINCIBLE_TIME;
 }
 
 /**
@@ -960,7 +961,7 @@ void draw_hud() {
     
     // invincibility
     if (still_invincible()) {
-        aux = (10000 - (glutGet(GLUT_ELAPSED_TIME) - _invincible_start))/1000.0;
+        aux = (INVINCIBLE_TIME - (glutGet(GLUT_ELAPSED_TIME) - _invincible_start))/1000.0;
         glColor3f(0, aux/10, 0);
         glRasterPos2i(10, 60);
         glutBitmapString(GLUT_BITMAP_9_BY_15, (unsigned char *) "Invincible ");
